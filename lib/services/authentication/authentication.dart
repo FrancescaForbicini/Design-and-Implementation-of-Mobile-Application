@@ -12,23 +12,43 @@ class AutenticationWidget extends StatelessWidget{
           width: 300,
           child: Column(
             children: [
-              Center(
-                child: FittedBox(
-                  fit: BoxFit.fitWidth,
-                  child: Text(
-                    'ciao',
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 110
-                    ),
-                  ),
+          Expanded(
+          child: Column(
+          children: const [
+            Spacer(
+            flex: 2,
+          ),
+          Center(
+            child: FittedBox(
+              fit: BoxFit.fitWidth,
+              child: Text(
+                "sign in",
+                style: TextStyle(
+                  color: Colors.blue,
+                  fontSize: 90,
                 ),
-              )
-            ],
+              ),
+            ),
+          ),
+          Center(
+          child: FittedBox(
+            fit: BoxFit.fitWidth,
+            child: Text(
+              "sign out",
+              style: TextStyle(
+                color: Colors.blue,
+                fontSize: 90,
+              ),
+            ),
           ),
         ),
+          ],
+        ),
       ),
-
+            ],
+    ),
+    ),
+    ),
     );
   }
 }
