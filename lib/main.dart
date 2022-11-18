@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         body:
-          const AutenticationWidget()
+        const AutenticationWidget()
       ),
     );
   }
