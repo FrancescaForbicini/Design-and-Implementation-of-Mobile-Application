@@ -7,12 +7,20 @@ class AutenticationWidget extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: SizedBox(
-          width: 300,
+      backgroundColor: Color (0xFF232131),
+      body:
+
+    //   <--- image
+
+    Center(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              Image.asset('images/logo.png',width: 300,height: 300, alignment: Alignment.bottomCenter),
           Expanded(
+
           child: Column(
           children: const [
             Spacer(
@@ -26,6 +34,7 @@ class AutenticationWidget extends StatelessWidget{
                 style: TextStyle(
                   color: Colors.blue,
                   fontSize: 90,
+                  fontFamily: 'Arial'
                 ),
               ),
             ),
@@ -46,7 +55,6 @@ class AutenticationWidget extends StatelessWidget{
         ),
       ),
             ],
-    ),
     ),
     ),
     );
