@@ -1,4 +1,5 @@
 import 'package:dima_project/services/authentication/authentication.dart';
+import 'package:dima_project/services/authentication/sign_up/signup.dart';
 import 'package:flutter/material.dart';
 
 
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         body:
-        const AutenticationWidget()
+         SignUpScreen()
       ),
     );
   }
