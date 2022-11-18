@@ -7,7 +7,7 @@ class AutenticationWidget extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color (0xFF232131),
+      backgroundColor: Color (0xFF101010),
       body:
 
     //   <--- image
@@ -17,45 +17,35 @@ class AutenticationWidget extends StatelessWidget{
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Image.asset('images/logo.png',width: 300,height: 300, alignment: Alignment.bottomCenter),
-          Expanded(
-
-          child: Column(
-          children: const [
-            Spacer(
-            flex: 2,
-          ),
-          Center(
-            child: FittedBox(
-              fit: BoxFit.fitWidth,
-              child: Text(
-                "sign in",
-                style: TextStyle(
-                  color: Colors.blue,
-                  fontSize: 90,
-                  fontFamily: 'Arial'
+            children: <Widget> [
+              Image.asset('images/logo.png',width: 400,height: 400, alignment: Alignment.bottomCenter),
+              Container(
+                margin: EdgeInsets.all(30),
+                child: TextButton(
+                  child: Text(
+                    'Sign in',
+                    style: TextStyle(fontSize: 40.0,fontFamily: 'Hind', color: Colors.lightGreen),
+                  ),
+                    onPressed: () {
+                      //TODO go to the home page
+                    },
                 ),
               ),
-            ),
-          ),
-          Center(
-          child: FittedBox(
-            fit: BoxFit.fitWidth,
-            child: Text(
-              "sign out",
-              style: TextStyle(
-                color: Colors.blue,
-                fontSize: 90,
+              Container(
+                margin: EdgeInsets.all(30),
+                child: TextButton(
+                  child: Text(
+                    'Sign up',
+                    style: TextStyle(fontSize: 40.0,fontFamily: 'Hind', color: Colors.lightGreen),
+                  ),
+                  onPressed: () {
+                    //TODO go to the registration page
+                  },
+                ),
               ),
-            ),
-          ),
-        ),
-          ],
-        ),
+
+        ],
       ),
-            ],
-    ),
     ),
     );
   }
