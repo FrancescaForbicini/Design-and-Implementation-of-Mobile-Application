@@ -1,21 +1,23 @@
+import 'package:dima_project/models/quiz.dart';
+
 class User {
   final String id;
   final String name;
   final String surname;
   final String email;
-  int followers;
-  int following;
+  final String username;
+  final List<User> followers = [];
+  final List<User> following = [];
+  //TODO final List<Quiz> quiz;
   //TODO playlist
-  //TODO quiz
 
   User({
     required this.id,
     required this.name,
     required this.surname,
+    required this.username,
     required this.email,
-    this.followers = 0,
-    this.following = 0,
+    //TODO required this.quiz,
     //TODO playlist
-    //TODO quiz
   });
 }

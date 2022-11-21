@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 
+import '../../models/quiz.dart';
+import '../../models/user.dart';
 import '../../services/authentication/authentication.dart';
+import 'following_screen.dart';
 
 class UserProfile extends StatelessWidget {
-  const UserProfile({super.key});
-
+  final List<User> userfollow = [new User(id: '1', name:'raff' , surname:'kik', username:'rocket', email: 'rocket@ann')];
+  final User user = new User(id: '1', name: 'francesca', surname: 'forbicini', email: 'francesca.forbicini@gmail.com',username:'frafra');
+  UserProfile({super.key});
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -17,8 +21,14 @@ class UserProfile extends StatelessWidget {
             child: const Text('User Profile'),
           ),
         ),
+
         body: ListView(
           children: <Widget>[
+            Container(
+              margin: EdgeInsets.all(10),
+              alignment: Alignment.topRight,
+              child: Icon(Icons.settings, color: Colors.lightGreen),
+            ),
             Container(
               height: 250,
               decoration: BoxDecoration(
@@ -29,6 +39,7 @@ class UserProfile extends StatelessWidget {
                   stops: [0.5, 0.9],
                 )
               ),
+
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -45,7 +56,7 @@ class UserProfile extends StatelessWidget {
                     height: 10,
                   ),
                   Text(
-                    'Dynamic username',
+                    user.name.toString(),
                     style: TextStyle(
                       fontSize: 35,
                       fontWeight: FontWeight.bold,
@@ -63,8 +74,7 @@ class UserProfile extends StatelessWidget {
                         color: Color(0xFF101010),
                         child: ListTile(
                           title: Text(
-                            '5000',
-                            textAlign: TextAlign.center,
+                            userfollow.length.toString(),                            textAlign: TextAlign.center,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 30,
@@ -79,6 +89,12 @@ class UserProfile extends StatelessWidget {
                               color: Colors.green,
                             ),
                           ),
+                          onTap: (){
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => FollowingScreen()),
+                            );
+                          },
                         ),
                       ),
                   ),
@@ -87,7 +103,7 @@ class UserProfile extends StatelessWidget {
                       color: Color(0xFF101010),
                       child: ListTile(
                         title: Text(
-                          '5000',
+                          userfollow.length.toString(),
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -103,7 +119,13 @@ class UserProfile extends StatelessWidget {
                             color: Colors.lightGreen,
                           ),
                         ),
-                      ),
+                        onTap: () {
+                          Navigator.push(context,
+                            MaterialPageRoute(
+                                builder: (context) => FollowingScreen()),
+                          );
+                        }
+                      )
                     ),
                   ),
                 ],
@@ -122,7 +144,7 @@ class UserProfile extends StatelessWidget {
                       ),
                     ),
                     subtitle: Text(
-                      'user@user.com',
+                      user.email.toString(),
                       style: TextStyle(
                         fontSize: 18,
                         color: Colors.lightGreen,
