@@ -1,11 +1,12 @@
+import 'package:dima_project/models/answer.dart';
+import 'package:dima_project/models/question.dart';
 import 'package:dima_project/models/user.dart';
 
 class Quiz {
   final String id;
   String genre;
   String author;
-  final List<String> questions;
-  final List<String> answers;
+  final List<Question> questions;
   final User winner;
   final List<User> participants;
 
@@ -14,7 +15,6 @@ class Quiz {
     this.genre = "",
     this.author = "",
     required this.questions,
-    required this.answers,
     required this.winner,
     required this.participants
   });
