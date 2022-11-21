@@ -1,3 +1,4 @@
+import 'package:dima_project/services/authentication/sign_in/signin.dart';
 import 'package:dima_project/services/authentication/sign_up/signup.dart';
 import 'package:flutter/material.dart';
 
@@ -28,7 +29,10 @@ class AutenticationScreen extends StatelessWidget{
                     style: TextStyle(fontSize: 40.0,fontFamily: 'Hind', color: Colors.lightGreen),
                   ),
                     onPressed: () {
-                      //TODO go to the home page
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => SignInScreen()),
+                      );
                     },
                 ),
               ),

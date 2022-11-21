@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../services/authentication/authentication.dart';
+
 class UserProfile extends StatelessWidget {
   const UserProfile({super.key});
 
@@ -150,15 +152,18 @@ class UserProfile extends StatelessWidget {
                     ),
                   ),
                   Divider(),
-                  ListTile(
-                    title: Text(
-                      'Log Out',
-                      style: TextStyle(
-                        color: Colors.green,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                  MaterialButton(
+                      color: Colors.lightGreen,
+                      textColor: Colors.black,
+                      child: Text('Log Out'),
+                      onPressed: () =>
+                      {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => AutenticationScreen()),
+                        ),
+                      },
                   ),
                 ],
               ),
