@@ -18,7 +18,7 @@ class FollowerScreen extends StatelessWidget{
           appBar: AppBar(
             backgroundColor: Color (0xFF101010),
             leading: IconButton(
-                icon: Icon(Icons.logout, color: Colors.lightGreen,size: 30,),
+                icon: Icon(Icons.arrow_back, color: Colors.lightGreen,size: 30,),
                 onPressed:(){ Navigator.push(context,
                     MaterialPageRoute(
                         builder: (context) => UserProfile()));
