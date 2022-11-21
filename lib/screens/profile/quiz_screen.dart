@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../models/answer.dart';
 import '../../models/quiz.dart';
+import '../../services/quiz_generator.dart';
 
 class QuizScreen extends StatelessWidget{
   Quiz quiz;
@@ -26,7 +27,7 @@ class QuizScreen extends StatelessWidget{
               }),
               IconButton(icon: Icon(Icons.add,color: Colors.lightGreen), onPressed:(){ Navigator.push(context,
                  MaterialPageRoute(
-                    builder: (context) => UserProfile()));
+                    builder: (context) => const QuizGenerator()));
               }),
 
             ],
