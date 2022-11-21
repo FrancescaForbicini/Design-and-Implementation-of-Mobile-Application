@@ -17,18 +17,17 @@ class UserProfile extends StatelessWidget {
         backgroundColor: Color(0xFF101010),
         appBar: AppBar(
           backgroundColor: Color (0xFF101010),
-          title: Center(
-            child: const Text('User Profile'),
-          ),
+          leading: IconButton(
+              icon: Icon(Icons.logout, color: Colors.lightGreen),
+                  onPressed:(){ Navigator.push(context,
+                  MaterialPageRoute(
+                  builder: (context) => AutenticationScreen()));
+              }),
+          title: Text('User Profile', textAlign: TextAlign.center,),
         ),
 
         body: ListView(
           children: <Widget>[
-            Container(
-              margin: EdgeInsets.all(10),
-              alignment: Alignment.topRight,
-              child: Icon(Icons.settings, color: Colors.lightGreen),
-            ),
             Container(
               height: 250,
               decoration: BoxDecoration(
@@ -172,20 +171,6 @@ class UserProfile extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ),
-                  Divider(),
-                  MaterialButton(
-                      color: Colors.lightGreen,
-                      textColor: Colors.black,
-                      child: Text('Log Out'),
-                      onPressed: () =>
-                      {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => AutenticationScreen()),
-                        ),
-                      },
                   ),
                 ],
               ),
