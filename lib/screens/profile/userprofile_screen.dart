@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../models/quiz.dart';
 import '../../models/user.dart';
 import '../../services/authentication/authentication.dart';
+import 'follower_screen.dart';
 import 'following_screen.dart';
 
 class UserProfile extends StatelessWidget {
@@ -18,12 +19,12 @@ class UserProfile extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: Color (0xFF101010),
           leading: IconButton(
-              icon: Icon(Icons.logout, color: Colors.lightGreen),
+              icon: Icon(Icons.logout, color: Colors.lightGreen,size: 30),
                   onPressed:(){ Navigator.push(context,
                   MaterialPageRoute(
                   builder: (context) => AutenticationScreen()));
               }),
-          title: Text('User Profile', textAlign: TextAlign.center,),
+          title: Text('User Profile', textAlign: TextAlign.center,style: new TextStyle(fontSize: 30),),
         ),
 
         body: ListView(
@@ -73,7 +74,7 @@ class UserProfile extends StatelessWidget {
                         color: Color(0xFF101010),
                         child: ListTile(
                           title: Text(
-                            userfollow.length.toString(),                            textAlign: TextAlign.center,
+                            userfollow.length.toString(),textAlign: TextAlign.center,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 30,
@@ -88,12 +89,12 @@ class UserProfile extends StatelessWidget {
                               color: Colors.green,
                             ),
                           ),
-                          onTap: (){
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => FollowingScreen()),
-                            );
-                          },
+                            onTap: () {
+                              Navigator.push(context,
+                                MaterialPageRoute(
+                                    builder: (context) => FollowerScreen(userfollow: this.userfollow)),
+                              );
+                            }
                         ),
                       ),
                   ),
@@ -121,7 +122,7 @@ class UserProfile extends StatelessWidget {
                         onTap: () {
                           Navigator.push(context,
                             MaterialPageRoute(
-                                builder: (context) => FollowingScreen()),
+                                builder: (context) => FollowingScreen(userfollow: this.userfollow)),
                           );
                         }
                       )
