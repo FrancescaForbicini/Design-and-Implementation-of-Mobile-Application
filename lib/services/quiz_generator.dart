@@ -37,7 +37,7 @@ class QuizGenerator extends StatelessWidget{
                 question: "Which is the best framework for app development?",
                 rightAnswer: "Flutter",
                 wrongAnswers: ["Fluttor", "Flitter"],
-                //TODO go to another question
+                //TODO go to another question.json
                 onRightAnswer: () => print("Right") ,
                 onWrongAnswer: () => print("Wrong"),
               )
