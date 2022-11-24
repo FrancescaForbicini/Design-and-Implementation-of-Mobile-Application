@@ -41,9 +41,10 @@ class UserProfile extends StatelessWidget {
                 )
               ),
 
-              child: Column(
+              child: Flex(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
+                direction: Axis.vertical,
                 children: <Widget>[
                   CircleAvatar(
                     backgroundColor: Color(0xFF101010),
@@ -155,13 +156,14 @@ class UserProfile extends StatelessWidget {
                   Divider(),
                   ListTile(
                     title: Text(
-                      'My quizzes',
+                      'My Quizzes',
                       style: TextStyle(
                         color: Colors.green,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+                      leading: Icon(Icons.quiz_sharp, color: Colors.lightGreen),
                       onTap: () {
                         Navigator.push(context,
                           MaterialPageRoute(
@@ -172,13 +174,26 @@ class UserProfile extends StatelessWidget {
                   Divider(),
                   ListTile(
                     title: Text(
-                      'My playlists',
+                      'My Playlists',
                       style: TextStyle(
                         color: Colors.green,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+                    leading: Icon(Icons.queue_music_outlined, color: Colors.lightGreen),
+                  ),
+                  Divider(),
+                  ListTile(
+                    title: Text(
+                      'New Quiz',
+                      style: TextStyle(
+                        color: Colors.green,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    leading: Icon(Icons.add, color: Colors.lightGreen),
                   ),
                 ],
               ),
