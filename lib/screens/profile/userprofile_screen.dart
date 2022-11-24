@@ -1,3 +1,4 @@
+import 'package:dima_project/screens/profile/quiz_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/quiz.dart';
@@ -161,6 +162,12 @@ class UserProfile extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+                      onTap: () {
+                        Navigator.push(context,
+                          MaterialPageRoute(
+                              builder: (context) => QuizScreen(quiz: new Quiz(), answers: [],)),
+                        );
+                      }
                   ),
                   Divider(),
                   ListTile(

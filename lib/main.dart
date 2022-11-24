@@ -2,11 +2,13 @@ import 'package:dima_project/screens/profile/userprofile_screen.dart';
 import 'package:dima_project/services/authentication/authentication.dart';
 import 'package:dima_project/services/authentication/sign_up/signup.dart';
 import 'package:flutter/material.dart';
-
+// @dart=2.9
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
