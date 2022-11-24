@@ -1,0 +1,37 @@
+[
+  {
+    "topic": "Artist",
+    "name" : "",
+    "question1": "When was ",
+    "artist": "",
+    "question2": "born? "
+  },
+  {
+    "topic": "Artist",
+    "name" : "",
+    "question1": "Which album did ",
+    "artist": "",
+    "question3": "produce?"
+  },
+  {
+    "topic": "Artist",
+    "name" : "",
+    "question1": "How old is ",
+    "artist": "",
+    "question3": "?"
+  },
+  {
+    "topic": "Album",
+    "name" : "",
+    "question1": "When has been ",
+    "album": "",
+    "question3": "released?"
+  },
+  {
+    "topic": "Artist",
+    "name" : "",
+    "question1": "Who has produces",
+    "album": "",
+    "question3": "?"
+  }
+]
