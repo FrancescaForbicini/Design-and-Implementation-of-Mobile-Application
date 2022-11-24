@@ -1,4 +1,4 @@
-import 'package:dima_project/services/authentication/authentication.dart';
+import 'package:dima_project/screens/authentication.dart';
 import 'package:flutter/material.dart';
 
 
@@ -116,7 +116,7 @@ class SignUpScreen extends StatelessWidget {
         onPressed: () => {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => AutenticationScreen()),
+            MaterialPageRoute(builder: (context) => AuthenticationScreen()),
           ),
           // TODO da qualche parte bisognerà fare Navigator.pop
         });

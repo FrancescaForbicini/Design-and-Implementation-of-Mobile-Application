@@ -2,8 +2,8 @@ import 'package:dima_project/services/authentication/sign_in/signin.dart';
 import 'package:dima_project/services/authentication/sign_up/signup.dart';
 import 'package:flutter/material.dart';
 
-class AutenticationScreen extends StatelessWidget{
-  const AutenticationScreen({super.key});
+class AuthenticationScreen extends StatelessWidget{
+  const AuthenticationScreen({super.key});
 
 
   @override

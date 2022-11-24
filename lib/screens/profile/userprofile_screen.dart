@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../models/quiz.dart';
 import '../../models/user.dart';
-import '../../services/authentication/authentication.dart';
+import '../authentication.dart';
 import 'follower_screen.dart';
 import 'following_screen.dart';
 
@@ -23,7 +23,7 @@ class UserProfile extends StatelessWidget {
               icon: Icon(Icons.logout, color: Colors.lightGreen,size: 30),
                   onPressed:(){ Navigator.push(context,
                   MaterialPageRoute(
-                  builder: (context) => AutenticationScreen()));
+                  builder: (context) => AuthenticationScreen()));
               }),
           title: Text('User Profile', textAlign: TextAlign.center,style: new TextStyle(fontSize: 30),),
         ),
