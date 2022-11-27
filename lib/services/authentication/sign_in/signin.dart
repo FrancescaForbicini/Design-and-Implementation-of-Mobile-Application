@@ -92,7 +92,7 @@ class SignInScreen extends StatelessWidget {
     return MaterialButton(
         color: Colors.lightGreen,
         textColor: Colors.white,
-        child: Text('SIGN UP'),
+        child: Text('SIGN IN'),
         onPressed: () => {
           Navigator.push(
             context,

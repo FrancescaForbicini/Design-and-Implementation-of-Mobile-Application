@@ -2,9 +2,12 @@ import 'package:dima_project/services/authentication/sign_in/signin.dart';
 import 'package:dima_project/services/authentication/sign_up/signup.dart';
 import 'package:flutter/material.dart';
 
-class AuthenticationScreen extends StatelessWidget{
-  const AuthenticationScreen({super.key});
+import '../services/authentication/authentication_service.dart';
 
+class AuthenticationScreen extends StatelessWidget{
+  AuthenticationScreen({super.key});
+
+  final AuthenticationService _authService = AuthenticationService();
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +54,16 @@ class AuthenticationScreen extends StatelessWidget{
                   },
                 ),
               ),
-
+              Container(
+                margin: EdgeInsets.all(30),
+                child: TextButton(
+                  child: Text(
+                    'Sign in with Google',
+                    style: TextStyle(fontSize: 40.0,fontFamily: 'Hind', color: Colors.lightGreen),
+                  ),
+                  onPressed: _authService.signInWithGoogle(context),
+                ),
+              ),
         ],
       ),
     ),
