@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AuthenticationService {
   bool _isEmailVerified = false;
+  late User _user;
   Timer? _timer;
 
   signUp(email, password, username, BuildContext context) async {
@@ -18,7 +19,6 @@ class AuthenticationService {
       FirebaseFirestore.instance.collection('User').add({
         "username": username,
         "email": email,
-        "password": password,
       });
       print("Everything went well!");
     } on FirebaseAuthException catch (e) {
@@ -84,9 +84,14 @@ class AuthenticationService {
     );
 
     // Once signed in, return the UserCredential
-    //return await FirebaseAuth.instance.signInWithCredential(credential);
+    UserCredential result = await FirebaseAuth.instance.signInWithCredential(credential);
 
-    Navigator.pop(context);
+    _user = result.user!;
+
+    print("User Name: ${_user.displayName}");
+    print("User Email ${_user.email}");
+
+    //Navigator.pop(context);
   }
 
   Future<void> signOut() async{
