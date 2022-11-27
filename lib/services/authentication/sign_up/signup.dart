@@ -157,7 +157,9 @@ class SignUpScreen extends StatelessWidget {
         textColor: Colors.white,
         child: Text('SIGN UP'),
         onPressed: () => {
-          _authService.signUp(_emailController.text, _passwordController.text, _usernameController.text, context)
+          if(formGlobalKey.currentState!.validate()){
+            _authService.signUp(_emailController.text, _passwordController.text, _usernameController.text, context)
+          }
         },
     );
   }
