@@ -27,7 +27,7 @@ class QuizScreen extends StatelessWidget{
               }),
               IconButton(icon: Icon(Icons.add,color: Colors.lightGreen), onPressed:(){ Navigator.push(context,
                  MaterialPageRoute(
-                    builder: (context) => const QuizGenerator()));
+                    builder: (context) => QuizGenerator()));
               }),
 
             ],
@@ -39,7 +39,7 @@ class QuizScreen extends StatelessWidget{
             itemBuilder: (context, index) {
               return ListTile(
                   textColor: Colors.lightGreen,
-                  title: Text(quiz.questions[index].text,style: TextStyle(fontSize: 30)),
+                  title: Text(quiz.questions[index].topic,style: TextStyle(fontSize: 30)),
                   subtitle: ListView.builder(
                       itemCount: answers.length,
                       itemBuilder: (context, index){

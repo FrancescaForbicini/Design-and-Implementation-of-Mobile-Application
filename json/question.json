@@ -3,35 +3,38 @@
     "topic": "Artist",
     "name" : "",
     "question1": "When was ",
-    "artist": "",
+    "artist_album": "",
     "question2": "born? "
   },
   {
     "topic": "Artist",
     "name" : "",
     "question1": "Which album did ",
-    "artist": "",
-    "question3": "produce?"
+    "artist_album": "",
+    "question2": "produce?"
   },
   {
     "topic": "Artist",
     "name" : "",
     "question1": "How old is ",
-    "artist": "",
-    "question3": "?"
+    "artist_album": "",
+    "question2": "?"
   },
   {
     "topic": "Album",
     "name" : "",
     "question1": "When has been ",
-    "album": "",
-    "question3": "released?"
+    "artist_album": "",
+    "question2": "released?"
   },
   {
     "topic": "Artist",
     "name" : "",
-    "question1": "Who has produces",
-    "album": "",
-    "question3": "?"
+    "question1": "Who has produced ",
+    "artist_album": "",
+    "question2": "?"
+  },
+  {
+    "topic": "end"
   }
 ]

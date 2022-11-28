@@ -1,4 +1,5 @@
 import 'package:dima_project/screens/profile/quiz_screen.dart';
+import 'package:dima_project/services/quiz_generator.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/quiz.dart';
@@ -193,7 +194,11 @@ class UserProfile extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    leading: Icon(Icons.add, color: Colors.lightGreen),
+                    leading: IconButton(icon: Icon(Icons.add, color: Colors.lightGreen),
+                                        onPressed: (){Navigator.push(context,
+                                          MaterialPageRoute(
+                                              builder: (context) => QuizGenerator()),
+                                        );},),
                   ),
                 ],
               ),
