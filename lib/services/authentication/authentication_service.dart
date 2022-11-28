@@ -45,12 +45,12 @@ class AuthenticationService {
 
   _checkVerificationStatus(auth) async{
     try {
-      await auth.currentUser!.reload();
-      _isEmailVerified = auth.currentUser!.emailVerified;
+      await auth.user!.reload();
+      _isEmailVerified = auth.user!.emailVerified;
     } catch (e) {
       // handle the error here
     }
-    _isEmailVerified = auth.currentUser!.emailVerified;
+    _isEmailVerified = auth.user!.emailVerified;
 
     if (_isEmailVerified) {
       _timer?.cancel();
