@@ -1,15 +1,17 @@
 import 'package:dima_project/screens/profile/userprofile_screen.dart';
 import 'package:dima_project/screens/authentication.dart';
 import 'package:dima_project/services/authentication/sign_up/signup.dart';
-import 'package:dima_project/services/quiz_generator.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
 
 
-void main() {
+void main() async{
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -24,8 +26,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         body:
-         QuizGenerator()
-        //UserProfile(),
+         AuthenticationScreen(),
       ),
     );
   }

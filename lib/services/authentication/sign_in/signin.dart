@@ -1,18 +1,22 @@
 import 'package:dima_project/screens/profile/userprofile_screen.dart';
 import 'package:flutter/material.dart';
 
+import '../authentication_service.dart';
+import '../sign_up/signup.dart';
+
 
 class SignInScreen extends StatelessWidget {
   SignInScreen({super.key});
-
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+  final AuthenticationService _authService = AuthenticationService();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color (0xFF101010),
-
-      body:
-      Flex(
+      body: Flex(
         direction: Axis.vertical,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -38,6 +42,8 @@ class SignInScreen extends StatelessWidget {
 
   Widget _buildEmailTextfield() {
     return TextFormField(
+        controller: _emailController,
+        validator: (value)=> EmailFieldValidator.validate(value!),
         style: TextStyle(color: Colors.lightGreen),
         keyboardType: TextInputType.emailAddress,
         decoration: InputDecoration(labelText: 'Email', filled: true,
@@ -54,6 +60,8 @@ class SignInScreen extends StatelessWidget {
 
   Widget _buildPasswordTextfield() {
     return TextFormField(
+      controller: _passwordController,
+      validator: (value)=> PasswordFieldValidator.validate(value!),
       style: TextStyle(color: Colors.lightGreen),
       decoration: InputDecoration(labelText: 'Password', filled: true,
           icon: Icon(Icons.key, color: Colors.lightGreen),
@@ -72,6 +80,8 @@ class SignInScreen extends StatelessWidget {
 
   Widget _buildUsernameTextField() {
     return TextFormField(
+      controller: _usernameController,
+      validator: (value)=> UsernameFieldValidator.validate(value!),
       style: TextStyle(color: Colors.lightGreen),
       keyboardType: TextInputType.name,
       decoration: InputDecoration(labelText: 'Username', filled: true,
@@ -92,14 +102,12 @@ class SignInScreen extends StatelessWidget {
     return MaterialButton(
         color: Colors.lightGreen,
         textColor: Colors.white,
-        child: Text('SIGN UP'),
+        child: Text('SIGN IN'),
         onPressed: () => {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => UserProfile()),
-          ),
-          // TODO da qualche parte bisognerà fare Navigator.pop
-        });
+          _authService.signIn(_emailController.text, _passwordController.text),
+          Navigator.pop(context)
+        }
+    );
   }
 
 
