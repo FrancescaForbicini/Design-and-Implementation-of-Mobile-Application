@@ -1,8 +1,12 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:dima_project/screens/profile/userprofile_screen.dart';
 import 'package:dima_project/screens/authentication.dart';
 import 'package:dima_project/services/authentication/sign_up/signup.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:spotify/spotify.dart';
 import 'firebase_options.dart';
 
 
@@ -12,6 +16,7 @@ void main() async{
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
   runApp(const MyApp());
 }
 

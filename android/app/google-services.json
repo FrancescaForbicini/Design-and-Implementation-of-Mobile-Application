@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "483836574423",
+    "project_id": "it-polimi-dima",
+    "storage_bucket": "it-polimi-dima.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:483836574423:android:023b7bdc8d17d0da47ce92",
+        "android_client_info": {
+          "package_name": "it.polimi.dima"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "483836574423-3f40r7l9m0eariphl6uelm1ptrn79t7c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8Vh4pb_s_Gw49XEgH-tvNOH239f1UTPQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "483836574423-3f40r7l9m0eariphl6uelm1ptrn79t7c.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "483836574423-aub3fl78l1outknrm1fg4qjpj2f9fbfb.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.untitled"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

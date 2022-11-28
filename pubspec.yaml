@@ -38,6 +38,7 @@ dependencies:
   google_sign_in: ^5.4.2
   cloud_firestore:
   firebase_storage: ^11.0.6
+  spotify: ^0.8.0
 
 dev_dependencies:
   flutter_test:

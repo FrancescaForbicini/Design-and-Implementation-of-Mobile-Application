@@ -36,19 +36,21 @@ class AuthenticationService {
   _sendVerification(auth) async{
     await auth.user?.sendEmailVerification();
 
-    if (!_isEmailVerified) {
+/*    if (!_isEmailVerified) {
       _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
         _checkVerificationStatus(auth);
       });
-    }
+    }*/
   }
 
   _checkVerificationStatus(auth) async{
     try {
       await auth.user!.reload();
       _isEmailVerified = auth.user!.emailVerified;
+      print("User Status: ${_isEmailVerified}");
     } catch (e) {
       // handle the error here
+      print(e.toString());
     }
     _isEmailVerified = auth.user!.emailVerified;
 
@@ -94,7 +96,7 @@ class AuthenticationService {
     //Navigator.pop(context);
   }
 
-  Future<void> signOut() async{
+  signOut() async{
     await FirebaseAuth.instance.signOut();
   }
 }
