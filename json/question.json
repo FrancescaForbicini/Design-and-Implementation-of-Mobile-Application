@@ -1,40 +1,39 @@
-[
-  {
-    "topic": "Artist",
-    "name" : "",
-    "question1": "When was ",
-    "artist_album": "",
-    "question2": "born? "
-  },
-  {
-    "topic": "Artist",
-    "name" : "",
-    "question1": "Which album did ",
-    "artist_album": "",
-    "question2": "produce?"
-  },
-  {
-    "topic": "Artist",
-    "name" : "",
-    "question1": "How old is ",
-    "artist_album": "",
-    "question2": "?"
-  },
-  {
-    "topic": "Album",
-    "name" : "",
-    "question1": "When has been ",
-    "artist_album": "",
-    "question2": "released?"
-  },
-  {
-    "topic": "Artist",
-    "name" : "",
-    "question1": "Who has produced ",
-    "artist_album": "",
-    "question2": "?"
-  },
-  {
-    "topic": "end"
-  }
-]
+{
+  "questions": [
+    {
+      "topic": "Artist",
+      "name": "",
+      "question1": "When was ",
+      "artist_album": "",
+      "question2": "born? "
+    },
+    {
+      "topic": "Artist",
+      "name": "",
+      "question1": "Which album did ",
+      "artist_album": "",
+      "question2": "produce?"
+    },
+    {
+      "topic": "Artist",
+      "name": "",
+      "question1": "How old is ",
+      "artist_album": "",
+      "question2": "?"
+    },
+    {
+      "topic": "Album",
+      "name": "",
+      "question1": "When has been ",
+      "artist_album": "",
+      "question2": "released?"
+    },
+    {
+      "topic": "Artist",
+      "name": "",
+      "question1": "Who has produced ",
+      "artist_album": "",
+      "question2": "?"
+    }
+  ]
+}
