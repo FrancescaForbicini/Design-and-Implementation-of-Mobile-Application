@@ -10,37 +10,64 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:spotify/spotify.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-class SpotifyScreen extends StatelessWidget{
-  SpotifyScreen({super.key});
+class SpotifyScreen extends StatefulWidget {
+  const SpotifyScreen({super.key});
 
+  @override
+  State<SpotifyScreen> createState() => _SpotifyScreenState();
+}
+
+class _SpotifyScreenState extends State<SpotifyScreen>{
   final SpotifyService _spotifyService = SpotifyService();
+  late final Future<bool> _done;
+
+  @override
+  void initState() {
+    _done = _spotifyService.init();
+  }
+
 
   @override
   Widget build(BuildContext context){
-    _spotifyService.init();
-    var authUri = _spotifyService.getAuthUri();
-    var redirectUri = _spotifyService.getRedirectUri();
     var responseUri;
 
     return Scaffold(
       backgroundColor: Color (0xFF101010),
       appBar: AppBar(
         title: Text('Authorize access to Spotify'),
+        backgroundColor: Colors.lightGreen,
       ),
       body: Flex(
         direction: Axis.vertical,
         children: <Widget>[
-          WebView(
-            javascriptMode: JavascriptMode.unrestricted,
-            initialUrl: authUri.toString(),
-            navigationDelegate: (navReq) {
-              if (navReq.url.startsWith(redirectUri.toString())) {
-                responseUri = navReq.url;
-                _spotifyService.handleResponse(responseUri);
-                return NavigationDecision.prevent;
-              }
+          FutureBuilder(
+            future: _done,
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              Widget child;
+              if (snapshot.connectionState == ConnectionState.done){
+                print(snapshot);
+                child = Container(
+                  height: 500,
+                  child: WebView(
+                    javascriptMode: JavascriptMode.unrestricted,
+                    initialUrl: _spotifyService.getAuthUri().toString(),
+                    navigationDelegate: (navReq) {
+                      if (navReq.url.startsWith(_spotifyService.getRedirectUri())) {
+                        responseUri = navReq.url;
+                        _spotifyService.handleResponse(responseUri);
+                        return NavigationDecision.prevent;
+                      }
 
-              return NavigationDecision.navigate;
+                      return NavigationDecision.navigate;
+                    },
+                  ),
+                );
+
+                return child;
+              }
+              else {
+                return CircularProgressIndicator();
+              }
             },
           )
         ],

@@ -1,5 +1,5 @@
 {
   "id": "d4a5ffbf383f49c4bbe51b42cccfe007",
   "secret": "d15cb733bb9c44a6ad4fe684b7c27bf7",
-  "redirect_uri": "https://1:483836574423:android:023b7bdc8d17d0da47ce92.firebaseapp.com/popup.html"
+  "redirect_uri": "http://dima-spotiquiz.com/callback/"
 }

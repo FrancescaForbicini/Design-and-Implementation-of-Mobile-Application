@@ -6,6 +6,7 @@ import 'package:dima_project/screens/authentication.dart';
 import 'package:dima_project/services/authentication/sign_up/signup.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
 import 'package:spotify/spotify.dart';
 
 const _scopes = [
@@ -18,26 +19,37 @@ const _scopes = [
 ];
 
 class SpotifyService {
+  static SpotifyService _spotifyService = SpotifyService._SpotifyServiceConstructor();
+
   late var _keyJson;
   late var _keyMap;
   late var _credentials;
+  late var _authUri;
   late var _redirectUri;
   late var _spotify;
   late var _grant;
 
-  void init() async {
-    _keyJson = await File('json/spotify.json').readAsString();
+  factory SpotifyService() => _spotifyService ??= SpotifyService._SpotifyServiceConstructor();
+
+  SpotifyService._SpotifyServiceConstructor();
+
+  Future<bool> init() async {
+/*    _keyJson = await File('json/spotify.json').readAsString();*/
+    _keyJson = await rootBundle.loadString('json/spotify.json');
     _keyMap = json.decode(_keyJson);
     _credentials = SpotifyApiCredentials(_keyMap['id'], _keyMap['secret']);
     _redirectUri = _keyMap['redirect_uri'];
     _grant = SpotifyApi.authorizationCodeGrant(_credentials);
+    _authUri = _grant.getAuthorizationUrl(Uri.parse(_redirectUri!), scopes: _scopes);
+
+    return true;
   }
 
   Uri getAuthUri(){
-    return _grant.getAuthorizationUrl(Uri.parse(_redirectUri!), scopes: _scopes);
+    return _authUri;
   }
 
-  Uri getRedirectUri(){
+  String getRedirectUri(){
     return _redirectUri;
   }
 
