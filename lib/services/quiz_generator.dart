@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'package:dima_project/screens/profile/userprofile_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:quiz_view/quiz_view.dart';
 
 import '../models/answer.dart';
 import '../models/question.dart';
@@ -38,7 +40,6 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
   late int _question_tot;
   int _score = 0;
   int _question_number = 1;
-  bool _isLocked = false;
   bool _can_show_button = true;
   // Fetch content from the json file
   Future<void> readJson() async {
@@ -77,18 +78,14 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
                   ? const SizedBox.shrink(
               ):
               ElevatedButton(
-
                 onPressed: readJson,
                 child: const Text('Start Quiz'),
               ),
-
               _questions.isNotEmpty
                   ? Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-
-                          const SizedBox(height: 32,),
                           Text("Question $_question_number/${_questions.length}", style: TextStyle(color: Color(0xFF101010), fontSize: 20, fontWeight: FontWeight.bold),),
                           const Divider(thickness:1, color: Colors.grey),
                           Expanded(child: PageView.builder(
@@ -96,158 +93,72 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
                               controller: _controller,
                               physics: const NeverScrollableScrollPhysics(),
                               itemBuilder: (context, index) {
-                                final question = Question();
+                                final Question question = Question();
                                 question.question1 =
-                                    _questions[index]['question1'].toString();
+                                _questions[index]['question1'].toString();
                                 question.name =
-                                    _name;
+                                _name;
                                 question.question2 =
-                                    _questions[index]['question2'].toString();
+                                _questions[index]['question2'].toString();
                                 question.artist_album =
-                                    _album;
-
+                                _album;
                                 question.options = [answer,answer2];
-                                return buildQuestion(question);
-                              }
-                          )
-                          ),
-                          _isLocked? buildElevatedButton() : const SizedBox.shrink(),
-                          const SizedBox(height:20),
-                        ],
-                      ),
-              ) : Container(),
+                                return QuizView(
+                                  image: Container(
+                                  width: 150,
+                                  height: 150,
+                                  child: Image.network(
+                                    "https://yt3.ggpht.com/a/AATXAJyPMywRmD62sfK-1CXjwF0YkvrvnmaaHzs4uw=s900-c-k-c0xffffffff-no-rj-mo"),
+                                  ),
+                                  showCorrect: true,
+                                  //tagBackgroundColor: Colors.lightGreen,
+                                  //tagColor: Color(0xFF101010),
+                                  //questionTag:"Question: "+ (index+1).toString(),
+                                  answerColor: Colors.white,
+                                  answerBackgroundColor: Color(0xFF101010),
+                                  questionColor: Color(0xFF101010),
+                                  backgroundColor: Colors.lightGreen,
+                                  width: 600,
+                                  height: 700,
+                                  question: question.question1.toString()+
+                                    question.artist_album.toString()+question.question2.toString(),
+                                  rightAnswer: answer2.text,
+                                  wrongAnswers: [answer.text, "ROCKET"],
+                                  onRightAnswer: () => {
+                                      buildElevatedButton(),
+                                      setState(() {
+                                        _score++;
+                                      })
+                                  },
+                                  onWrongAnswer: () => buildElevatedButton(),
+                              );
+                            },
+    )
+                          )])
+              ):Container()
             ]
-          ),
-        );
-    }
-
-  ElevatedButton buildElevatedButton() {
-    return ElevatedButton(
-        onPressed: () {
-          if (_question_number < _question_tot) {
-            _controller.nextPage(
-              duration: const Duration(milliseconds:250),
-              curve: Curves.easeInExpo,
-            );
-            setState(() {
-              _question_number++;
-              _isLocked = false;
-            });
-          }
-          else{
-            Navigator.pushReplacement(context,
-              MaterialPageRoute(
-                builder: (context) => ResultPage(score: _score,total: _question_tot,),
-              ),);
-          }
-        },
-        child: Text(
-            _question_number < _question_tot ? 'NextPage': 'See Results'
-        )
+        ),
     );
   }
-  Column buildQuestion(Question question) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          question.question1,
-          style:const TextStyle(fontSize: 25),
-        ),
-        const SizedBox(height: 32,),
-        Expanded(
-            child: OptionsWidget(
-              question:question,
-              onClickedOption: (option){
-                if (question.isLocked)
-                  return;
-                else
-                  setState(() {
-                    question.isLocked = true;
-                    question.selectedOption = option;
-                  });
-                _isLocked = question.isLocked;
-                if (question.selectedOption!.correct)
-                  _score++;
-              },
-            )
-        )
-      ],
+
+  void buildElevatedButton() {
+    _controller.nextPage(
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeInExpo,
     );
+    if (_question_number < _question_tot) {
+      setState(() {
+        _question_number++;
+      });
+    }
+    else {
+      Navigator.pushReplacement(context,
+        MaterialPageRoute(
+          builder: (context) => ResultPage(score: _score,total: _question_tot,),
+        ),);
+    }
   }
 }
-
-class OptionsWidget extends StatelessWidget {
-  final Question question;
-  final ValueChanged<Answer> onClickedOption;
-
-  const OptionsWidget(
-      {Key? key, required this.question, required this.onClickedOption,})
-      : super (key: key);
-
-  @override
-  Widget build(BuildContext context) =>
-      SingleChildScrollView(
-        child: Column(
-            children: question.options.map((option) => buildOption(context,option)).toList()
-        ),
-      );
-
-
-  Widget buildOption(BuildContext context, Answer option) {
-    final color = getColorForOption(option, question);
-    return GestureDetector(
-        onTap: () => onClickedOption(option),
-        child: Container(
-            height: 50,
-            decoration: BoxDecoration(
-              color: Colors.grey.shade200,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: color),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  option.text,
-                  style: const TextStyle(fontSize: 20),
-                ),
-                getIconForOption(option, question)
-              ],
-            )
-        )
-    );
-  }
-
-  Color getColorForOption(Answer option, Question question) {
-    final isSelected = option == question.selectedOption;
-    if (question.isLocked) {
-      if (isSelected) {
-        return option.correct ? Colors.green : Colors.red;
-      }
-      else if (option.correct) {
-        return Colors.green;
-      }
-    }
-    return Colors.grey.shade300;
-  }
-
-  Widget getIconForOption(Answer option, Question question) {
-    final isSelected = option == question.selectedOption;
-    if (question.isLocked) {
-      if (isSelected) {
-        return option.correct ?
-        const Icon(Icons.check_circle, color: Colors.green)
-            : const Icon(Icons.cancel, color: Colors.red);
-      }
-      else if (option.correct) {
-        return Icon(Icons.check_circle, color: Colors.green,);
-      }
-    }
-    return const SizedBox.shrink();
-  }
-}
-
 class ResultPage extends StatelessWidget{
   final int score;
   final int total;
@@ -256,9 +167,24 @@ class ResultPage extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.lightGreen,
       body:Center(
-        child: Text('You got $score/$total'),
-      ),
+          child: Column(
+            children: [
+              SizedBox(height: 300,),
+              Text('You got $score/$total',style: new TextStyle(color: Color(0xFF101010),fontSize: 30,fontWeight: FontWeight.bold),),
+              Divider(height: 20,),
+              ElevatedButton(style: new ButtonStyle(backgroundColor: MaterialStateColor.resolveWith((states) => Color(0xFF101010))),
+                onPressed: () => {Navigator.push(context,
+                  MaterialPageRoute(
+                      builder: (context) => UserProfile()))},
+                  child: Text("Exit",style: new TextStyle(color: Colors.white),),),
+            ],
+
+          ),
+
+        )
     );
   }
 }
+
