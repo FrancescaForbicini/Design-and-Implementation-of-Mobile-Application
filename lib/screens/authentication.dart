@@ -1,5 +1,6 @@
 import 'package:dima_project/services/authentication/sign_in/signin.dart';
 import 'package:dima_project/services/authentication/sign_up/signup.dart';
+import 'package:dima_project/screens/spotifyAuth_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../services/authentication/authentication_service.dart';
@@ -55,7 +56,8 @@ class AuthenticationScreen extends StatelessWidget{
                   style: TextStyle(fontSize: 20.0,fontFamily: 'Hind', color: Colors.lightGreen),
                 ),
                 onPressed: () => {
-                  _authService.signInWithGoogle(context)
+                  _authService.signInWithGoogle(context),
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => SpotifyScreen()),)
                 },
               ),
             ),

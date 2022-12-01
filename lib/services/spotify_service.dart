@@ -18,15 +18,34 @@ const _scopes = [
 ];
 
 class SpotifyService {
+  late var _keyJson;
+  late var _keyMap;
+  late var _credentials;
+  late var _redirectUri;
+  late var _spotify;
+  late var _grant;
 
   void init() async {
-    var keyJson = await File('json/spotify.json').readAsString();
-    var keyMap = json.decode(keyJson);
-    var credentials = SpotifyApiCredentials(keyMap['id'], keyMap['secret']);
-    var redirect = keyMap['redirect_uri'];
-    var spotify = await _getUserAuthenticatedSpotifyApi(credentials, redirect);
+    _keyJson = await File('json/spotify.json').readAsString();
+    _keyMap = json.decode(_keyJson);
+    _credentials = SpotifyApiCredentials(_keyMap['id'], _keyMap['secret']);
+    _redirectUri = _keyMap['redirect_uri'];
+    _grant = SpotifyApi.authorizationCodeGrant(_credentials);
+  }
 
-    if (spotify == null) {
+  Uri getAuthUri(){
+    return _grant.getAuthorizationUrl(Uri.parse(_redirectUri!), scopes: _scopes);
+  }
+
+  Uri getRedirectUri(){
+    return _redirectUri;
+  }
+
+  void handleResponse(Uri responseUri) async{
+    var client = await _grant.handleAuthorizationResponse(responseUri.queryParameters);
+    _spotify = SpotifyApi.fromClient(client);
+
+    if (_spotify == null) {
       print("Something went wrong!");
     }
     else {
@@ -34,8 +53,8 @@ class SpotifyService {
     }
   }
 
-  Future<SpotifyApi?> _getUserAuthenticatedSpotifyApi(SpotifyApiCredentials credentials, redirectUri) async {
-    var grant = SpotifyApi.authorizationCodeGrant(credentials);
+/*  Future<SpotifyApi?> _getUserAuthenticatedSpotifyApi(SpotifyApiCredentials credentials, redirectUri) async {
+
     var authUri = grant.getAuthorizationUrl(Uri.parse(redirectUri!), scopes: _scopes);
 
     await redirect(authUri);
@@ -51,5 +70,5 @@ class SpotifyService {
 
   listen(redirectUri){
 
-  }
+  }*/
 }

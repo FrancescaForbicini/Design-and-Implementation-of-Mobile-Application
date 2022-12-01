@@ -1,4 +1,5 @@
 import 'package:dima_project/screens/profile/userprofile_screen.dart';
+import 'package:dima_project/screens/spotifyAuth_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../authentication_service.dart';
@@ -105,7 +106,8 @@ class SignInScreen extends StatelessWidget {
         child: Text('SIGN IN'),
         onPressed: () => {
           _authService.signIn(_emailController.text, _passwordController.text),
-          Navigator.pop(context)
+          Navigator.pop(context),
+          Navigator.push(context, MaterialPageRoute(builder: (context) => SpotifyScreen()),)
         }
     );
   }

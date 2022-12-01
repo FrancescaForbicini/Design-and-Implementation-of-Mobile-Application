@@ -39,6 +39,7 @@ dependencies:
   cloud_firestore:
   firebase_storage: ^11.0.6
   spotify: ^0.8.0
+  webview_flutter:
 
 dev_dependencies:
   flutter_test:
