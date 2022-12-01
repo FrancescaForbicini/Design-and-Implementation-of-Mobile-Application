@@ -1,7 +1,6 @@
 import 'package:dima_project/models/question.dart';
 
 class Answer{
-  final String id = "";
-  final String text = "";
+  String text = "";
   bool correct = false;
 }
