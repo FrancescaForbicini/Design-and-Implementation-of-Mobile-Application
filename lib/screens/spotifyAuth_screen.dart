@@ -46,15 +46,15 @@ class _SpotifyScreenState extends State<SpotifyScreen>{
               Widget child;
               if (snapshot.connectionState == ConnectionState.done){
                 print(snapshot);
-                child = Container(
-                  height: 500,
+                child = Expanded(
+                  flex: 1,
                   child: WebView(
                     javascriptMode: JavascriptMode.unrestricted,
                     initialUrl: _spotifyService.getAuthUri().toString(),
                     navigationDelegate: (navReq) {
                       if (navReq.url.startsWith(_spotifyService.getRedirectUri())) {
                         responseUri = navReq.url;
-                        _spotifyService.handleResponse(responseUri);
+                        _spotifyService.handleResponse(Uri.parse(responseUri));
                         return NavigationDecision.prevent;
                       }
 
