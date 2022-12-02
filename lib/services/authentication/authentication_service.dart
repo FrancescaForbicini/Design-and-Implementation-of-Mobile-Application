@@ -5,9 +5,15 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AuthenticationService {
+  static AuthenticationService _authenticationService = AuthenticationService._AuthenticationServiceConstructor();
+
   bool _isEmailVerified = false;
   late User _user;
   Timer? _timer;
+
+  factory AuthenticationService() => _authenticationService ??= AuthenticationService._AuthenticationServiceConstructor();
+
+  AuthenticationService._AuthenticationServiceConstructor();
 
   signUp(email, password, username, BuildContext context) async {
     try{

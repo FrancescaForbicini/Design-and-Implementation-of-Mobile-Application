@@ -55,6 +55,7 @@ class _SpotifyScreenState extends State<SpotifyScreen>{
                       if (navReq.url.startsWith(_spotifyService.getRedirectUri())) {
                         responseUri = navReq.url;
                         _spotifyService.handleResponse(Uri.parse(responseUri));
+                        Navigator.pop(context);
                         return NavigationDecision.prevent;
                       }
 
@@ -69,7 +70,7 @@ class _SpotifyScreenState extends State<SpotifyScreen>{
                 return CircularProgressIndicator();
               }
             },
-          )
+          ),
         ],
       ),
     );

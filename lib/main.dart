@@ -5,9 +5,9 @@ import 'package:dima_project/screens/profile/userprofile_screen.dart';
 import 'package:dima_project/screens/authentication.dart';
 import 'package:dima_project/services/authentication/sign_up/signup.dart';
 import 'package:dima_project/services/quiz_generator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:spotify/spotify.dart';
 import 'firebase_options.dart';
 
 
@@ -29,11 +29,8 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: AuthenticationScreen(),
-/*         QuizGenerator(),*/
-      ),
+    return const MaterialApp(
+      home: MyHomePage(),
     );
   }
 }
@@ -41,24 +38,55 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  late final _user;
+  late Future<bool> _done;
+
+  Future<bool> _checkLogin() async{
+    FirebaseAuth.instance
+        .authStateChanges()
+        .listen((User? user) {
+      if (user != null) {
+        _user = user;
+      }
+      else{
+        print("No user authenticated");
+      }
+    });
+
+    return true;
+  }
+
+  @override
+  void initState() {
+    _done = _checkLogin();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        body: FutureBuilder(
+          future: _done,
+          builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+            Widget child;
+            if (snapshot.connectionState == ConnectionState.done){
+              if (_user == null){
+                child = AuthenticationScreen();
+              }
+              else{
+                child = UserProfile();
+              }
+              return child;
+            }
+            else {
+              return CircularProgressIndicator();
+            }
+          },
+        )
     );
   }
 }

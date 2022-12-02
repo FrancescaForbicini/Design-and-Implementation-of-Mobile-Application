@@ -34,7 +34,6 @@ class SpotifyService {
   SpotifyService._SpotifyServiceConstructor();
 
   Future<bool> init() async {
-/*    _keyJson = await File('json/spotify.json').readAsString();*/
     _keyJson = await rootBundle.loadString('json/spotify.json');
     _keyMap = json.decode(_keyJson);
     _credentials = SpotifyApiCredentials(_keyMap['id'], _keyMap['secret']);
@@ -64,23 +63,4 @@ class SpotifyService {
       print("Spotify done!");
     }
   }
-
-/*  Future<SpotifyApi?> _getUserAuthenticatedSpotifyApi(SpotifyApiCredentials credentials, redirectUri) async {
-
-    var authUri = grant.getAuthorizationUrl(Uri.parse(redirectUri!), scopes: _scopes);
-
-    await redirect(authUri);
-    final responseUri = await listen(redirectUri);
-
-    var client = await grant.handleAuthorizationResponse(responseUri);
-    return SpotifyApi.fromClient(client);
-  }
-
-  redirect(authUri){
-
-  }
-
-  listen(redirectUri){
-
-  }*/
 }
