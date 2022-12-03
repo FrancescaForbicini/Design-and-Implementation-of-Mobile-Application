@@ -1,5 +1,5 @@
 import 'package:dima_project/screens/profile/userprofile_screen.dart';
-import 'package:dima_project/services/authentication/sign_in/signin.dart';
+import 'package:dima_project/screens/authentication/sign_in/signin.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

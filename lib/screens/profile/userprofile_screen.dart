@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../models/quiz.dart';
 import '../../models/user.dart';
-import '../authentication.dart';
+import '../authentication/authentication.dart';
 import 'follower_screen.dart';
 import 'following_screen.dart';
 

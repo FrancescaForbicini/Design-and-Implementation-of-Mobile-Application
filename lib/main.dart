@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dima_project/screens/profile/userprofile_screen.dart';
-import 'package:dima_project/screens/authentication.dart';
-import 'package:dima_project/services/authentication/sign_up/signup.dart';
+import 'package:dima_project/screens/authentication/authentication.dart';
+import 'package:dima_project/screens/authentication/sign_up/signup.dart';
 import 'package:dima_project/services/quiz_generator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
