@@ -2,7 +2,7 @@ import 'package:dima_project/screens/profile/userprofile_screen.dart';
 import 'package:dima_project/screens/spotifyAuth_screen.dart';
 import 'package:flutter/material.dart';
 
-import '../authentication_service.dart';
+import '../../../services/authentication_service.dart';
 import '../sign_up/signup.dart';
 
 

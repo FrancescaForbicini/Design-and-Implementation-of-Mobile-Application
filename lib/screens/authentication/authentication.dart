@@ -1,9 +1,9 @@
-import 'package:dima_project/services/authentication/sign_in/signin.dart';
-import 'package:dima_project/services/authentication/sign_up/signup.dart';
+import 'package:dima_project/screens/authentication/sign_in/signin.dart';
+import 'package:dima_project/screens/authentication/sign_up/signup.dart';
 import 'package:dima_project/screens/spotifyAuth_screen.dart';
 import 'package:flutter/material.dart';
 
-import '../services/authentication/authentication_service.dart';
+import '../../services/authentication_service.dart';
 
 class AuthenticationScreen extends StatelessWidget{
   AuthenticationScreen({super.key});

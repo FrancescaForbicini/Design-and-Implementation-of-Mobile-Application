@@ -1,6 +1,6 @@
-import 'package:dima_project/screens/authentication.dart';
-import 'package:dima_project/services/authentication/authentication_service.dart';
 import 'package:flutter/material.dart';
+
+import '../../../services/authentication_service.dart';
 
 class EmailFieldValidator{
   static String? validate(String value){
