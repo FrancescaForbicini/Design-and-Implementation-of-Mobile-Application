@@ -1,13 +1,5 @@
-import 'dart:convert';
-import 'dart:io';
-
-import 'package:dima_project/screens/profile/userprofile_screen.dart';
-import 'package:dima_project/screens/authentication/authentication.dart';
-import 'package:dima_project/screens/authentication/sign_up/signup.dart';
 import 'package:dima_project/services/spotify_service.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:spotify/spotify.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class SpotifyScreen extends StatefulWidget {

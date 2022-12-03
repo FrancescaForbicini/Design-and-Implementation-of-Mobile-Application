@@ -24,8 +24,15 @@ class UserProfile extends StatelessWidget {
               icon: Icon(Icons.logout, color: Colors.lightGreen,size: 30),
                   onPressed:(){ Navigator.push(context,
                   MaterialPageRoute(
-                  builder: (context) => AuthenticationScreen()));
-              }),
+                  builder: (context) => AuthenticationScreen()));},
+          ),
+          actions: [
+            IconButton(icon: Icon(Icons.home, color: Colors.lightGreen,size: 30),
+                      onPressed:(){ Navigator.push(context,
+                      MaterialPageRoute(
+                      builder: (context) => AuthenticationScreen()));
+                }),
+            ],
           title: Text('User Profile', textAlign: TextAlign.center,style: new TextStyle(fontSize: 30),),
         ),
 
@@ -72,65 +79,6 @@ class UserProfile extends StatelessWidget {
             Container(
               child: Row(
                 children: <Widget>[
-                  Expanded(
-                      child: Container(
-                        color: Color(0xFF101010),
-                        child: ListTile(
-                          title: Text(
-                            userfollow.length.toString(),textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 30,
-                              color: Colors.green,
-                            ),
-                          ),
-                          subtitle: Text(
-                            'Followers',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.green,
-                            ),
-                          ),
-                            onTap: () {
-                              Navigator.push(context,
-                                MaterialPageRoute(
-                                    builder: (context) => FollowerScreen(userfollow: this.userfollow)),
-                              );
-                            }
-                        ),
-                      ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      color: Color(0xFF101010),
-                      child: ListTile(
-                        title: Text(
-                          userfollow.length.toString(),
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 30,
-                            color: Colors.lightGreen,
-                          ),
-                        ),
-                        subtitle: Text(
-                          'Following',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.lightGreen,
-                          ),
-                        ),
-                        onTap: () {
-                          Navigator.push(context,
-                            MaterialPageRoute(
-                                builder: (context) => FollowingScreen(userfollow: this.userfollow)),
-                          );
-                        }
-                      )
-                    ),
-                  ),
                 ],
               ),
             ),
@@ -183,22 +131,6 @@ class UserProfile extends StatelessWidget {
                       ),
                     ),
                     leading: Icon(Icons.queue_music_outlined, color: Colors.lightGreen),
-                  ),
-                  Divider(),
-                  ListTile(
-                    title: Text(
-                      'New Quiz',
-                      style: TextStyle(
-                        color: Colors.green,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    leading: IconButton(icon: Icon(Icons.add, color: Colors.lightGreen),
-                                        onPressed: (){Navigator.push(context,
-                                          MaterialPageRoute(
-                                              builder: (context) => QuizGenerator()),
-                                        );},),
                   ),
                 ],
               ),
