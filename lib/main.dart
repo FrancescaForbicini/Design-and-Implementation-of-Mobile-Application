@@ -43,7 +43,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  late final _user;
+  var _user = null;
   late Future<bool> _done;
 
   Future<bool> _checkLogin() async{
