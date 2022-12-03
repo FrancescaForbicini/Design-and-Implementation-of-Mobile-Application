@@ -3,8 +3,6 @@ import 'dart:io';
 
 import 'package:dima_project/screens/profile/userprofile_screen.dart';
 import 'package:dima_project/screens/authentication/authentication.dart';
-import 'package:dima_project/screens/authentication/sign_up/signup.dart';
-import 'package:dima_project/services/quiz_generator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -43,7 +41,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  late final _user;
+  var _user = null;
   late Future<bool> _done;
 
   Future<bool> _checkLogin() async{
@@ -73,7 +71,7 @@ class _MyHomePageState extends State<MyHomePage> {
           future: _done,
           builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
             Widget child;
-            if (snapshot.connectionState == ConnectionState.done){
+            if (snapshot.connectionState == ConnectionState.done ){
               if (_user == null){
                 child = AuthenticationScreen();
               }
