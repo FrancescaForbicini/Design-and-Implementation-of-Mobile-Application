@@ -1,4 +1,5 @@
 import 'package:dima_project/screens/profile/quiz_screen.dart';
+import 'package:dima_project/services/authentication_service.dart';
 import 'package:dima_project/services/quiz_generator.dart';
 import 'package:flutter/material.dart';
 
@@ -9,9 +10,12 @@ import 'follower_screen.dart';
 import 'following_screen.dart';
 
 class UserProfile extends StatelessWidget {
+  final AuthenticationService _authenticationService = AuthenticationService();
   final List<User> userfollow = [new User(id: '1', name:'raff' , surname:'kik', username:'rocket', email: 'rocket@ann')];
   final User user = new User(id: '1', name: 'francesca', surname: 'forbicini', email: 'francesca.forbicini@gmail.com',username:'frafra');
+
   UserProfile({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -22,9 +26,10 @@ class UserProfile extends StatelessWidget {
           backgroundColor: Color (0xFF101010),
           leading: IconButton(
               icon: Icon(Icons.logout, color: Colors.lightGreen,size: 30),
-                  onPressed:(){ Navigator.push(context,
-                  MaterialPageRoute(
-                  builder: (context) => AuthenticationScreen()));},
+            onPressed: () => {
+                _authenticationService.signOut(),
+                Navigator.push(context, MaterialPageRoute(builder: (context) => AuthenticationScreen()))
+            },
           ),
           actions: [
             IconButton(icon: Icon(Icons.home, color: Colors.lightGreen,size: 30),

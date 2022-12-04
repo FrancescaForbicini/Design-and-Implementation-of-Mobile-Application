@@ -100,14 +100,38 @@ class SignInScreen extends StatelessWidget {
 
 
   Widget _buildButton(BuildContext context) {
+    Future<bool> done;
     return MaterialButton(
         color: Colors.lightGreen,
         textColor: Colors.white,
         child: Text('SIGN IN'),
         onPressed: () => {
-          _authService.signIn(_emailController.text, _passwordController.text),
-          Navigator.pop(context),
-          Navigator.push(context, MaterialPageRoute(builder: (context) => SpotifyScreen()),)
+          done = _authService.signIn(_emailController.text, _passwordController.text),
+          done.then((value) => {
+            if (value){
+              Navigator.pop(context),
+              Navigator.push(context, MaterialPageRoute(builder: (context) => SpotifyScreen()),)
+            }
+            else{
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text("Error"),
+                    content: Text("Invalid email or password"),
+                    actions: [
+                      MaterialButton(
+                        child: Text("Ok"),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      )
+                    ],
+                  );
+                  }
+              )
+            }
+          }),
         }
     );
   }
