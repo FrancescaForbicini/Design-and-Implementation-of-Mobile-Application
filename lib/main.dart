@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:dima_project/screens/home/home_screen.dart';
 import 'package:dima_project/screens/profile/userprofile_screen.dart';
 import 'package:dima_project/screens/authentication/authentication.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -76,7 +77,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 child = AuthenticationScreen();
               }
               else{
-                child = UserProfile();
+                child = HomeScreen();
               }
               return child;
             }

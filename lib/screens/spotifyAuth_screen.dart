@@ -2,6 +2,8 @@ import 'package:dima_project/services/spotify_service.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+import 'home/home_screen.dart';
+
 class SpotifyScreen extends StatefulWidget {
   const SpotifyScreen({super.key});
 
@@ -48,6 +50,7 @@ class _SpotifyScreenState extends State<SpotifyScreen>{
                         responseUri = navReq.url;
                         _spotifyService.handleResponse(Uri.parse(responseUri));
                         Navigator.pop(context);
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));
                         return NavigationDecision.prevent;
                       }
 

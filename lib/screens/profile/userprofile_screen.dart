@@ -1,3 +1,4 @@
+import 'package:dima_project/screens/home/home_screen.dart';
 import 'package:dima_project/screens/profile/quiz_screen.dart';
 import 'package:dima_project/services/authentication_service.dart';
 import 'package:dima_project/services/quiz_generator.dart';
@@ -35,7 +36,7 @@ class UserProfile extends StatelessWidget {
             IconButton(icon: Icon(Icons.home, color: Colors.lightGreen,size: 30),
                       onPressed:(){ Navigator.push(context,
                       MaterialPageRoute(
-                      builder: (context) => AuthenticationScreen()));
+                      builder: (context) => HomeScreen()));
                 }),
             ],
           title: Text('User Profile', textAlign: TextAlign.center,style: new TextStyle(fontSize: 30),),
