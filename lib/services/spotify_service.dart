@@ -1,9 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:dima_project/screens/profile/userprofile_screen.dart';
-import 'package:dima_project/screens/authentication/authentication.dart';
-import 'package:dima_project/screens/authentication/sign_up/signup.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
@@ -26,7 +25,7 @@ class SpotifyService {
   late var _credentials;
   late var _authUri;
   late var _redirectUri;
-  late var _spotify;
+  late var spotify;
   late var _grant;
 
   factory SpotifyService() => _spotifyService ??= SpotifyService._SpotifyServiceConstructor();
@@ -54,13 +53,49 @@ class SpotifyService {
 
   void handleResponse(Uri responseUri) async{
     var client = await _grant.handleAuthorizationResponse(responseUri.queryParameters);
-    _spotify = SpotifyApi.fromClient(client);
+    spotify = SpotifyApi.fromClient(client);
 
-    if (_spotify == null) {
+    if (spotify == null) {
       print("Something went wrong!");
     }
     else {
       print("Spotify done!");
+      // TODO check if it is working
+      saveCredentials();
     }
+  }
+
+  void saveCredentials(){
+    var user = FirebaseAuth.instance.currentUser;
+    var credentials = spotify.getCredentials();
+
+    FirebaseFirestore.instance.collection("users").doc(user?.email).set({
+      "clientId": credentials.clientId,
+      "clientSecret": credentials.clientSecret,
+      "accessToken": credentials.accessToken,
+      "refreshToken": credentials.accessToken,
+      "scopes": credentials.scopes,
+      "expiration": credentials.expiration
+    });
+  }
+
+  SpotifyApiCredentials getCredentials(user){
+    var data;
+    var spotifyCredentials;
+    final docRef = FirebaseFirestore.instance.collection("users").doc(user.email);
+    docRef.get().then((DocumentSnapshot doc) {
+      data = doc.data() as Map<String, dynamic>;
+      spotifyCredentials = SpotifyApiCredentials(
+          data["clientId"],
+          data["clientSecret"],
+          accessToken: data["accessToken"],
+          refreshToken: data["refreshToken"],
+          scopes: data["scopes"],
+          expiration: data["expiration"]
+      );
+    },
+      onError: (e) => print("Error getting document: $e"),
+    );
+    return spotifyCredentials;
   }
 }

@@ -1,12 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dima_project/screens/home/home_screen.dart';
 import 'package:dima_project/screens/profile/userprofile_screen.dart';
 import 'package:dima_project/screens/authentication/authentication.dart';
+import 'package:dima_project/services/spotify_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:spotify/spotify.dart' as spotify_dart;
 import 'firebase_options.dart';
 
 
@@ -23,7 +26,6 @@ void main() async{
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
 
   // This widget is the root of your application.
   @override
@@ -44,6 +46,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   var _user = null;
   late Future<bool> _done;
+  SpotifyService _spotifyService = SpotifyService();
 
   Future<bool> _checkLogin() async{
     FirebaseAuth.instance
@@ -51,6 +54,9 @@ class _MyHomePageState extends State<MyHomePage> {
         .listen((User? user) {
       if (user != null) {
         _user = user;
+        var spotifyCredentials = _spotifyService.getCredentials(user);
+        _spotifyService.spotify = spotify_dart.SpotifyApi(spotifyCredentials);
+        _spotifyService.saveCredentials();
       }
       else{
         print("No user authenticated");
