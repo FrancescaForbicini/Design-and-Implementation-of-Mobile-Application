@@ -65,9 +65,9 @@ class SpotifyService {
     }
   }
 
-  void saveCredentials(){
+  void saveCredentials() async{
     var user = FirebaseAuth.instance.currentUser;
-    var credentials = spotify.getCredentials();
+    SpotifyApiCredentials credentials = await spotify.getCredentials();
 
     FirebaseFirestore.instance.collection("users").doc(user?.email).set({
       "clientId": credentials.clientId,
@@ -90,8 +90,8 @@ class SpotifyService {
           data["clientSecret"],
           accessToken: data["accessToken"],
           refreshToken: data["refreshToken"],
-          scopes: data["scopes"],
-          expiration: data["expiration"]
+          scopes: new List<String>.from(data["scopes"]),
+          expiration: data["expiration"].toDate()
       );
     },
       onError: (e) => print("Error getting document: $e"),
