@@ -7,12 +7,35 @@ import 'package:dima_project/services/authentication_service.dart';
 import 'package:dima_project/services/spotify_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:spotify/spotify.dart';
 
-class HomeScreen extends StatelessWidget{
+class HomeScreen extends StatefulWidget{
+  HomeScreen({super.key});
+
+  @override
+  State<StatefulWidget> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen>{
   final AuthenticationService _authenticationService = AuthenticationService();
   final SpotifyService _spotifyService = SpotifyService();
+  late var _userId;
+  late var _playlists;
+  late var _artists;
+  late Future<bool> _done;
 
-  HomeScreen({super.key});
+  @override
+  void initState() {
+    _done = _startup();
+  }
+
+  Future<bool> _startup() async{
+    _userId = await _spotifyService.spotify.me.get().id;
+    _playlists = await _spotifyService.spotify.playlists.getUserPlaylists(_userId);
+    _artists = await _spotifyService.spotify.me.topArtists();
+
+    return true;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -127,21 +150,53 @@ class HomeScreen extends StatelessWidget{
     );
   }
 
-  Widget _buildPlaylists(){
-    return ListView(
-      scrollDirection: Axis.horizontal,
-      children: <Widget>[
+  Widget _buildPlaylists() {
+    return FutureBuilder(
+      future: _done,
+      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+        Widget child;
+        if (snapshot.connectionState == ConnectionState.done){
+          child = ListView.builder(
+            itemCount: _playlists.length,
+            itemBuilder: (context, index){
+              return ListTile(
+                leading: _playlists[index].images[0],
+                title: _playlists[index].name,
+              );
+            },
+          );
 
-      ],
+          return child;
+        }
+        else {
+          return CircularProgressIndicator();
+        }
+      },
     );
   }
 
   Widget _buildArtists(){
-    return ListView(
-      scrollDirection: Axis.horizontal,
-      children: <Widget>[
+    return FutureBuilder(
+      future: _done,
+      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+        Widget child;
+        if (snapshot.connectionState == ConnectionState.done){
+          child = ListView.builder(
+            itemCount: _artists.length,
+            itemBuilder: (context, index){
+              return ListTile(
+                leading: _artists[index].images[0],
+                title: _artists[index].name,
+              );
+            },
+          );
 
-      ],
+          return child;
+        }
+        else {
+          return CircularProgressIndicator();
+        }
+      },
     );
   }
 }
