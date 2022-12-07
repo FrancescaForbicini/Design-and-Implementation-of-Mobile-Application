@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:dima_project/screens/profile/userprofile_screen.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:quiz_view/quiz_view.dart';
@@ -38,6 +40,7 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
   late String _album;
   late PageController _controller;
   late int _question_tot;
+  bool end = false;
   int _score = 0;
   int _question_number = 1;
   bool _can_show_button = true;
@@ -79,7 +82,9 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
               ):
               ElevatedButton(
                 onPressed: readJson,
+                style: new ButtonStyle(backgroundColor: MaterialStateColor.resolveWith((states) => Color(0xFF101010))),
                 child: const Text('Start Quiz'),
+
               ),
               _questions.isNotEmpty
                   ? Expanded(
@@ -130,7 +135,22 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
                                         _score++;
                                       })
                                   },
-                                  onWrongAnswer: () => buildElevatedButton(),
+                                  onWrongAnswer: () => {
+                                    setState(() {
+                                      end = true;
+                                      Timer(
+                                        Duration(milliseconds: 500),
+                                          (){
+                                            Navigator.pushReplacement(context,
+                                              MaterialPageRoute(
+                                                builder: (context) => ResultPage(score: _score,total: _question_tot,end: end,),
+                                              ),);
+
+
+                                          }
+                                      );
+                                      })
+                                  },
                               );
                             },
     )
@@ -154,7 +174,7 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
     else {
       Navigator.pushReplacement(context,
         MaterialPageRoute(
-          builder: (context) => ResultPage(score: _score,total: _question_tot,),
+          builder: (context) => ResultPage(score: _score,total: _question_tot,end: end,),
         ),);
     }
   }
@@ -162,7 +182,8 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
 class ResultPage extends StatelessWidget{
   final int score;
   final int total;
-  const ResultPage({Key?key, required this.score, required this.total}): super (key:key);
+  final bool end;
+  const ResultPage({Key?key, required this.score, required this.total, required this.end}): super (key:key);
 
   @override
   Widget build(BuildContext context) {
@@ -172,6 +193,8 @@ class ResultPage extends StatelessWidget{
           child: Column(
             children: [
               SizedBox(height: 300,),
+              if (end)
+                Text("You missed a question!"),
               Text('You got $score/$total',style: new TextStyle(color: Color(0xFF101010),fontSize: 30,fontWeight: FontWeight.bold),),
               Divider(height: 20,),
               ElevatedButton(style: new ButtonStyle(backgroundColor: MaterialStateColor.resolveWith((states) => Color(0xFF101010))),
