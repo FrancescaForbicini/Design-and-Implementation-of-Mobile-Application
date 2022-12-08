@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dima_project/screens/profile/userprofile_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
@@ -198,7 +200,9 @@ class ResultPage extends StatelessWidget{
               Text('You got $score/$total',style: new TextStyle(color: Color(0xFF101010),fontSize: 30,fontWeight: FontWeight.bold),),
               Divider(height: 20,),
               ElevatedButton(style: new ButtonStyle(backgroundColor: MaterialStateColor.resolveWith((states) => Color(0xFF101010))),
-                onPressed: () => {Navigator.push(context,
+                onPressed: () => {
+                  updateScore(score),
+                  Navigator.push(context,
                   MaterialPageRoute(
                       builder: (context) => UserProfile()))},
                   child: Text("Exit",style: new TextStyle(color: Colors.white),),),
@@ -209,5 +213,23 @@ class ResultPage extends StatelessWidget{
         )
     );
   }
+}
+
+Future<void> updateScore(int score) async {
+  var user = FirebaseAuth.instance.currentUser;
+  var data;
+  var bestScore;
+  final docRef = FirebaseFirestore.instance.collection("users").doc(user?.email);
+  docRef.get().then((DocumentSnapshot doc) {
+    data = doc.data() as Map<String, dynamic>;
+    bestScore = data["bestScore"];
+    print(bestScore);
+    },
+    onError: (e) => print("Error getting document: $e"),
+  );
+  if (bestScore < score) {
+    user?.updateBestScore(score);
+  }
+
 }
 
