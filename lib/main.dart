@@ -30,21 +30,21 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       home: MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+  MyHomePage({super.key});
+  var currUser = null;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  var _user = null;
   late Future<bool> _done;
   SpotifyService _spotifyService = SpotifyService();
 
@@ -53,7 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
         .authStateChanges()
         .listen((User? user) {
       if (user != null) {
-        _user = user;
+        widget.currUser = user;
         var spotifyCredentials = _spotifyService.getCredentials(user);
         _spotifyService.spotify = spotify_dart.SpotifyApi(spotifyCredentials);
         _spotifyService.saveCredentials();
@@ -78,8 +78,8 @@ class _MyHomePageState extends State<MyHomePage> {
           future: _done,
           builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
             Widget child;
-            if (snapshot.connectionState == ConnectionState.done ){
-              if (_user == null){
+            if (snapshot.connectionState == ConnectionState.done){
+              if (widget.currUser == null){
                 child = AuthenticationScreen();
               }
               else{

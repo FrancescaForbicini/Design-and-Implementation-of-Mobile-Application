@@ -22,9 +22,9 @@ class AuthenticationService {
 
       _sendVerification(auth);
 
-      FirebaseFirestore.instance.collection('User').add({
+      FirebaseFirestore.instance.collection('users').doc(email).set({
         "username": username,
-        "email": email,
+        "bestScore": 0,
       });
       print("Everything went well!");
     } on FirebaseAuthException catch (e) {
