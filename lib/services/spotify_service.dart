@@ -25,7 +25,7 @@ class SpotifyService {
   late var _credentials;
   late var _authUri;
   late var _redirectUri;
-  late var spotify;
+  late var spotify = null;
   late var _grant;
 
   factory SpotifyService() => _spotifyService ??= SpotifyService._SpotifyServiceConstructor();
@@ -69,7 +69,7 @@ class SpotifyService {
     var user = FirebaseAuth.instance.currentUser;
     SpotifyApiCredentials credentials = await spotify.getCredentials();
 
-    FirebaseFirestore.instance.collection("users").doc(user?.email).set({
+    FirebaseFirestore.instance.collection("users").doc(user?.email).update({
       "clientId": credentials.clientId,
       "clientSecret": credentials.clientSecret,
       "accessToken": credentials.accessToken,
@@ -79,19 +79,20 @@ class SpotifyService {
     });
   }
 
-  SpotifyApiCredentials getCredentials(user){
+  Future<SpotifyApiCredentials> getCredentials(user) async{
     var data;
     var spotifyCredentials;
     final docRef = FirebaseFirestore.instance.collection("users").doc(user.email);
-    docRef.get().then((DocumentSnapshot doc) {
+    await docRef.get().then((DocumentSnapshot doc) {
       data = doc.data() as Map<String, dynamic>;
       spotifyCredentials = SpotifyApiCredentials(
           data["clientId"],
           data["clientSecret"],
           accessToken: data["accessToken"],
           refreshToken: data["refreshToken"],
-          scopes: new List<String>.from(data["scopes"]),
+          scopes: List<String>.from(data["scopes"]),
           expiration: data["expiration"].toDate()
+
       );
     },
       onError: (e) => print("Error getting document: $e"),

@@ -51,24 +51,30 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<bool> _checkLogin() async{
     FirebaseAuth.instance
         .authStateChanges()
-        .listen((User? user) {
+        .listen((User? user) async {
       if (user != null) {
         widget.currUser = user;
-        var spotifyCredentials = _spotifyService.getCredentials(user);
-        _spotifyService.spotify = spotify_dart.SpotifyApi(spotifyCredentials);
-        _spotifyService.saveCredentials();
       }
       else{
         print("No user authenticated");
       }
     });
+    await _initSpotify();
+    print("I am HERE");
 
     return true;
+  }
+
+  Future<void> _initSpotify() async{
+    spotify_dart.SpotifyApiCredentials spotifyCredentials = await _spotifyService.getCredentials(widget.currUser);
+    _spotifyService.spotify = spotify_dart.SpotifyApi(spotifyCredentials);
+    _spotifyService.saveCredentials();
   }
 
   @override
   void initState() {
     _done = _checkLogin();
+    super.initState();
   }
 
   @override
@@ -83,6 +89,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 child = AuthenticationScreen();
               }
               else{
+                if (_spotifyService.spotify!=null){
+                  print("Spotify ok");
+                }
+                else{
+                  print("HERE THE PROBLEM");
+                }
                 child = HomeScreen();
               }
               return child;

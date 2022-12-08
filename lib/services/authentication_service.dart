@@ -98,10 +98,13 @@ class AuthenticationService {
 
     _user = result.user!;
 
+    FirebaseFirestore.instance.collection('users').doc(_user.email).set({
+      "username": _user.displayName,
+      "bestScore": 0,
+    });
+
     print("User Name: ${_user.displayName}");
     print("User Email ${_user.email}");
-
-    //Navigator.pop(context);
   }
 
   signOut() async{

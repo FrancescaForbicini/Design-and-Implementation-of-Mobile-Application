@@ -27,10 +27,13 @@ class _HomeScreenState extends State<HomeScreen>{
   @override
   void initState() {
     _done = _startup();
+    super.initState();
   }
 
   Future<bool> _startup() async{
+    print("Debugging here in startup method");
     _userId = await _spotifyService.spotify.me.get().id;
+    print("UserID: $_userId");
     _playlists = await _spotifyService.spotify.playlists.getUserPlaylists(_userId);
     _artists = await _spotifyService.spotify.me.topArtists();
 
@@ -41,30 +44,44 @@ class _HomeScreenState extends State<HomeScreen>{
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "Spotify Music Quiz",
-      home: Scaffold(
-        backgroundColor: Color(0xFF101010),
-        appBar: AppBar(
-          backgroundColor: Color (0xFF101010),
-          leading: IconButton(
-            icon: Icon(Icons.logout, color: Colors.lightGreen,size: 30),
-            onPressed: () => {
-              _authenticationService.signOut(),
-              Navigator.push(context, MaterialPageRoute(builder: (context) => AuthenticationScreen()))
-            },
-          ),
-          actions: [
-            IconButton(
-              icon: Icon(Icons.settings, color: Colors.lightGreen,size: 30),
-              onPressed: () => {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => UserProfile()))
-              },
-            ),
-          ],
-          title: Text('Home Page', textAlign: TextAlign.center,style: new TextStyle(fontSize: 30),),
-        ),
+      home: FutureBuilder(
+        future: _done,
+        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+          Widget child;
+          if (snapshot.connectionState == ConnectionState.done){
+            child = Scaffold(
+              backgroundColor: Color(0xFF101010),
+              appBar: AppBar(
+                backgroundColor: Color (0xFF101010),
+                leading: IconButton(
+                  icon: Icon(Icons.logout, color: Colors.lightGreen,size: 30),
+                  onPressed: () => {
+                    _authenticationService.signOut(),
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => AuthenticationScreen()))
+                  },
+                ),
+                actions: [
+                  IconButton(
+                    icon: Icon(Icons.settings, color: Colors.lightGreen,size: 30),
+                    onPressed: () => {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => UserProfile()))
+                    },
+                  ),
+                ],
+                title: Text('Home Page', textAlign: TextAlign.center,style: new TextStyle(fontSize: 30),),
+              ),
 
-        body: _buildHomeBody(),
-      ),
+              body: _buildHomeBody(),
+            );
+
+            return child;
+          }
+          else {
+            return CircularProgressIndicator();
+          }
+        },
+      )
+,
     );
   }
 

@@ -53,7 +53,7 @@ class _SpotifyScreenState extends State<SpotifyScreen>{
                         Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));
                         return NavigationDecision.prevent;
                       }
-
+                      //TODO check if it creates problems
                       return NavigationDecision.navigate;
                     },
                   ),
