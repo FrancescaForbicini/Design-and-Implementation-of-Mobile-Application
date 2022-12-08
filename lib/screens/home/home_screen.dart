@@ -7,7 +7,7 @@ import 'package:dima_project/services/authentication_service.dart';
 import 'package:dima_project/services/spotify_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:spotify/spotify.dart';
+import 'package:spotify/spotify.dart' as sp;
 
 class HomeScreen extends StatefulWidget{
   HomeScreen({super.key});
@@ -20,8 +20,8 @@ class _HomeScreenState extends State<HomeScreen>{
   final AuthenticationService _authenticationService = AuthenticationService();
   final SpotifyService _spotifyService = SpotifyService();
   late var _userId;
-  late var _playlists;
-  late var _artists;
+  late List _playlists;
+  late List _artists;
   late Future<bool> _done;
 
   @override
@@ -32,10 +32,24 @@ class _HomeScreenState extends State<HomeScreen>{
 
   Future<bool> _startup() async{
     print("Debugging here in startup method");
-    _userId = await _spotifyService.spotify.me.get().id;
+    var _user = await _spotifyService.spotify.me.get();
+    print("User spotify: $_user");
+    print("User spotify info: ${_user.displayName}, ${_user.country}, ${_user.product}, ${_user.id}");
+    _userId = _user.id;
+    print("Got the userid");
     print("UserID: $_userId");
-    _playlists = await _spotifyService.spotify.playlists.getUserPlaylists(_userId);
-    _artists = await _spotifyService.spotify.me.topArtists();
+    var _playlistsRef = _spotifyService.spotify.playlists;
+    print("Got reference to playlists: ${_playlistsRef.runtimeType}");
+    if(_playlistsRef != null){
+      print("The reference exists!");
+    }
+    Iterable<sp.PlaylistSimple> playlists = await _playlistsRef.getUsersPlaylists(_userId).all();
+    print("Got the playlists");
+    print(playlists.runtimeType);
+    _playlists = playlists.toList();
+    Iterable<sp.Artist> artists = await _spotifyService.spotify.me.topArtists();
+    print(artists.runtimeType);
+    _artists = artists.toList();
 
     return true;
   }
@@ -163,8 +177,8 @@ class _HomeScreenState extends State<HomeScreen>{
             itemCount: _playlists.length,
             itemBuilder: (context, index){
               return ListTile(
-                leading: _playlists[index].images[0],
-                title: _playlists[index].name,
+                leading: Image.network(_playlists[index].images[0].url),
+                title: Text(_playlists[index].name, style: TextStyle(fontSize: 15)),
               );
             },
           );
@@ -192,8 +206,8 @@ class _HomeScreenState extends State<HomeScreen>{
             itemCount: _artists.length,
             itemBuilder: (context, index){
               return ListTile(
-                leading: _artists[index].images[0],
-                title: _artists[index].name,
+                leading: Image.network(_artists[index].images[0].url),
+                title: Text(_artists[index].name, style: TextStyle(fontSize: 15)),
               );
             },
           );
