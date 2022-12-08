@@ -217,8 +217,18 @@ class ResultPage extends StatelessWidget{
 
 Future<void> updateScore(int score) async {
   var user = FirebaseAuth.instance.currentUser;
-  if (user!.bestScore < score) {
-    FirebaseAuth.instance.currentUser?.updateBestScore(score);
+  var data;
+  var bestScore;
+  final docRef = FirebaseFirestore.instance.collection("users").doc(user?.email);
+  docRef.get().then((DocumentSnapshot doc) {
+    data = doc.data() as Map<String, dynamic>;
+    bestScore = data["bestScore"];
+    print(bestScore);
+    },
+    onError: (e) => print("Error getting document: $e"),
+  );
+  if (bestScore < score) {
+    user?.updateBestScore(score);
   }
 
 }
