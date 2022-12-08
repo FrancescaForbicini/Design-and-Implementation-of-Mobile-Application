@@ -82,7 +82,17 @@ class SpotifyService {
   Future<SpotifyApiCredentials> getCredentials(user) async{
     var data;
     var spotifyCredentials;
+    print("Getting the reference to the doc...");
+    if(user!=null){
+      print("WTF");
+      print("User: ${user.email}");
+    }
+    else{
+      print("Why the f am I in else");
+    }
+
     final docRef = FirebaseFirestore.instance.collection("users").doc(user.email);
+    print("Getting the credentials...");
     await docRef.get().then((DocumentSnapshot doc) {
       data = doc.data() as Map<String, dynamic>;
       spotifyCredentials = SpotifyApiCredentials(
@@ -92,11 +102,11 @@ class SpotifyService {
           refreshToken: data["refreshToken"],
           scopes: List<String>.from(data["scopes"]),
           expiration: data["expiration"].toDate()
-
       );
     },
       onError: (e) => print("Error getting document: $e"),
     );
+    print("Got all, ready to return");
     return spotifyCredentials;
   }
 }

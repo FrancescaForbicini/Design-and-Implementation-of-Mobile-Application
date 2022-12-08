@@ -227,9 +227,9 @@ Future<void> updateScore(int score) async {
     },
     onError: (e) => print("Error getting document: $e"),
   );
-  if (bestScore < score) {
+/*  if (bestScore < score) {
     user?.updateBestScore(score);
-  }
+  }*/
 
 }
 

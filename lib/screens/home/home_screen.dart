@@ -44,44 +44,30 @@ class _HomeScreenState extends State<HomeScreen>{
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "Spotify Music Quiz",
-      home: FutureBuilder(
-        future: _done,
-        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-          Widget child;
-          if (snapshot.connectionState == ConnectionState.done){
-            child = Scaffold(
-              backgroundColor: Color(0xFF101010),
-              appBar: AppBar(
-                backgroundColor: Color (0xFF101010),
-                leading: IconButton(
-                  icon: Icon(Icons.logout, color: Colors.lightGreen,size: 30),
-                  onPressed: () => {
-                    _authenticationService.signOut(),
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => AuthenticationScreen()))
-                  },
-                ),
-                actions: [
-                  IconButton(
-                    icon: Icon(Icons.settings, color: Colors.lightGreen,size: 30),
-                    onPressed: () => {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => UserProfile()))
-                    },
-                  ),
-                ],
-                title: Text('Home Page', textAlign: TextAlign.center,style: new TextStyle(fontSize: 30),),
-              ),
+      home: Scaffold(
+        backgroundColor: Color(0xFF101010),
+        appBar: AppBar(
+          backgroundColor: Color (0xFF101010),
+          leading: IconButton(
+            icon: Icon(Icons.logout, color: Colors.lightGreen,size: 30),
+            onPressed: () => {
+              _authenticationService.signOut(),
+              Navigator.push(context, MaterialPageRoute(builder: (context) => AuthenticationScreen()))
+            },
+          ),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.settings, color: Colors.lightGreen,size: 30),
+              onPressed: () => {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => UserProfile()))
+              },
+            ),
+          ],
+          title: Text('Home Page', textAlign: TextAlign.center,style: new TextStyle(fontSize: 30),),
+        ),
 
-              body: _buildHomeBody(),
-            );
-
-            return child;
-          }
-          else {
-            return CircularProgressIndicator();
-          }
-        },
-      )
-,
+        body: _buildHomeBody(),
+      ),
     );
   }
 
@@ -172,7 +158,7 @@ class _HomeScreenState extends State<HomeScreen>{
       future: _done,
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         Widget child;
-        if (snapshot.connectionState == ConnectionState.done){
+        if (snapshot.hasData && snapshot.connectionState == ConnectionState.done){
           child = ListView.builder(
             itemCount: _playlists.length,
             itemBuilder: (context, index){
@@ -186,7 +172,11 @@ class _HomeScreenState extends State<HomeScreen>{
           return child;
         }
         else {
-          return CircularProgressIndicator();
+          return Center(
+            child: CircularProgressIndicator(
+              color: Colors.lightGreen,
+            ),
+          );
         }
       },
     );
@@ -197,7 +187,7 @@ class _HomeScreenState extends State<HomeScreen>{
       future: _done,
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         Widget child;
-        if (snapshot.connectionState == ConnectionState.done){
+        if (snapshot.hasData && snapshot.connectionState == ConnectionState.done){
           child = ListView.builder(
             itemCount: _artists.length,
             itemBuilder: (context, index){
@@ -211,7 +201,11 @@ class _HomeScreenState extends State<HomeScreen>{
           return child;
         }
         else {
-          return CircularProgressIndicator();
+          return Center(
+            child: CircularProgressIndicator(
+              color: Colors.lightGreen,
+            ),
+          );
         }
       },
     );

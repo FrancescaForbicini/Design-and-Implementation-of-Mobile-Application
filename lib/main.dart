@@ -49,26 +49,38 @@ class _MyHomePageState extends State<MyHomePage> {
   SpotifyService _spotifyService = SpotifyService();
 
   Future<bool> _checkLogin() async{
+    print("First line of check login");
+    await _checkFirebaseAuth();
+    print("Ready to wait for Spotify");
+    await _initSpotify();
+    print("Finished waiting Spotify");
+
+    return true;
+  }
+
+  Future<void> _checkFirebaseAuth() async{
     FirebaseAuth.instance
         .authStateChanges()
-        .listen((User? user) async {
+        .listen((User? user) {
       if (user != null) {
+        print("user: ${user.email}");
         widget.currUser = user;
       }
       else{
         print("No user authenticated");
       }
     });
-    await _initSpotify();
-    print("I am HERE");
-
-    return true;
   }
 
   Future<void> _initSpotify() async{
+    print("First line of init Spotify");
+    print("Current user: ${widget.currUser.email}");
     spotify_dart.SpotifyApiCredentials spotifyCredentials = await _spotifyService.getCredentials(widget.currUser);
+    print("Got the credentials");
     _spotifyService.spotify = spotify_dart.SpotifyApi(spotifyCredentials);
+    print("Created API");
     _spotifyService.saveCredentials();
+    print("Saved credentials");
   }
 
   @override
@@ -80,11 +92,12 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Color(0xFF101010),
         body: FutureBuilder(
           future: _done,
           builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
             Widget child;
-            if (snapshot.connectionState == ConnectionState.done){
+            if (snapshot.hasData && snapshot.connectionState == ConnectionState.done){
               if (widget.currUser == null){
                 child = AuthenticationScreen();
               }
@@ -100,7 +113,11 @@ class _MyHomePageState extends State<MyHomePage> {
               return child;
             }
             else {
-              return CircularProgressIndicator();
+              return Center(
+                child: CircularProgressIndicator(
+                  color: Colors.lightGreen,
+                ),
+              );
             }
           },
         )
