@@ -51,9 +51,11 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<bool> _checkLogin() async{
     print("First line of check login");
     await _checkFirebaseAuth();
-    print("Ready to wait for Spotify");
-    await _initSpotify();
-    print("Finished waiting Spotify");
+    if(widget.currUser != null){
+      print("Ready to wait for Spotify");
+      await _initSpotify();
+      print("Finished waiting Spotify");
+    }
 
     return true;
   }
