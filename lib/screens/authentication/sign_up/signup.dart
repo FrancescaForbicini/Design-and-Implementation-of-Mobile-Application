@@ -42,8 +42,17 @@ class SignUpScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color (0xFF101010),
-
+        appBar: AppBar(
+          backgroundColor: Color (0xFF101010),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.lightGreen,size: 30),
+            onPressed: () => {
+              Navigator.pop(context),
+            },
+          ),
+          title: Text('Sign Up', textAlign: TextAlign.center,style: new TextStyle(fontSize: 30),),
+        ),
+        backgroundColor: Color (0xFF101010),
       body: Form(
         key: formGlobalKey,
         child: Flex(

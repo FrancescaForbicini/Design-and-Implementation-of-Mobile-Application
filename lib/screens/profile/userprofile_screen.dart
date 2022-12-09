@@ -7,7 +7,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/quiz.dart';
-import '../../models/user.dart';
 import '../authentication/authentication.dart';
 
 
@@ -29,10 +28,7 @@ class UserProfile extends StatelessWidget {
       _username = _data["username"];
       _email = _data["email"];
       _photo = _data["photoURL"];
-      if (_photo == null){
-        _photo = 'https://googleflutter.com/sample_image.jpg';
-
-      }
+      print(_photo);
     });
         onError: (e) => print("Error getting document: $e");
   }

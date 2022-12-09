@@ -16,6 +16,16 @@ class SignInScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color (0xFF101010),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.lightGreen,size: 30),
+          onPressed: () => {
+            Navigator.pop(context),
+          },
+        ),
+        title: Text('Sign In', textAlign: TextAlign.center,style: new TextStyle(fontSize: 30),),
+      ),
       backgroundColor: Color (0xFF101010),
       body: Flex(
         direction: Axis.vertical,
