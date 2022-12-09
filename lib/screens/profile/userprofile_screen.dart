@@ -1,21 +1,42 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dima_project/screens/home/home_screen.dart';
 import 'package:dima_project/screens/profile/quiz_screen.dart';
 import 'package:dima_project/services/authentication_service.dart';
 import 'package:dima_project/services/quiz_generator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/quiz.dart';
 import '../../models/user.dart';
 import '../authentication/authentication.dart';
-import 'follower_screen.dart';
-import 'following_screen.dart';
+
+
 
 class UserProfile extends StatelessWidget {
   final AuthenticationService _authenticationService = AuthenticationService();
-  final List<User> userfollow = [new User(id: '1', name:'raff' , surname:'kik', username:'rocket', email: 'rocket@ann')];
-  final User user = new User(id: '1', name: 'francesca', surname: 'forbicini', email: 'francesca.forbicini@gmail.com',username:'frafra');
+  var _user = FirebaseAuth.instance.currentUser;
+  var _username;
+  var _email;
+  var _photo;
 
   UserProfile({super.key});
+  @override
+  void initState() {
+    var _data;
+    var docRef = FirebaseFirestore.instance.collection("users").doc(_user?.email);
+    docRef.get().then((DocumentSnapshot doc) {
+      _data = doc.data() as Map<String, dynamic>;
+      _username = _data["username"];
+      _email = _data["email"];
+      _photo = _data["photoURL"];
+      if (_photo == null){
+        _photo = 'https://googleflutter.com/sample_image.jpg';
+
+      }
+    });
+        onError: (e) => print("Error getting document: $e");
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -63,14 +84,14 @@ class UserProfile extends StatelessWidget {
                   minRadius: 60.0,
                   child: CircleAvatar(
                     radius: 50.0,
-                    backgroundImage: Image.asset('images/wolf_user.png').image,
+                    backgroundImage: Image.network(_photo).image,
                   ),
                 ),
                 SizedBox(
                   height: 10,
                 ),
                 Text(
-                  user.name.toString(),
+                  _username,
                   style: TextStyle(
                     fontSize: 35,
                     fontWeight: FontWeight.bold,
@@ -99,7 +120,7 @@ class UserProfile extends StatelessWidget {
                     ),
                   ),
                   subtitle: Text(
-                    user.email.toString(),
+                    _email,
                     style: TextStyle(
                       fontSize: 18,
                       color: Colors.lightGreen,
@@ -143,4 +164,5 @@ class UserProfile extends StatelessWidget {
       ),
     );
   }
+
 }
