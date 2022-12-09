@@ -224,12 +224,14 @@ Future<void> updateScore(int score) async {
     data = doc.data() as Map<String, dynamic>;
     bestScore = data["bestScore"];
     print(bestScore);
-    },
-    onError: (e) => print("Error getting document: $e"),
+    if (bestScore < score) {
+      print("ciao");
+    }
+  },
+    onError: (e) => print("Error getting document: $e")
+
   );
-/*  if (bestScore < score) {
-    user?.updateBestScore(score);
-  }*/
 
 }
+
 
