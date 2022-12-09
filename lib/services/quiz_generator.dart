@@ -225,7 +225,9 @@ Future<void> updateScore(int score) async {
     bestScore = data["bestScore"];
     print(bestScore);
     if (bestScore < score) {
-      print("ciao");
+      docRef.update({
+        "bestScore": score,
+      });
     }
   },
     onError: (e) => print("Error getting document: $e")
