@@ -14,7 +14,8 @@ const _scopes = [
   'user-follow-read',
   'user-top-read',
   'user-read-recently-played',
-  'user-library-read'
+  'user-library-read',
+  'user-read-private'
 ];
 
 class SpotifyService {
@@ -73,7 +74,7 @@ class SpotifyService {
       "clientId": credentials.clientId,
       "clientSecret": credentials.clientSecret,
       "accessToken": credentials.accessToken,
-      "refreshToken": credentials.accessToken,
+      "refreshToken": credentials.refreshToken,
       "scopes": credentials.scopes,
       "expiration": credentials.expiration
     });
@@ -84,7 +85,6 @@ class SpotifyService {
     var spotifyCredentials;
     print("Getting the reference to the doc...");
     if(user!=null){
-      print("WTF");
       print("User: ${user.email}");
     }
     else{
