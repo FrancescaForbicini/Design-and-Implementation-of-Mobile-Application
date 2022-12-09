@@ -85,7 +85,6 @@ class SpotifyService {
     var spotifyCredentials;
     print("Getting the reference to the doc...");
     if(user!=null){
-      print("WTF");
       print("User: ${user.email}");
     }
     else{

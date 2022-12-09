@@ -56,43 +56,136 @@ class _HomeScreenState extends State<HomeScreen>{
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: "Spotify Music Quiz",
-      home: Scaffold(
-        backgroundColor: Color(0xFF101010),
-        appBar: AppBar(
-          backgroundColor: Color (0xFF101010),
-          leading: IconButton(
-            icon: Icon(Icons.logout, color: Colors.lightGreen,size: 30),
-            onPressed: () => {
-              _authenticationService.signOut(),
-              Navigator.push(context, MaterialPageRoute(builder: (context) => AuthenticationScreen()))
-            },
-          ),
-          actions: [
-            IconButton(
-              icon: Icon(Icons.settings, color: Colors.lightGreen,size: 30),
-              onPressed: () => {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => UserProfile()))
-              },
-            ),
-          ],
-          title: Text('Home Page', textAlign: TextAlign.center,style: new TextStyle(fontSize: 30),),
-        ),
-
-        body: _buildHomeBody(),
+    final _appBar = AppBar(
+      backgroundColor: Color (0xFF101010),
+      leading: IconButton(
+        icon: Icon(Icons.logout, color: Colors.lightGreen,size: 30),
+        onPressed: () => {
+          _authenticationService.signOut(),
+          Navigator.push(context, MaterialPageRoute(builder: (context) => AuthenticationScreen()))
+        },
       ),
+      actions: [
+        IconButton(
+          icon: Icon(Icons.settings, color: Colors.lightGreen,size: 30),
+          onPressed: () => {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => UserProfile()))
+          },
+        ),
+      ],
+      title: Text('Home Page', textAlign: TextAlign.center,style: new TextStyle(fontSize: 30),),
+    );
+    final _screenHeight = MediaQuery.of(context).size.height;
+    final _screenWidth = MediaQuery.of(context).size.width;
+    final _appBarHeight = _appBar.preferredSize.height;
+    final _statusBarHeight = MediaQuery.of(context).padding.top;
+
+    return Scaffold(
+      backgroundColor: Color(0xFF101010),
+      appBar: _appBar,
+
+      body: _buildHomeBody(_screenHeight - _appBarHeight - _statusBarHeight, _screenWidth),
     );
   }
 
-  Widget _buildHomeBody(){
+  Widget _buildHomeBody(height, width){
     return ListView(
       scrollDirection: Axis.vertical,
       shrinkWrap: true,
       children: <Widget>[
-        Divider(),
+        Container(
+          color: Color(0xFF101010),
+          width: width,
+          height: height,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                color: Color(0xFF101010),
+                width: width,
+                height: height * 0.1,
+                child: Text(
+                  "Start a new quiz!",
+                  style: TextStyle(
+                    color: Colors.lightGreen,
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Container(
+                color: Color(0xFF101010),
+                width: width,
+                height: height * 0.45,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Container(
+                      color: Color(0xFF101010),
+                      width: width,
+                      height: height * 0.05,
+                      child: Text(
+                        "Your playlists:",
+                        style: TextStyle(
+                          color: Colors.lightGreen,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      color: Color(0xFF101010),
+                      width: width,
+                      height: height * 0.4,
+                      child: _buildPlaylists(height, width),
+                    )
+                  ],
+                ),
+              ),
+              Container(
+                color: Color(0xFF101010),
+                width: width,
+                height: height * 0.45,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Container(
+                      color: Color(0xFF101010),
+                      width: width,
+                      height: height * 0.05,
+                      child: Text(
+                        "Your artists:",
+                        style: TextStyle(
+                          color: Colors.lightGreen,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      color: Color(0xFF101010),
+                      width: width,
+                      height: height * 0.4,
+                      child: _buildArtists(height, width),
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
+        )
+      ],
+    );
+/*    return ListView(
+      scrollDirection: Axis.vertical,
+      shrinkWrap: true,
+      children: <Widget>[
         SizedBox(
-          height: 60,
+          height: height * 0.1,
+          width: width,
           child: Flex(
             mainAxisSize: MainAxisSize.min,
             direction: Axis.vertical,
@@ -111,9 +204,9 @@ class _HomeScreenState extends State<HomeScreen>{
             ],
           ),
         ),
-        Divider(),
         SizedBox(
-          height: 200,
+          height: height * 0.45,
+          width: width,
           child: Flex(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -137,9 +230,9 @@ class _HomeScreenState extends State<HomeScreen>{
             ],
           ),
         ),
-        Divider(),
         SizedBox(
-          height: 200,
+          height: height * 0.45,
+          width: width,
           child: Flex(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -164,22 +257,58 @@ class _HomeScreenState extends State<HomeScreen>{
           ),
         ),
       ],
-    );
+    );*/
   }
 
-  Widget _buildPlaylists() {
+  Widget _buildPlaylists(height, width) {
     return FutureBuilder(
       future: _done,
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         Widget child;
         if (snapshot.hasData && snapshot.connectionState == ConnectionState.done){
           child = ListView.builder(
+            scrollDirection: Axis.horizontal,
             itemCount: _playlists.length,
             itemBuilder: (context, index){
-              return ListTile(
+              return Container(
+                color: Color(0xFF101010),
+                width: width * 0.3,
+                height: height * 0.3,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        child: Ink.image(
+                          width: width * 0.2,
+                          height: height * 0.2,
+                          //fit: BoxFit.cover,
+                          image: Image.network(_playlists[index].images[0].url).image,
+                        ),
+                        //TODO implement onTap
+                        //onTap: ,
+                      ),
+                    ),
+                    Container(
+                      width: width * 0.2,
+                      height: height * 0.1,
+                      child: Text(
+                        _playlists[index].name,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              );
+/*              return ListTile(
                 leading: Image.network(_playlists[index].images[0].url),
                 title: Text(_playlists[index].name, style: TextStyle(fontSize: 15)),
-              );
+              );*/
             },
           );
 
@@ -196,19 +325,55 @@ class _HomeScreenState extends State<HomeScreen>{
     );
   }
 
-  Widget _buildArtists(){
+  Widget _buildArtists(height, width){
     return FutureBuilder(
       future: _done,
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         Widget child;
         if (snapshot.hasData && snapshot.connectionState == ConnectionState.done){
           child = ListView.builder(
+            scrollDirection: Axis.horizontal,
             itemCount: _artists.length,
             itemBuilder: (context, index){
-              return ListTile(
+              return Container(
+                color: Color(0xFF101010),
+                width: width * 0.3,
+                height: height * 0.3,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        child: Ink.image(
+                          width: width * 0.2,
+                          height: height * 0.2,
+                          //fit: BoxFit.cover,
+                          image: Image.network(_artists[index].images[0].url).image,
+                        ),
+                        //TODO implement onTap
+                        //onTap: ,
+                      ),
+                    ),
+                    Container(
+                      width: width * 0.2,
+                      height: height * 0.1,
+                      child: Text(
+                        _artists[index].name,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              );
+/*              return ListTile(
                 leading: Image.network(_artists[index].images[0].url),
                 title: Text(_artists[index].name, style: TextStyle(fontSize: 15)),
-              );
+              );*/
             },
           );
 
