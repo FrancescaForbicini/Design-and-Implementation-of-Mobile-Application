@@ -104,7 +104,7 @@ class AuthenticationService {
     });
 
     print("User Name: ${_user.displayName}");
-    print("User Email ${_user.email}");
+    print("User Email: ${_user.email}");
   }
 
   signOut() async{

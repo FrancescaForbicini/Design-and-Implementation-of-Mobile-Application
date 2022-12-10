@@ -20,6 +20,7 @@ class _HomeScreenState extends State<HomeScreen>{
   final AuthenticationService _authenticationService = AuthenticationService();
   final SpotifyService _spotifyService = SpotifyService();
   late var _userId;
+  late var _username;
   late List _playlists;
   late List _artists;
   late Future<bool> _done;
@@ -36,6 +37,7 @@ class _HomeScreenState extends State<HomeScreen>{
     print("User spotify: $_user");
     print("User spotify info: ${_user.displayName}, ${_user.country}, ${_user.product}, ${_user.id}");
     _userId = _user.id;
+    _username = _user.displayName;
     print("Got the userid");
     print("UserID: $_userId");
     var _playlistsRef = _spotifyService.spotify.playlists;
@@ -179,85 +181,6 @@ class _HomeScreenState extends State<HomeScreen>{
         )
       ],
     );
-/*    return ListView(
-      scrollDirection: Axis.vertical,
-      shrinkWrap: true,
-      children: <Widget>[
-        SizedBox(
-          height: height * 0.1,
-          width: width,
-          child: Flex(
-            mainAxisSize: MainAxisSize.min,
-            direction: Axis.vertical,
-            children: [
-              Expanded(
-                flex: 1,
-                child: Text(
-                  "Start a new quiz!",
-                  style: TextStyle(
-                    color: Colors.lightGreen,
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
-        SizedBox(
-          height: height * 0.45,
-          width: width,
-          child: Flex(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            direction: Axis.vertical,
-            children: [
-              Expanded(
-                flex: 1,
-                child: Text(
-                  " Your playlists:",
-                  style: TextStyle(
-                    color: Colors.lightGreen,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: _buildPlaylists(),
-              )
-            ],
-          ),
-        ),
-        SizedBox(
-          height: height * 0.45,
-          width: width,
-          child: Flex(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            direction: Axis.vertical,
-            children: [
-              Expanded(
-                flex: 1,
-                child: Text(
-                  " Your artists:",
-                  style: TextStyle(
-                    color: Colors.lightGreen,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: _buildArtists(),
-              )
-            ],
-          ),
-        ),
-      ],
-    );*/
   }
 
   Widget _buildPlaylists(height, width) {
@@ -284,7 +207,6 @@ class _HomeScreenState extends State<HomeScreen>{
                         child: Ink.image(
                           width: width * 0.2,
                           height: height * 0.2,
-                          //fit: BoxFit.cover,
                           image: Image.network(_playlists[index].images[0].url).image,
                         ),
                         //TODO implement onTap
@@ -305,10 +227,6 @@ class _HomeScreenState extends State<HomeScreen>{
                   ],
                 ),
               );
-/*              return ListTile(
-                leading: Image.network(_playlists[index].images[0].url),
-                title: Text(_playlists[index].name, style: TextStyle(fontSize: 15)),
-              );*/
             },
           );
 

@@ -46,6 +46,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   late Future<bool> _done;
+  var _tokenOk = true;
   SpotifyService _spotifyService = SpotifyService();
 
   Future<bool> _checkLogin() async{
@@ -81,8 +82,13 @@ class _MyHomePageState extends State<MyHomePage> {
     print("Got the credentials");
     _spotifyService.spotify = spotify_dart.SpotifyApi(spotifyCredentials);
     print("Created API");
-    _spotifyService.saveCredentials();
-    print("Saved credentials");
+    try{
+      _spotifyService.spotify.me.get();
+      _spotifyService.saveCredentials();
+      print("Saved credentials");
+    }catch (e){
+      _tokenOk = false;
+    }
   }
 
   @override
@@ -100,17 +106,18 @@ class _MyHomePageState extends State<MyHomePage> {
           builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
             Widget child;
             if (snapshot.hasData && snapshot.connectionState == ConnectionState.done){
-              if (widget.currUser == null){
+              if (widget.currUser == null || !_tokenOk){
                 child = AuthenticationScreen();
               }
               else{
                 if (_spotifyService.spotify!=null){
                   print("Spotify ok");
+                  child = HomeScreen();
                 }
                 else{
                   print("HERE THE PROBLEM");
+                  child = AuthenticationScreen();
                 }
-                child = HomeScreen();
               }
               return child;
             }

@@ -3,36 +3,49 @@ import 'package:dima_project/screens/home/home_screen.dart';
 import 'package:dima_project/screens/profile/quiz_screen.dart';
 import 'package:dima_project/services/authentication_service.dart';
 import 'package:dima_project/services/quiz_generator.dart';
+import 'package:dima_project/services/spotify_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/quiz.dart';
 import '../authentication/authentication.dart';
 
+class UserProfile extends StatefulWidget{
+  UserProfile({super.key});
 
+  @override
+  State<StatefulWidget> createState() => _UserProfileState();
+}
 
-class UserProfile extends StatelessWidget {
+class _UserProfileState extends State<UserProfile> {
   final AuthenticationService _authenticationService = AuthenticationService();
-  var _user = FirebaseAuth.instance.currentUser;
+  final SpotifyService _spotifyService = SpotifyService();
+  var _user;
   var _username;
   var _email;
   var _photo;
+  late Future<bool> _done;
 
-  UserProfile({super.key});
   @override
   void initState() {
-    var _data;
-    var docRef = FirebaseFirestore.instance.collection("users").doc(_user?.email);
-    docRef.get().then((DocumentSnapshot doc) {
-      _data = doc.data() as Map<String, dynamic>;
-      _username = _data["username"];
-      _email = _data["email"];
-      _photo = _data["photoURL"];
-      print(_photo);
-    });
-        onError: (e) => print("Error getting document: $e");
+    _done = _getUserData();
   }
 
+  Future<bool> _getUserData() async{
+    _user = FirebaseAuth.instance.currentUser;
+    _username = _user.displayName;
+    _email = _user.email;
+
+    var _spotiUser = await _spotifyService.spotify.me.get();
+    var _photoRef = _spotiUser.images;
+    if (!_photoRef.isEmpty){
+      _photo = Image.network(_photoRef[0].url).image;
+    }
+    else{
+      _photo = Image.asset('images/wolf_user.png').image;
+    }
+    return true;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +93,7 @@ class UserProfile extends StatelessWidget {
                   minRadius: 60.0,
                   child: CircleAvatar(
                     radius: 50.0,
-                    backgroundImage: Image.network(_photo).image,
+                    child: _photo,
                   ),
                 ),
                 SizedBox(
@@ -137,7 +150,7 @@ class UserProfile extends StatelessWidget {
                     onTap: () {
                       Navigator.push(context,
                         MaterialPageRoute(
-                            builder: (context) => QuizScreen(quiz: new Quiz(), answers: [],)),
+                            builder: (context) => QuizScreen(quiz: Quiz(), answers: [],)),
                       );
                     }
                 ),
