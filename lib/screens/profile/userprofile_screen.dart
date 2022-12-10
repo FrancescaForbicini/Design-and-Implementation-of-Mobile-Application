@@ -49,128 +49,148 @@ class _UserProfileState extends State<UserProfile> {
 
   @override
   Widget build(BuildContext context) {
+    final _appBar = AppBar(
+      backgroundColor: Color (0xFF101010),
+      leading: IconButton(
+        icon: Icon(Icons.logout, color: Colors.lightGreen,size: 30),
+        onPressed: () => {
+          _authenticationService.signOut(),
+          Navigator.push(context, MaterialPageRoute(builder: (context) => AuthenticationScreen()))
+        },
+      ),
+      actions: [
+        IconButton(icon: Icon(Icons.home, color: Colors.lightGreen,size: 30),
+            onPressed:(){ Navigator.push(context,
+                MaterialPageRoute(
+                    builder: (context) => HomeScreen()));
+            }),
+      ],
+      title: Text('User Profile', textAlign: TextAlign.center,style: new TextStyle(fontSize: 30),),
+    );
+    final _screenHeight = MediaQuery.of(context).size.height;
+    final _screenWidth = MediaQuery.of(context).size.width;
+    final _appBarHeight = _appBar.preferredSize.height;
+    final _statusBarHeight = MediaQuery.of(context).padding.top;
+    final _height = _screenHeight - _appBarHeight - _statusBarHeight;
+
     return Scaffold(
       backgroundColor: Color(0xFF101010),
-      appBar: AppBar(
-        backgroundColor: Color (0xFF101010),
-        leading: IconButton(
-            icon: Icon(Icons.logout, color: Colors.lightGreen,size: 30),
-          onPressed: () => {
-              _authenticationService.signOut(),
-              Navigator.push(context, MaterialPageRoute(builder: (context) => AuthenticationScreen()))
-          },
-        ),
-        actions: [
-          IconButton(icon: Icon(Icons.home, color: Colors.lightGreen,size: 30),
-                    onPressed:(){ Navigator.push(context,
-                    MaterialPageRoute(
-                    builder: (context) => HomeScreen()));
-              }),
-          ],
-        title: Text('User Profile', textAlign: TextAlign.center,style: new TextStyle(fontSize: 30),),
-      ),
+      appBar: _appBar,
 
-      body: ListView(
-        children: <Widget>[
-          Container(
-            height: 250,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Colors.green, Colors.lightGreen],
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-                stops: [0.5, 0.9],
-              )
-            ),
+      body: FutureBuilder(
+          future: _done,
+          builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+            Widget child;
+            if (snapshot.hasData && snapshot.connectionState == ConnectionState.done){
+              child = ListView(
+                children: <Widget>[
+                  Container(
+                    height: _height * 0.5,
+                    width: _screenWidth,
+                    decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [Colors.green, Colors.lightGreen],
+                          begin: Alignment.centerLeft,
+                          end: Alignment.centerRight,
+                          stops: [0.5, 0.9],
+                        )
+                    ),
 
-            child: Flex(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              direction: Axis.vertical,
-              children: <Widget>[
-                CircleAvatar(
-                  backgroundColor: Color(0xFF101010),
-                  minRadius: 60.0,
-                  child: CircleAvatar(
-                    radius: 50.0,
-                    child: _photo,
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  _username,
-                  style: TextStyle(
-                    fontSize: 35,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF101010),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            child: Row(
-              children: <Widget>[
-              ],
-            ),
-          ),
-          Container(
-            child: Column(
-              children: <Widget>[
-                ListTile(
-                  title: Text(
-                    'E-mail',
-                    style: TextStyle(
-                      color: Colors.green,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        CircleAvatar(
+                          backgroundColor: Color(0xFF101010),
+                          minRadius: 60.0,
+                          child: CircleAvatar(
+                            backgroundColor: Colors.transparent,
+                            radius: 50.0,
+                            backgroundImage: _photo,
+                          ),
+                        ),
+/*                        SizedBox(
+                          height: _height * 0.05,
+                          width: _screenWidth,
+                        ),*/
+                        Text(
+                          _username,
+                          style: TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF101010),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  subtitle: Text(
-                    _email,
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.lightGreen,
+                  Container(
+                    height: _screenHeight * 0.5,
+                    width: _screenWidth,
+                    child: Column(
+                      children: <Widget>[
+                        ListTile(
+                          title: Text(
+                            'E-mail',
+                            style: TextStyle(
+                              color: Colors.green,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          subtitle: Text(
+                            _email,
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.lightGreen,
+                            ),
+                          ),
+                        ),
+                        ListTile(
+                            title: Text(
+                              'My Quizzes',
+                              style: TextStyle(
+                                color: Colors.green,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            leading: Icon(Icons.quiz_sharp, color: Colors.lightGreen),
+                            onTap: () {
+                              Navigator.push(context,
+                                MaterialPageRoute(
+                                    builder: (context) => QuizScreen(quiz: Quiz(), answers: [],)),
+                              );
+                            }
+                        ),
+                        ListTile(
+                          title: Text(
+                            'My Playlists',
+                            style: TextStyle(
+                              color: Colors.green,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          leading: Icon(Icons.queue_music_outlined, color: Colors.lightGreen),
+                        ),
+                      ],
                     ),
-                  ),
+                  )
+                ],
+              );
+              return child;
+            }
+            else{
+              return Center(
+                child: CircularProgressIndicator(
+                  color: Colors.lightGreen,
                 ),
-                Divider(),
-                ListTile(
-                  title: Text(
-                    'My Quizzes',
-                    style: TextStyle(
-                      color: Colors.green,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                    leading: Icon(Icons.quiz_sharp, color: Colors.lightGreen),
-                    onTap: () {
-                      Navigator.push(context,
-                        MaterialPageRoute(
-                            builder: (context) => QuizScreen(quiz: Quiz(), answers: [],)),
-                      );
-                    }
-                ),
-                Divider(),
-                ListTile(
-                  title: Text(
-                    'My Playlists',
-                    style: TextStyle(
-                      color: Colors.green,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  leading: Icon(Icons.queue_music_outlined, color: Colors.lightGreen),
-                ),
-              ],
-            ),
-          )
-        ],
-      ),
+              );
+            }
+          }
+      )
+
     );
   }
 
