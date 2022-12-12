@@ -33,11 +33,11 @@ class _UserProfileState extends State<UserProfile> {
 
   Future<bool> _getUserData() async{
     _user = FirebaseAuth.instance.currentUser;
-    _username = _user.displayName;
     _email = _user.email;
 
     var _spotiUser = await _spotifyService.spotify.me.get();
     var _photoRef = _spotiUser.images;
+    _username = _spotiUser.displayName;
     if (!_photoRef.isEmpty){
       _photo = Image.network(_photoRef[0].url).image;
     }
