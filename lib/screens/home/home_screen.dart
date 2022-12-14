@@ -9,6 +9,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:spotify/spotify.dart' as sp;
 
+import '../../models/quiz.dart';
+import '../../services/quiz_generator.dart';
+
 class HomeScreen extends StatefulWidget{
   HomeScreen({super.key});
 
@@ -46,6 +49,7 @@ class _HomeScreenState extends State<HomeScreen>{
       print("The reference exists!");
     }
     Iterable<sp.PlaylistSimple> playlists = await _playlistsRef.getUsersPlaylists(_userId).all();
+    print(_playlistsRef.tracks[0]);
     print("Got the playlists");
     print(playlists.runtimeType);
     _playlists = playlists.toList();
@@ -209,8 +213,12 @@ class _HomeScreenState extends State<HomeScreen>{
                           height: height * 0.2,
                           image: Image.network(_playlists[index].images[0].url).image,
                         ),
-                        //TODO implement onTap
-                        //onTap: ,
+                        onTap:()=>{
+
+                        Navigator.push(context,
+                        MaterialPageRoute(
+                        builder: (context) => QuizGenerator(_playlists)))
+                        } ,
                       ),
                     ),
                     Container(
