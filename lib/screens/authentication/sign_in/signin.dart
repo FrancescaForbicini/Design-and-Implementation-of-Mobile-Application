@@ -120,6 +120,7 @@ class SignInScreen extends StatelessWidget {
           done.then((value) => {
             if (value){
               Navigator.pop(context),
+              //TODO check if user has a non expired token
               Navigator.push(context, MaterialPageRoute(builder: (context) => SpotifyScreen()),)
             }
             else{

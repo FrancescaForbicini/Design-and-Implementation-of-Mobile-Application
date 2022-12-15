@@ -45,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen>{
     if(_playlistsRef != null){
       print("The reference exists!");
     }
-    Iterable<sp.PlaylistSimple> playlists = await _playlistsRef.getUsersPlaylists(_userId).all();
+    Iterable<sp.PlaylistSimple> playlists = await _playlistsRef.me.all();
     print("Got the playlists");
     print(playlists.runtimeType);
     _playlists = playlists.toList();

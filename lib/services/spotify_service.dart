@@ -8,6 +8,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:spotify/spotify.dart';
 
+import '../screens/home/home_screen.dart';
+
 const _scopes = [
   'playlist-read-private',
   'playlist-read-collaborative',
@@ -52,7 +54,7 @@ class SpotifyService {
     return _redirectUri;
   }
 
-  void handleResponse(Uri responseUri) async{
+  void handleResponse(Uri responseUri, BuildContext context) async{
     var client = await _grant.handleAuthorizationResponse(responseUri.queryParameters);
     spotify = SpotifyApi.fromClient(client);
 
@@ -61,9 +63,10 @@ class SpotifyService {
     }
     else {
       print("Spotify done!");
-      // TODO check if it is working
       saveCredentials();
     }
+    Navigator.pop(context);
+    Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));
   }
 
   void saveCredentials() async{

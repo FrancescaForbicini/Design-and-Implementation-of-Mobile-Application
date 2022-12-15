@@ -45,12 +45,11 @@ class _SpotifyScreenState extends State<SpotifyScreen>{
                   child: WebView(
                     javascriptMode: JavascriptMode.unrestricted,
                     initialUrl: _spotifyService.getAuthUri().toString(),
-                    navigationDelegate: (navReq) {
+                    navigationDelegate: (navReq) async {
                       if (navReq.url.startsWith(_spotifyService.getRedirectUri())) {
                         responseUri = navReq.url;
-                        _spotifyService.handleResponse(Uri.parse(responseUri));
-                        Navigator.pop(context);
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+                        await _handleResponse(responseUri);
+
                         return NavigationDecision.prevent;
                       }
                       //TODO check if it creates problems
@@ -69,5 +68,9 @@ class _SpotifyScreenState extends State<SpotifyScreen>{
         ],
       ),
     );
+  }
+
+  Future<void> _handleResponse(responseUri) async{
+    _spotifyService.handleResponse(Uri.parse(responseUri), context);
   }
 }
