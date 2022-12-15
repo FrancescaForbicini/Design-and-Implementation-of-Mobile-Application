@@ -192,50 +192,66 @@ class _HomeScreenState extends State<HomeScreen>{
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         Widget child;
         if (snapshot.hasData && snapshot.connectionState == ConnectionState.done){
-          child = ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: _playlists.length,
-            itemBuilder: (context, index){
-              return Container(
-                color: Color(0xFF101010),
-                width: width * 0.3,
-                height: height * 0.3,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        child: Ink.image(
-                          width: width * 0.2,
-                          height: height * 0.2,
-                          image: Image.network(_playlists[index].images[0].url).image,
-                        ),
-                        onTap:()=>{
+          if(_playlists.length > 0){
+            child = ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: _playlists.length,
+              itemBuilder: (context, index){
+                return Container(
+                  color: Color(0xFF101010),
+                  width: width * 0.3,
+                  height: height * 0.3,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          child: Ink.image(
+                            width: width * 0.2,
+                            height: height * 0.2,
+                            image: Image.network(_playlists[index].images[0].url).image,
+                          ),
+                          onTap:()=>{
 
-                        Navigator.push(context,
-                        MaterialPageRoute(
-                        builder: (context) => QuizGenerator(_playlists)))
-                        } ,
-                      ),
-                    ),
-                    Container(
-                      width: width * 0.2,
-                      height: height * 0.1,
-                      child: Text(
-                        _playlists[index].name,
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15
+                            Navigator.push(context,
+                                MaterialPageRoute(
+                                    builder: (context) => QuizGenerator(_playlists)))
+                          } ,
                         ),
                       ),
-                    )
-                  ],
+                      Container(
+                        width: width * 0.2,
+                        height: height * 0.1,
+                        child: Text(
+                          _playlists[index].name,
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                );
+              },
+            );
+          }
+          else{
+            child = Container(
+              color: Color(0xFF101010),
+              width: width,
+              height: height * 0.3,
+              child: Text(
+                "You don't have any playlist yet!",
+                style: TextStyle(
+                  color: Colors.lightGreen,
+                  fontSize: 18,
                 ),
-              );
-            },
-          );
+              ),
+            );
+          }
 
           return child;
         }
@@ -256,51 +272,67 @@ class _HomeScreenState extends State<HomeScreen>{
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         Widget child;
         if (snapshot.hasData && snapshot.connectionState == ConnectionState.done){
-          child = ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: _artists.length,
-            itemBuilder: (context, index){
-              return Container(
-                color: Color(0xFF101010),
-                width: width * 0.3,
-                height: height * 0.3,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        child: Ink.image(
-                          width: width * 0.2,
-                          height: height * 0.2,
-                          //fit: BoxFit.cover,
-                          image: Image.network(_artists[index].images[0].url).image,
-                        ),
-                        //TODO implement onTap
-                        //onTap: ,
-                      ),
-                    ),
-                    Container(
-                      width: width * 0.2,
-                      height: height * 0.1,
-                      child: Text(
-                        _artists[index].name,
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15
+          if(_artists.length > 0){
+            child = ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: _artists.length,
+              itemBuilder: (context, index){
+                return Container(
+                  color: Color(0xFF101010),
+                  width: width * 0.3,
+                  height: height * 0.3,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          child: Ink.image(
+                            width: width * 0.2,
+                            height: height * 0.2,
+                            //fit: BoxFit.cover,
+                            image: Image.network(_artists[index].images[0].url).image,
+                          ),
+                          //TODO implement onTap
+                          //onTap: ,
                         ),
                       ),
-                    )
-                  ],
-                ),
-              );
+                      Container(
+                        width: width * 0.2,
+                        height: height * 0.1,
+                        child: Text(
+                          _artists[index].name,
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                );
 /*              return ListTile(
                 leading: Image.network(_artists[index].images[0].url),
                 title: Text(_artists[index].name, style: TextStyle(fontSize: 15)),
               );*/
-            },
-          );
+              },
+            );
+          }
+          else{
+            child = Container(
+              color: Color(0xFF101010),
+              width: width,
+              height: height * 0.3,
+              child: Text(
+                "You don't have any favourite artist yet!",
+                style: TextStyle(
+                  color: Colors.lightGreen,
+                  fontSize: 18,
+                ),
+              ),
+            );
+          }
 
           return child;
         }
