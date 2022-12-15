@@ -24,6 +24,7 @@ class _UserProfileState extends State<UserProfile> {
   var _username;
   var _email;
   var _photo;
+  var bestScore = getBestScore();
   late Future<bool> _done;
 
   @override
@@ -121,6 +122,15 @@ class _UserProfileState extends State<UserProfile> {
                             color: Color(0xFF101010),
                           ),
                         ),
+                        Text(
+                          "Best Score: $bestScore",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF101010),
+                          ),
+                        ),
+
                       ],
                     ),
                   ),
@@ -146,23 +156,7 @@ class _UserProfileState extends State<UserProfile> {
                             ),
                           ),
                         ),
-                        ListTile(
-                            title: Text(
-                              'My Quizzes',
-                              style: TextStyle(
-                                color: Colors.green,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            leading: Icon(Icons.quiz_sharp, color: Colors.lightGreen),
-                            onTap: () {
-                              Navigator.push(context,
-                                MaterialPageRoute(
-                                    builder: (context) => QuizScreen(quiz: Quiz(), answers: [],)),
-                              );
-                            }
-                        ),
+
                         ListTile(
                           title: Text(
                             'My Playlists',
@@ -194,4 +188,18 @@ class _UserProfileState extends State<UserProfile> {
     );
   }
 
+}
+
+int getBestScore(){
+  var _user = FirebaseAuth.instance.currentUser;
+  var data;
+  var bestScore;
+  final docRef = FirebaseFirestore.instance.collection("users").doc(_user?.email);
+  docRef.get().then((DocumentSnapshot doc) {
+    data = doc.data() as Map<String, dynamic>;
+    bestScore = data["bestScore"];
+  });
+  if (bestScore == null)
+    return 0;
+  return bestScore;
 }

@@ -14,6 +14,9 @@ import '../models/question.dart';
 
 
 class QuizGenerator extends StatelessWidget {
+  final List topic;
+  QuizGenerator( this.topic);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
