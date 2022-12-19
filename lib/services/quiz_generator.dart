@@ -15,7 +15,8 @@ import '../models/question.dart';
 
 class QuizGenerator extends StatelessWidget {
   final List topic;
-  QuizGenerator( this.topic);
+  final String type_quiz;
+  QuizGenerator(this.topic,this.type_quiz);
 
   @override
   Widget build(BuildContext context) {
@@ -24,21 +25,26 @@ class QuizGenerator extends StatelessWidget {
         backgroundColor: Color(0xFF101010),
         title: Text("New Quiz",style: new TextStyle(color: Colors.lightGreen,fontSize: 35),),
       ),
-      body: QuizGeneratorStateful(),
+      body: QuizGeneratorStateful(topic,type_quiz),
 
     );
   }
 }
 
 class QuizGeneratorStateful extends StatefulWidget {
+  final List topic;
+  final String type_quiz;
+
+  QuizGeneratorStateful(this.topic, this.type_quiz);
   @override
-  _QuizGeneratorState createState() => _QuizGeneratorState();
+  _QuizGeneratorState createState() => _QuizGeneratorState(topic,type_quiz);
 }
 
 
 class _QuizGeneratorState extends State<QuizGeneratorStateful> {
+  final List topic;
+  final String type_quiz;
   List _questions = [];
-  //TODO remove answers when we'll use spotify
   Answer answer = Answer();
   Answer answer2 = Answer();
   late String _name;
@@ -49,12 +55,19 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
   int _score = 0;
   int _question_number = 1;
   bool _can_show_button = true;
+
+  _QuizGeneratorState(this.topic,this.type_quiz);
   // Fetch content from the json file
   Future<void> readJson() async {
-    final String response = await rootBundle.loadString('json/question.json');
+    final String response = await rootBundle.loadString('json/question/'+this.type_quiz+'.json');
     final data = await json.decode(response);
     setState(() {
       _questions = data["questions"];
+      _question_tot = _questions.length;
+
+      for (int i = 0; i < _question_tot; i++){
+
+      }
       answer.text = 'ciao';
       answer.correct = false;
       answer2.text = 'addio';

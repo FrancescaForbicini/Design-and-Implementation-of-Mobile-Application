@@ -27,6 +27,7 @@ class _HomeScreenState extends State<HomeScreen>{
   late List _playlists;
   late List _artists;
   late Future<bool> _done;
+  late sp.Playlists  p;
 
   @override
   void initState() {
@@ -48,10 +49,14 @@ class _HomeScreenState extends State<HomeScreen>{
     if(_playlistsRef != null){
       print("The reference exists!");
     }
+    print(_playlistsRef.me.all().runtimeType);
     Iterable<sp.PlaylistSimple> playlists = await _playlistsRef.me.all();
+    print(_playlistsRef.me.all().runtimeType);
     print("Got the playlists");
     print(playlists.runtimeType);
     _playlists = playlists.toList();
+    p = sp.Playlists(_spotifyService.spotify);
+
     Iterable<sp.Artist> artists = await _spotifyService.spotify.me.topArtists();
     print(artists.runtimeType);
     _artists = artists.toList();
@@ -211,13 +216,15 @@ class _HomeScreenState extends State<HomeScreen>{
                           child: Ink.image(
                             width: width * 0.2,
                             height: height * 0.2,
-                            image: Image.network(_playlists[index].images[0].url).image,
+                            image: getImage(_playlists[index].images),
                           ),
                           onTap:()=>{
+                            print("ciao"),
+                            print(p.getTracksByPlaylistId(_playlists[index].id)),
 
-                            Navigator.push(context,
-                                MaterialPageRoute(
-                                    builder: (context) => QuizGenerator(_playlists)))
+                            // Navigator.push(context,
+                            //     MaterialPageRoute(
+                            //         builder: (context) => QuizGenerator()))
                           } ,
                         ),
                       ),
@@ -292,7 +299,7 @@ class _HomeScreenState extends State<HomeScreen>{
                             width: width * 0.2,
                             height: height * 0.2,
                             //fit: BoxFit.cover,
-                            image: Image.network(_artists[index].images[0].url).image,
+                            image: getImage(_artists[index].images),
                           ),
                           //TODO implement onTap
                           //onTap: ,
@@ -346,4 +353,9 @@ class _HomeScreenState extends State<HomeScreen>{
       },
     );
   }
+}
+ImageProvider<Object> getImage(image){
+  if (image.isEmpty)
+    return Image.asset('images/wolf_user.png').image;
+  return Image.network(image[0].url).image;
 }
