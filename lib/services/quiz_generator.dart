@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:quiz_view/quiz_view.dart';
+import 'package:spotify/spotify.dart' as sp;
 
 import '../models/answer.dart';
 import '../models/question.dart';
@@ -44,47 +45,92 @@ class QuizGeneratorStateful extends StatefulWidget {
 class _QuizGeneratorState extends State<QuizGeneratorStateful> {
   final List topic;
   final String type_quiz;
-  List _questions = [];
-  Answer answer = Answer();
-  Answer answer2 = Answer();
-  late String _name;
-  late String _album;
+  List _questions_from_JSON = [];
+  late List <Question> _questions = [];
   late PageController _controller;
   late int _question_tot;
   bool end = false;
   int _score = 0;
   int _question_number = 1;
   bool _can_show_button = true;
+  late Future<bool> _done;
 
   _QuizGeneratorState(this.topic,this.type_quiz);
+
   // Fetch content from the json file
   Future<void> readJson() async {
-    final String response = await rootBundle.loadString('json/question/'+this.type_quiz+'.json');
+    print(type_quiz);
+
+    final String response = await rootBundle.loadString(
+        'json/question_' + this.type_quiz + '.json');
     final data = await json.decode(response);
     setState(() {
-      _questions = data["questions"];
-      _question_tot = _questions.length;
-
-      for (int i = 0; i < _question_tot; i++){
-
-      }
-      answer.text = 'ciao';
-      answer.correct = false;
-      answer2.text = 'addio';
-      answer2.correct = true;
-      _question_tot = _questions.length;
-      _name = "Rocket";
-      _album = "ANN";
+      _questions_from_JSON = data["questions"];
       _can_show_button = false;
-    });
+      _question_tot = topic.length;
+      // if (type_quiz == 'playlists')
+      //     buildQuestionPlaylist();
+    }
+    );
 
   }
 
+  Future<bool> buildQuestionPlaylist() async{
+    await readJson();
+    List possible_artists = [];
+    List possible_albums = [];
+    List possible_tracks = [];
+    List<Question> possible_questions = [];
+    String answer = "";
+    final Question question = Question();
+    int i = 0;
+    int j = 0;
+    for (i = 0; i < topic.length; i++) {
+      possible_tracks.add(topic[i].name);
+      sp.Artist artist = topic[i].artists[0];
+      possible_artists.add(artist.name);
+      possible_albums.add(topic[i].album);
+    }
+    for (i = 0; i < topic.length; i++) {
+      if (j > 1)
+        j = 0;
+      question.question1 = _questions_from_JSON[0]["question1"];
+      if (j != 2) {
+        question.artist_album = topic[i].name;
+        question.question2 = _questions_from_JSON[0]["question2"];
+        if (j == 0) {
+          sp.Artist artist = topic[i].artists[0];
+          answer = artist.name.toString();
+          question.right_answer = answer;
+          possible_artists.shuffle();
+          possible_artists.where((element) =>
+          !possible_artists.contains(element[topic[i].artists[0].name])).take(
+              3);
+          for (int k = 0; k < 3; k++) {
+            answer = possible_artists[k].toString();
+            question.wrong_answer.add(answer);
+          }
+        }
+      }
+      else {
+        //TODO playable
+      }
+      //j++;
+      possible_questions.add(question);
 
+      //print(possible_questions[0].artist_album)
+    }
+    setState(() {
+      _questions = possible_questions;
+    });
+
+    return true;
+  }
   @override
   void initState() {
     super.initState();
     _controller = PageController(initialPage:0);
+    _done = buildQuestionPlaylist();
   }
 
   @override
@@ -93,39 +139,34 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
         color: Colors.lightGreen,
         padding: const EdgeInsets.all(25),
         child: Column(
-
             children: [
-              !_can_show_button
-                  ? const SizedBox.shrink(
-              ):
-              ElevatedButton(
-                onPressed: readJson,
-                style: new ButtonStyle(backgroundColor: MaterialStateColor.resolveWith((states) => Color(0xFF101010))),
-                child: const Text('Start Quiz'),
-
-              ),
-              _questions.isNotEmpty
-                  ? Expanded(
+              // !_can_show_button
+              //     ? const SizedBox.shrink(
+              // ):
+              // ElevatedButton(
+              //   onPressed:()=>{}, //readJson,
+              //   style: new ButtonStyle(backgroundColor: MaterialStateColor.resolveWith((states) => Color(0xFF101010))),
+              //   child: const Text('Start Quiz'),
+              //
+              // ),
+              FutureBuilder (
+                future: _done,
+                builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                  if (snapshot.hasData && snapshot.connectionState == ConnectionState.done) {
+                  return Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Text("Question $_question_number/${_questions.length}", style: TextStyle(color: Color(0xFF101010), fontSize: 20, fontWeight: FontWeight.bold),),
+                          Text("Question $_question_number/${_question_tot}", style: TextStyle(color: Color(0xFF101010), fontSize: 20, fontWeight: FontWeight.bold),),
                           const Divider(thickness:1, color: Colors.grey),
                           Expanded(child: PageView.builder(
-                              itemCount: _questions.length,
+                              itemCount: _question_tot,
                               controller: _controller,
                               physics: const NeverScrollableScrollPhysics(),
                               itemBuilder: (context, index) {
-                                final Question question = Question();
-                                question.question1 =
-                                _questions[index]['question1'].toString();
-                                question.name =
-                                _name;
-                                question.question2 =
-                                _questions[index]['question2'].toString();
-                                question.artist_album =
-                                _album;
-                                question.options = [answer,answer2];
+                                // for (int i = 0; i < 50; i++){
+                                //   print(_questions[i].artist_album);
+                                // }
                                 return QuizView(
                                   image: Container(
                                   width: 150,
@@ -143,10 +184,9 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
                                   backgroundColor: Colors.lightGreen,
                                   width: 600,
                                   height: 700,
-                                  question: question.question1.toString()+
-                                    question.artist_album.toString()+question.question2.toString(),
-                                  rightAnswer: answer2.text,
-                                  wrongAnswers: [answer.text, "ROCKET"],
+                                  question: _questions[index].question1 + _questions[index].artist_album + _questions[index].question2,
+                                  rightAnswer: _questions[index].right_answer,
+                                  wrongAnswers: [_questions[index].wrong_answer[0], _questions[index].wrong_answer[1], _questions[index].wrong_answer[2]],
                                   onRightAnswer: () => {
                                       buildElevatedButton(),
                                       setState(() {
@@ -173,7 +213,9 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
                             },
     )
                           )])
-              ):Container()
+              );
+    }  else return Container();}
+                  )
             ]
         ),
     );

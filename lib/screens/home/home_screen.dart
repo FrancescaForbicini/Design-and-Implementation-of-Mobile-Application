@@ -28,6 +28,9 @@ class _HomeScreenState extends State<HomeScreen>{
   late List _artists;
   late Future<bool> _done;
   late sp.Playlists  p;
+  late sp.Pages<sp.Track> tracks;
+  late Iterable<sp.Track> brani;
+  late List _brani;
 
   @override
   void initState() {
@@ -36,6 +39,7 @@ class _HomeScreenState extends State<HomeScreen>{
   }
 
   Future<bool> _startup() async{
+
     print("Debugging here in startup method");
     var _user = await _spotifyService.spotify.me.get();
     print("User spotify: $_user");
@@ -202,6 +206,7 @@ class _HomeScreenState extends State<HomeScreen>{
               scrollDirection: Axis.horizontal,
               itemCount: _playlists.length,
               itemBuilder: (context, index){
+
                 return Container(
                   color: Color(0xFF101010),
                   width: width * 0.3,
@@ -218,13 +223,15 @@ class _HomeScreenState extends State<HomeScreen>{
                             height: height * 0.2,
                             image: getImage(_playlists[index].images),
                           ),
-                          onTap:()=>{
-                            print("ciao"),
-                            print(p.getTracksByPlaylistId(_playlists[index].id)),
-
-                            // Navigator.push(context,
-                            //     MaterialPageRoute(
-                            //         builder: (context) => QuizGenerator()))
+                          onTap:() async =>{
+                            tracks = await p.getTracksByPlaylistId(_playlists[index].id)  ,
+                            brani = await tracks.all(),
+                            _brani = brani.toList(),
+                            print(_brani[0].name),
+                          print(_brani[1].name),
+                            Navigator.push(context,
+                                MaterialPageRoute(
+                                    builder: (context) => QuizGenerator(_brani,"playlists")))
                           } ,
                         ),
                       ),
@@ -359,3 +366,5 @@ ImageProvider<Object> getImage(image){
     return Image.asset('images/wolf_user.png').image;
   return Image.network(image[0].url).image;
 }
+
+

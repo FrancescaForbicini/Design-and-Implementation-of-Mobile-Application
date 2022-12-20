@@ -1,21 +1,10 @@
-
-
-import 'dart:convert';
-
-import 'package:flutter/services.dart';
-
-import 'answer.dart';
-
+import 'package:spotify/spotify.dart' as sp;
 
 class Question{
-  String topic = "";
-  String name = "";
   String question1 = "";
   String artist_album = "";
   String question2 = "";
-  List<Answer> options = <Answer>[];
-  bool isLocked = false;
-  Answer? selectedOption;
+  String right_answer = "";
+  List<String> wrong_answer = [];
 
 }
-
