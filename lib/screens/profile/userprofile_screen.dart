@@ -24,7 +24,7 @@ class _UserProfileState extends State<UserProfile> {
   var _username;
   var _email;
   var _photo;
-  var bestScore = getBestScore();
+  var _bestScore;
   late Future<bool> _done;
 
   @override
@@ -45,6 +45,9 @@ class _UserProfileState extends State<UserProfile> {
     else{
       _photo = Image.asset('images/wolf_user.png').image;
     }
+    _bestScore = await getBestScore();
+    print("BEEEST");
+    print( _bestScore);
     return true;
   }
 
@@ -123,7 +126,7 @@ class _UserProfileState extends State<UserProfile> {
                           ),
                         ),
                         Text(
-                          "Best Score: $bestScore",
+                          "Best Score: $_bestScore",
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -190,16 +193,16 @@ class _UserProfileState extends State<UserProfile> {
 
 }
 
-int getBestScore(){
+Future<int> getBestScore() async{
   var _user = FirebaseAuth.instance.currentUser;
-  var data;
-  var bestScore;
+  var _data;
+  var _bestScore;
   final docRef = FirebaseFirestore.instance.collection("users").doc(_user?.email);
-  docRef.get().then((DocumentSnapshot doc) {
-    data = doc.data() as Map<String, dynamic>;
-    bestScore = data["bestScore"];
+  await docRef.get().then((DocumentSnapshot doc) {
+    _data = doc.data() as Map<String, dynamic>;
+    _bestScore = _data["bestScore"];
   });
-  if (bestScore == null)
+  if (_bestScore == null)
     return 0;
-  return bestScore;
+  return _bestScore;
 }

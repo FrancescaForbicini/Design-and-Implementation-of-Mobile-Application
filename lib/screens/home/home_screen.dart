@@ -1,15 +1,9 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:dima_project/screens/profile/userprofile_screen.dart';
 import 'package:dima_project/screens/authentication/authentication.dart';
 import 'package:dima_project/services/authentication_service.dart';
 import 'package:dima_project/services/spotify_service.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:spotify/spotify.dart' as sp;
-
-import '../../models/quiz.dart';
 import '../../services/quiz_generator.dart';
 
 class HomeScreen extends StatefulWidget{
@@ -224,11 +218,10 @@ class _HomeScreenState extends State<HomeScreen>{
                             image: getImage(_playlists[index].images),
                           ),
                           onTap:() async =>{
-                            tracks = await p.getTracksByPlaylistId(_playlists[index].id)  ,
+                            tracks = await p.getTracksByPlaylistId(_playlists[index].id),
                             brani = await tracks.all(),
                             _brani = brani.toList(),
-                            print(_brani[0].name),
-                          print(_brani[1].name),
+
                             Navigator.push(context,
                                 MaterialPageRoute(
                                     builder: (context) => QuizGenerator(_brani,"playlists")))

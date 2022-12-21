@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dima_project/screens/profile/userprofile_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -45,92 +46,117 @@ class QuizGeneratorStateful extends StatefulWidget {
 class _QuizGeneratorState extends State<QuizGeneratorStateful> {
   final List topic;
   final String type_quiz;
+
+  List <String> possible_artists =  List.empty(growable: true);
+  List <String> possible_albums =  List.empty(growable: true);
+  List <String> possible_tracks =  List.empty(growable: true);
   List _questions_from_JSON = [];
-  late List <Question> _questions = [];
+  List <Question> _questions = List.empty(growable:true);
   late PageController _controller;
+  String answer = "";
   late int _question_tot;
   bool end = false;
   int _score = 0;
   int _question_number = 1;
-  bool _can_show_button = true;
   late Future<bool> _done;
-
   _QuizGeneratorState(this.topic,this.type_quiz);
 
   // Fetch content from the json file
-  Future<void> readJson() async {
-    print(type_quiz);
-
+  Future<bool> readJson() async {
     final String response = await rootBundle.loadString(
         'json/question_' + this.type_quiz + '.json');
     final data = await json.decode(response);
     setState(() {
       _questions_from_JSON = data["questions"];
-      _can_show_button = false;
       _question_tot = topic.length;
-      // if (type_quiz == 'playlists')
-      //     buildQuestionPlaylist();
-    }
-    );
-
+    });
+    buildQuestionPlaylist();
+    return true;
   }
 
-  Future<bool> buildQuestionPlaylist() async{
-    await readJson();
-    List possible_artists = [];
-    List possible_albums = [];
-    List possible_tracks = [];
-    List<Question> possible_questions = [];
-    String answer = "";
-    final Question question = Question();
+  void buildQuestionPlaylist(){
     int i = 0;
-    int j = 0;
-    for (i = 0; i < topic.length; i++) {
-      possible_tracks.add(topic[i].name);
+    int type_question = 0;
+    for (i = 0; i < topic.length; i++)  {
+      sp.Track track = topic[i];
+      if (!possible_artists.contains(track.name.toString()))
+        possible_tracks.add(track.name.toString());
       sp.Artist artist = topic[i].artists[0];
-      possible_artists.add(artist.name);
-      possible_albums.add(topic[i].album);
+      if (!possible_artists.contains(artist.name.toString()))
+        possible_artists.add(artist.name.toString());
+      sp.AlbumSimple album = topic[i].album;
+      if (!possible_albums.contains(album.name.toString()))
+        possible_albums.add(album.name.toString());
     }
     for (i = 0; i < topic.length; i++) {
-      if (j > 1)
-        j = 0;
-      question.question1 = _questions_from_JSON[0]["question1"];
-      if (j != 2) {
-        question.artist_album = topic[i].name;
-        question.question2 = _questions_from_JSON[0]["question2"];
-        if (j == 0) {
-          sp.Artist artist = topic[i].artists[0];
-          answer = artist.name.toString();
-          question.right_answer = answer;
-          possible_artists.shuffle();
-          possible_artists.where((element) =>
-          !possible_artists.contains(element[topic[i].artists[0].name])).take(
-              3);
-          for (int k = 0; k < 3; k++) {
-            answer = possible_artists[k].toString();
-            question.wrong_answer.add(answer);
+      Question question = new Question();
+
+      if (type_question > 2)
+        type_question = 0;
+
+      question.question1 = _questions_from_JSON[type_question]["question1"];
+      question.question2 = _questions_from_JSON[type_question]["question2"];
+
+      List<String> wrong_answers = List.empty(growable: true);
+
+      switch(type_question){
+        case 0:
+          {
+            question.artist_album = topic[i].name;
+            sp.Artist artist = topic[i].artists[0];
+            answer = artist.name.toString();
+            question.right_answer = answer;
+            possible_artists.shuffle();
+            wrong_answers = possible_artists.where((element) => element !=
+                topic[i].artists[0].name).take(3).toList();
+
+            break;
           }
+
+        case 1:
+          {
+            question.artist_album = topic[i].name;
+            sp.AlbumSimple album = topic[i].album;
+            answer = album.name.toString();
+            question.right_answer = answer;
+            possible_albums.shuffle();
+            wrong_answers = possible_albums.where((element) => element !=
+                topic[i].album.name).take(3).toList();
+
+            break;
+          }
+
+        case 2:{
+          sp.AlbumSimple album = topic[i].album;
+          sp.Track track = topic[i];
+          question.track = track;
+          if (album.images!.isEmpty)
+            question.image = Image.network(album.images![0].url!);
+          answer = track.name.toString();
+          question.right_answer = answer;
+          possible_tracks.shuffle();
+          wrong_answers = possible_tracks.where((element) => element !=
+              topic[i].name).take(3).toList();
+          question.isPresent = true;
+          break;
         }
-      }
-      else {
-        //TODO playable
-      }
-      //j++;
-      possible_questions.add(question);
 
-      //print(possible_questions[0].artist_album)
+      }
+      for (int k = 0; k < 3; k++) {
+        answer = wrong_answers[k].toString();
+        question.wrong_answer.add(answer);
+      }
+
+      _questions.add(question);
+      type_question ++;
     }
-    setState(() {
-      _questions = possible_questions;
-    });
-
-    return true;
   }
   @override
   void initState() {
+    _done = readJson();
+
     super.initState();
     _controller = PageController(initialPage:0);
-    _done = buildQuestionPlaylist();
   }
 
   @override
@@ -140,83 +166,75 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
         padding: const EdgeInsets.all(25),
         child: Column(
             children: [
-              // !_can_show_button
-              //     ? const SizedBox.shrink(
-              // ):
-              // ElevatedButton(
-              //   onPressed:()=>{}, //readJson,
-              //   style: new ButtonStyle(backgroundColor: MaterialStateColor.resolveWith((states) => Color(0xFF101010))),
-              //   child: const Text('Start Quiz'),
-              //
-              // ),
-              FutureBuilder (
+              FutureBuilder(
                 future: _done,
                 builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                  if (snapshot.hasData && snapshot.connectionState == ConnectionState.done) {
+                  if (snapshot.hasData && snapshot.connectionState == ConnectionState.done){
                   return Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text("Question $_question_number/${_question_tot}", style: TextStyle(color: Color(0xFF101010), fontSize: 20, fontWeight: FontWeight.bold),),
-                          const Divider(thickness:1, color: Colors.grey),
-                          Expanded(child: PageView.builder(
-                              itemCount: _question_tot,
-                              controller: _controller,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemBuilder: (context, index) {
-                                // for (int i = 0; i < 50; i++){
-                                //   print(_questions[i].artist_album);
-                                // }
-                                return QuizView(
-                                  image: Container(
-                                  width: 150,
-                                  height: 150,
-                                  child: Image.network(
-                                    "https://yt3.ggpht.com/a/AATXAJyPMywRmD62sfK-1CXjwF0YkvrvnmaaHzs4uw=s900-c-k-c0xffffffff-no-rj-mo"),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text("Question $_question_number/${_question_tot}", style: TextStyle(color: Color(0xFF101010), fontSize: 20, fontWeight: FontWeight.bold),),
+                        const Divider(thickness:1, color: Colors.grey),
+                        Expanded(child: PageView.builder(
+                          itemCount: _question_tot,
+                          controller: _controller,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            double h,w;
+                            h = 0;
+                            w = 0;
+                            if (_questions[index].isPresent) {
+                              h = 300;
+                              w = 300;
+                            }
+                            return QuizView(
+                              image: Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  child: Ink.image(
+                                    width: w * 0.2,
+                                    height: h * 0.2,
+                                    image: _questions[index].image.image,
                                   ),
-                                  showCorrect: true,
-                                  //tagBackgroundColor: Colors.lightGreen,
-                                  //tagColor: Color(0xFF101010),
-                                  //questionTag:"Question: "+ (index+1).toString(),
-                                  answerColor: Colors.white,
-                                  answerBackgroundColor: Color(0xFF101010),
-                                  questionColor: Color(0xFF101010),
-                                  backgroundColor: Colors.lightGreen,
-                                  width: 600,
-                                  height: 700,
-                                  question: _questions[index].question1 + _questions[index].artist_album + _questions[index].question2,
-                                  rightAnswer: _questions[index].right_answer,
-                                  wrongAnswers: [_questions[index].wrong_answer[0], _questions[index].wrong_answer[1], _questions[index].wrong_answer[2]],
-                                  onRightAnswer: () => {
-                                      buildElevatedButton(),
-                                      setState(() {
-                                        _score++;
-                                      })
-                                  },
-                                  onWrongAnswer: () => {
-                                    setState(() {
-                                      end = true;
-                                      Timer(
-                                        Duration(milliseconds: 500),
-                                          (){
-                                            Navigator.pushReplacement(context,
-                                              MaterialPageRoute(
-                                                builder: (context) => ResultPage(score: _score,total: _question_tot,end: end,),
-                                              ),);
-
-
-                                          }
-                                      );
-                                      })
-                                  },
-                              );
+                                  onTap:()   => {
+                                    playSong(_questions[index]),
+                                  } ,
+                                ),
+                              ),
+                              showCorrect: true,
+                              answerColor: Colors.white,
+                              answerBackgroundColor: Color(0xFF101010),
+                              questionColor: Color(0xFF101010),
+                              backgroundColor: Colors.lightGreen,
+                              width: 600,
+                              height: 700,
+                              question: _questions[index].question1 + _questions[index].artist_album + _questions[index].question2,
+                              rightAnswer: _questions[index].right_answer,
+                              wrongAnswers: [_questions[index].wrong_answer[0], _questions[index].wrong_answer[1], _questions[index].wrong_answer[2]],
+                              onRightAnswer: () => {
+                                buildElevatedButton(),
+                                setState(() {
+                                  _score++;
+                                })
+                              },
+                              onWrongAnswer: () => {
+                                  setState(() {
+                                    end = true;
+                                    Timer(Duration(milliseconds: 500),
+                                    (){Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ResultPage(score: _score,total: _question_tot,end: end,),),);});
+                                  })
+                              },
+                            );
                             },
-    )
-                          )])
-              );
-    }  else return Container();}
-                  )
+                        )
+                        )])
+                  );
+                }else return Container();
+                }
+                )
             ]
+
         ),
     );
   }
@@ -271,6 +289,13 @@ class ResultPage extends StatelessWidget{
         )
     );
   }
+  }
+void playSong(Question question) async{
+  AudioPlayer audioPlayer = AudioPlayer();
+  final url = question.track.previewUrl.toString();
+  print(url);
+  await audioPlayer.setSourceUrl(url);
+  await audioPlayer.resume();
 }
 
 Future<void> updateScore(int score) async {
@@ -281,7 +306,6 @@ Future<void> updateScore(int score) async {
   docRef.get().then((DocumentSnapshot doc) {
     data = doc.data() as Map<String, dynamic>;
     bestScore = data["bestScore"];
-    print(bestScore);
     if (bestScore < score) {
       docRef.update({
         "bestScore": score,

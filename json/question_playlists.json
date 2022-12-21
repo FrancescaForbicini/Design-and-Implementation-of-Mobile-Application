@@ -2,17 +2,15 @@
   "questions": [
     {
       "question1": "Who has released ",
-      "artist_album": "",
       "question2": "?"
     },
     {
-      "question1": "Which album contains",
-      "artist_album": "",
+      "question1": "Which album contains ",
       "question2": "?"
     },
     {
-      "question1": "TODO",
-      "playable": ""
+      "question1": "Which song is it",
+      "question2": "?"
     }
   ]
 }
