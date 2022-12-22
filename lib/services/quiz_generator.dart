@@ -56,6 +56,7 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
   bool end = false;
   int _score = 0;
   int _question_number = 1;
+  bool _isPlaying = false;
   late Future<bool> _done;
   _QuizGeneratorState(this.topic,this.type_quiz);
 
@@ -87,7 +88,7 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
         possible_albums.add(album.name.toString());
     }
     for (i = 0; i < topic.length; i++) {
-      Question question = new Question();
+      Question question = Question();
 
       if (type_question > 2)
         type_question = 0;
@@ -150,6 +151,7 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
       type_question ++;
     }
   }
+
   @override
   void initState() {
     _done = readJson();
@@ -197,11 +199,15 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
                                     image: _questions[index].image.image,
                                   ),
                                   onTap:() async {
-                                    print(_questions[index].track.previewUrl);
-                                    // print("ciao"+  _questions[index].track.previewUrl.toString());
-
                                     await audioPlayer.setUrl(_questions[index].track.previewUrl!);
-                                    await audioPlayer.play();
+                                    if (_isPlaying){
+                                      _isPlaying = false;
+                                      await audioPlayer.pause();
+                                    }
+                                    else {
+                                      _isPlaying = true;
+                                      await audioPlayer.play();
+                                    }
                                   } ,
                                 ),
                               ),
@@ -216,6 +222,7 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
                               rightAnswer: _questions[index].right_answer,
                               wrongAnswers: [_questions[index].wrong_answer[0], _questions[index].wrong_answer[1], _questions[index].wrong_answer[2]],
                               onRightAnswer: () => {
+                                _isPlaying = false,
                                 audioPlayer.stop(),
                                 buildElevatedButton(),
                                 setState(() {
@@ -223,19 +230,20 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
                                 })
                               },
                               onWrongAnswer: () => {
-                                  audioPlayer.stop(),
-                                  setState(() {
-                                    end = true;
-                                    Timer(Duration(milliseconds: 500),
-                                    (){Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ResultPage(score: _score,total: _question_tot,end: end,),),);});
-                                  })
+                                _isPlaying = false,
+                                audioPlayer.stop(),
+                                setState(() {
+                                  end = true;
+                                  Timer(Duration(milliseconds: 500),
+                                          (){Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ResultPage(score: _score,total: _question_tot,end: end,),),);});
+                                })
                               },
                             );
                             },
                         )
                         )])
                   );
-                }else return Container();
+                  }else return Container();
                 }
                 )
             ]
