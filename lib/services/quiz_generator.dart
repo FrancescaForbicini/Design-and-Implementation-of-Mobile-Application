@@ -1,17 +1,15 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dima_project/screens/profile/userprofile_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:quiz_view/quiz_view.dart';
 import 'package:spotify/spotify.dart' as sp;
 
-import '../models/answer.dart';
 import '../models/question.dart';
 
 
@@ -46,7 +44,7 @@ class QuizGeneratorStateful extends StatefulWidget {
 class _QuizGeneratorState extends State<QuizGeneratorStateful> {
   final List topic;
   final String type_quiz;
-
+  AudioPlayer audioPlayer = AudioPlayer();
   List <String> possible_artists =  List.empty(growable: true);
   List <String> possible_albums =  List.empty(growable: true);
   List <String> possible_tracks =  List.empty(growable: true);
@@ -130,8 +128,9 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
           sp.AlbumSimple album = topic[i].album;
           sp.Track track = topic[i];
           question.track = track;
-          if (album.images!.isEmpty)
+          if (album.images!.isEmpty) {
             question.image = Image.network(album.images![0].url!);
+          }
           answer = track.name.toString();
           question.right_answer = answer;
           possible_tracks.shuffle();
@@ -174,7 +173,7 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Text("Question $_question_number/${_question_tot}", style: TextStyle(color: Color(0xFF101010), fontSize: 20, fontWeight: FontWeight.bold),),
+                        Text("Question $_question_number/$_question_tot", style: TextStyle(color: Color(0xFF101010), fontSize: 20, fontWeight: FontWeight.bold),),
                         const Divider(thickness:1, color: Colors.grey),
                         Expanded(child: PageView.builder(
                           itemCount: _question_tot,
@@ -197,8 +196,12 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
                                     height: h * 0.2,
                                     image: _questions[index].image.image,
                                   ),
-                                  onTap:()   => {
-                                    playSong(_questions[index]),
+                                  onTap:() async {
+                                    print(_questions[index].track.previewUrl);
+                                    // print("ciao"+  _questions[index].track.previewUrl.toString());
+
+                                    await audioPlayer.setUrl(_questions[index].track.previewUrl!);
+                                    await audioPlayer.play();
                                   } ,
                                 ),
                               ),
@@ -213,12 +216,14 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
                               rightAnswer: _questions[index].right_answer,
                               wrongAnswers: [_questions[index].wrong_answer[0], _questions[index].wrong_answer[1], _questions[index].wrong_answer[2]],
                               onRightAnswer: () => {
+                                audioPlayer.stop(),
                                 buildElevatedButton(),
                                 setState(() {
                                   _score++;
                                 })
                               },
                               onWrongAnswer: () => {
+                                  audioPlayer.stop(),
                                   setState(() {
                                     end = true;
                                     Timer(Duration(milliseconds: 500),
@@ -291,13 +296,8 @@ class ResultPage extends StatelessWidget{
   }
   }
 void playSong(Question question) async{
-  AudioPlayer audioPlayer = AudioPlayer();
-  final url = question.track.previewUrl.toString();
-  print(url);
-  await audioPlayer.setSourceUrl(url);
-  await audioPlayer.resume();
-}
 
+}
 Future<void> updateScore(int score) async {
   var user = FirebaseAuth.instance.currentUser;
   var data;
