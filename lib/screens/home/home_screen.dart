@@ -21,10 +21,11 @@ class _HomeScreenState extends State<HomeScreen>{
   late List _playlists;
   late List _artists;
   late Future<bool> _done;
-  late sp.Playlists  p;
-  late sp.Pages<sp.Track> tracks;
-  late Iterable<sp.Track> brani;
-  late List _brani;
+  late sp.Playlists  _playlists_quiz;
+  late sp.Artists _artists_quiz;
+  late sp.Pages<sp.Track> _tracksPages;
+  late Iterable<sp.Track> _tracksIterator;
+  late List _tracks;
 
   @override
   void initState() {
@@ -53,8 +54,8 @@ class _HomeScreenState extends State<HomeScreen>{
     print("Got the playlists");
     print(playlists.runtimeType);
     _playlists = playlists.toList();
-    p = sp.Playlists(_spotifyService.spotify);
-
+    _playlists_quiz = sp.Playlists(_spotifyService.spotify);
+    _artists_quiz = sp.Artists(_spotifyService.spotify);
     Iterable<sp.Artist> artists = await _spotifyService.spotify.me.topArtists();
     print(artists.runtimeType);
     _artists = artists.toList();
@@ -217,14 +218,13 @@ class _HomeScreenState extends State<HomeScreen>{
                             height: height * 0.2,
                             image: getImage(_playlists[index].images),
                           ),
-                          onTap:() async =>{
-                            tracks = await p.getTracksByPlaylistId(_playlists[index].id),
-                            brani = await tracks.all(),
-                            _brani = brani.toList(),
-
+                          onTap:() async{
+                            _tracksPages = await _playlists_quiz.getTracksByPlaylistId(_playlists[index].id);
+                            _tracksIterator = await _tracksPages.all();
+                            _tracks = _tracksIterator.toList();
                             Navigator.push(context,
                                 MaterialPageRoute(
-                                    builder: (context) => QuizGenerator(_brani,"playlists")))
+                                    builder: (context) => QuizGenerator(_tracks,"playlists")));
                           } ,
                         ),
                       ),
@@ -301,8 +301,13 @@ class _HomeScreenState extends State<HomeScreen>{
                             //fit: BoxFit.cover,
                             image: getImage(_artists[index].images),
                           ),
-                          //TODO implement onTap
-                          //onTap: ,
+                          onTap:()async{
+                            sp.Artist artist = await _artists_quiz.get(_artists[index].id);
+                            Navigator.push(context,
+                                MaterialPageRoute(
+                                    builder: (context) => QuizGenerator(artist,"artists")));
+
+                          },
                         ),
                       ),
                       Container(

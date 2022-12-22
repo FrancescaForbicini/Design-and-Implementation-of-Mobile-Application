@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
+import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dima_project/screens/profile/userprofile_screen.dart';
+import 'package:dima_project/services/spotify_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,235 +15,404 @@ import 'package:spotify/spotify.dart' as sp;
 
 import '../models/question.dart';
 
-
 class QuizGenerator extends StatelessWidget {
-  final List topic;
+  final topic;
   final String type_quiz;
-  QuizGenerator(this.topic,this.type_quiz);
+
+  QuizGenerator(this.topic, this.type_quiz);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFF101010),
-        title: Text("New Quiz",style: new TextStyle(color: Colors.lightGreen,fontSize: 35),),
+        title: Text(
+          "New Quiz",
+          style: new TextStyle(color: Colors.lightGreen, fontSize: 35),
+        ),
       ),
-      body: QuizGeneratorStateful(topic,type_quiz),
-
+      body: QuizGeneratorStateful(topic, type_quiz),
     );
   }
 }
 
 class QuizGeneratorStateful extends StatefulWidget {
-  final List topic;
+  final topic;
   final String type_quiz;
 
   QuizGeneratorStateful(this.topic, this.type_quiz);
+
   @override
-  _QuizGeneratorState createState() => _QuizGeneratorState(topic,type_quiz);
+  _QuizGeneratorState createState() => _QuizGeneratorState(topic, type_quiz);
 }
 
-
 class _QuizGeneratorState extends State<QuizGeneratorStateful> {
-  final List topic;
+  final topic;
   final String type_quiz;
   AudioPlayer audioPlayer = AudioPlayer();
-  List <String> possible_artists =  List.empty(growable: true);
-  List <String> possible_albums =  List.empty(growable: true);
-  List <String> possible_tracks =  List.empty(growable: true);
-  List _questions_from_JSON = [];
-  List <Question> _questions = List.empty(growable:true);
+  List<Question> _questions = [];
   late PageController _controller;
-  String answer = "";
-  late int _question_tot;
+  List _questions_from_JSON = [];
   bool end = false;
   int _score = 0;
   int _question_number = 1;
   late Future<bool> _done;
-  _QuizGeneratorState(this.topic,this.type_quiz);
+
+  _QuizGeneratorState(this.topic, this.type_quiz);
 
   // Fetch content from the json file
   Future<bool> readJson() async {
-    final String response = await rootBundle.loadString(
-        'json/question_' + this.type_quiz + '.json');
+    final String response = await rootBundle
+        .loadString('json/question_' + this.type_quiz + '.json');
     final data = await json.decode(response);
     setState(() {
       _questions_from_JSON = data["questions"];
-      _question_tot = topic.length;
     });
-    buildQuestionPlaylist();
+    switch (type_quiz) {
+      case 'playlist':
+        {
+          buildQuestionPlaylist();
+          break;
+        }
+
+      case 'artists':
+        {
+          buildQuestionArtists();
+          break;
+        }
+      default:
+        {
+          print("error");
+          break;
+        }
+    }
+
     return true;
   }
 
-  void buildQuestionPlaylist(){
+  void buildQuestionArtists() async {
+    List<sp.AlbumSimple?> allAlbums = [];
+    List<sp.TrackSimple> allTracks = [];
+    List<String?> allYearsAlbum = List.empty(growable: true);
     int i = 0;
-    int type_question = 0;
-    for (i = 0; i < topic.length; i++)  {
+    int _typeQuestion = 0;
+    sp.Artist artist = topic;
+    sp.Artists artistsRetrieve = sp.Artists(SpotifyService().spotify);
+    var id = artist.id;
+    List<String> input = ["album"];
+    sp.Pages<sp.Album> _albumsPages = artistsRetrieve.albums(id!,includeGroups: input);
+    Iterable<sp.Album> _albumsLists = await _albumsPages.all();
+    allAlbums = _albumsLists.toList();
+    late List<List<sp.TrackSimple>> allTracksForAlbum = new List.generate(allAlbums.length, (i) => []);
+
+    for (i = 0; i < allAlbums.length; i++) {
+      String? _id = allAlbums[i]?.id.toString();
+      allTracksForAlbum[i].addAll(await sp.Albums(SpotifyService().spotify)
+          .getTracks(_id.toString())
+          .all());
+      allTracks.addAll(allTracksForAlbum[i]);
+    }
+    allYearsAlbum =
+        allAlbums.map((e) => e?.releaseDate?.substring(0, 4).toString()).toList();
+
+    for (i = 0; i < allAlbums.length; i++) {
+      Question _question = new Question();
+      String? answer = "";
+      List<String?> _wrongAnswers = List.empty(growable: true);
+
+      if (_typeQuestion > 3) {
+        _typeQuestion = 0;
+      }
+
+      _question.question1 = _questions_from_JSON[_typeQuestion]["question1"];
+      _question.question2 = _questions_from_JSON[_typeQuestion]["question2"];
+
+      switch (_typeQuestion) {
+        case 0:
+          {
+            _question.artistAlbum = allAlbums[i]?.name;
+            answer = allAlbums[i]?.releaseDate?.substring(0, 4).toString();
+            _question.rightAnswer = answer;
+            allYearsAlbum.shuffle();
+            _wrongAnswers =
+                allYearsAlbum.where((element) => element != answer).take(3).toList();
+            for (int k = 0; k < 3; k++) {
+              _question.wrongAnswers.add(_wrongAnswers[k]!);
+            }
+            break;
+          }
+        case 1:
+        {
+          _question.artistAlbum = allAlbums[i]?.name;
+          List<sp.TrackSimple> rightAnswersTracks = allTracksForAlbum[i];
+          allTracks.shuffle();
+          List<sp.TrackSimple> wrongAnswersTracks = allTracks.where((element) => !rightAnswersTracks.contains(element)).take(3).toList();
+          int randomTrack = Random().nextInt(rightAnswersTracks.length);
+          answer = rightAnswersTracks[randomTrack].name;
+
+          _question.rightAnswer = answer;
+          for (int k = 0; k < 3; k++) {
+            _question.wrongAnswers.add(wrongAnswersTracks[k].name!);
+          }
+          break;
+
+        }
+
+        case 2:
+          {
+            _question.artistAlbum = allAlbums[i]?.name;
+            allTracksForAlbum[i].shuffle();
+            List<sp.TrackSimple> wrongAnswerTracks = allTracksForAlbum[i];
+            allTracks.shuffle();
+            List<sp.TrackSimple> rightAnswerTracks = allTracks.where((element) => !wrongAnswerTracks.contains(element)).toList();
+            int randomTrack = Random().nextInt(rightAnswerTracks.length);
+            answer = rightAnswerTracks[randomTrack].name;
+            _question.rightAnswer = answer;
+            wrongAnswerTracks.shuffle();
+            for (int k = 0; k < 3; k++) {
+              _question.wrongAnswers.add(wrongAnswerTracks[k].name!);
+            }
+            break;
+          }
+        case 3:
+        {
+          int randomTrack = Random().nextInt(allTracksForAlbum[i].length);
+          sp.TrackSimple trackSelected = allTracksForAlbum[i][randomTrack];
+          _question.url = trackSelected.previewUrl.toString();
+          answer = trackSelected.name.toString();
+          _question.rightAnswer = trackSelected.name;
+          allTracksForAlbum[i].shuffle();
+          List<sp.TrackSimple> wrongAnswerTracks = allTracksForAlbum[i]
+              .where((element) => element.name != trackSelected.name)
+              .take(3)
+              .toList();
+          _question.isPresent = true;
+          for (int k=0; k < 3; k++) {
+            _question.wrongAnswers.add(wrongAnswerTracks[k].name!);
+          }
+
+        }
+      }
+      setState(() {
+        _questions = [
+          ..._questions,
+          _question,
+        ];
+      });
+
+      _typeQuestion++;
+    }
+    _questions.shuffle();
+  }
+
+  void buildQuestionPlaylist() {
+    List<String> _possible_artists = List.empty(growable: true);
+    List<String> _possible_albums = List.empty(growable: true);
+    List<String> _possible_tracks = List.empty(growable: true);
+    String answer = "";
+    int i = 0;
+    int typeQuestion = 0;
+    for (i = 0; i < topic.length; i++) {
       sp.Track track = topic[i];
-      if (!possible_artists.contains(track.name.toString()))
-        possible_tracks.add(track.name.toString());
+      if (!_possible_artists.contains(track.name.toString())) {
+        _possible_tracks.add(track.name.toString());
+      }
       sp.Artist artist = topic[i].artists[0];
-      if (!possible_artists.contains(artist.name.toString()))
-        possible_artists.add(artist.name.toString());
+      if (!_possible_artists.contains(artist.name.toString())) {
+        _possible_artists.add(artist.name.toString());
+      }
       sp.AlbumSimple album = topic[i].album;
-      if (!possible_albums.contains(album.name.toString()))
-        possible_albums.add(album.name.toString());
+      if (!_possible_albums.contains(album.name.toString())) {
+        _possible_albums.add(album.name.toString());
+      }
     }
     for (i = 0; i < topic.length; i++) {
       Question question = new Question();
 
-      if (type_question > 2)
-        type_question = 0;
+      if (typeQuestion > 3) typeQuestion = 0;
 
-      question.question1 = _questions_from_JSON[type_question]["question1"];
-      question.question2 = _questions_from_JSON[type_question]["question2"];
+      question.question1 = _questions_from_JSON[typeQuestion]["question1"];
+      question.question2 = _questions_from_JSON[typeQuestion]["question2"];
 
-      List<String> wrong_answers = List.empty(growable: true);
+      List<String> wrongAnswers = List.empty(growable: true);
 
-      switch(type_question){
+      switch (typeQuestion) {
         case 0:
           {
-            question.artist_album = topic[i].name;
+            question.artistAlbum = topic[i].name;
             sp.Artist artist = topic[i].artists[0];
             answer = artist.name.toString();
-            question.right_answer = answer;
-            possible_artists.shuffle();
-            wrong_answers = possible_artists.where((element) => element !=
-                topic[i].artists[0].name).take(3).toList();
+            question.rightAnswer = answer;
+            _possible_artists.shuffle();
+            wrongAnswers = _possible_artists
+                .where((element) => element != topic[i].artists[0].name)
+                .take(3)
+                .toList();
 
             break;
           }
 
         case 1:
           {
-            question.artist_album = topic[i].name;
+            question.artistAlbum = topic[i].name;
             sp.AlbumSimple album = topic[i].album;
             answer = album.name.toString();
-            question.right_answer = answer;
-            possible_albums.shuffle();
-            wrong_answers = possible_albums.where((element) => element !=
-                topic[i].album.name).take(3).toList();
+            question.rightAnswer = answer;
+            _possible_albums.shuffle();
+            wrongAnswers = _possible_albums
+                .where((element) => element != topic[i].album.name)
+                .take(3)
+                .toList();
 
             break;
           }
 
-        case 2:{
-          sp.AlbumSimple album = topic[i].album;
-          sp.Track track = topic[i];
-          question.track = track;
-          if (album.images!.isEmpty) {
-            question.image = Image.network(album.images![0].url!);
+        case 2:
+          {
+            sp.AlbumSimple album = topic[i].album;
+            sp.Track track = topic[i];
+            question.url = track.previewUrl.toString();
+            if (album.images!.isEmpty) {
+              question.image = Image.network(album.images![0].url!);
+            }
+            answer = track.name.toString();
+            question.rightAnswer = answer;
+            _possible_tracks.shuffle();
+            wrongAnswers = _possible_tracks
+                .where((element) => element != topic[i].name)
+                .take(3)
+                .toList();
+            question.isPresent = true;
+            break;
           }
-          answer = track.name.toString();
-          question.right_answer = answer;
-          possible_tracks.shuffle();
-          wrong_answers = possible_tracks.where((element) => element !=
-              topic[i].name).take(3).toList();
-          question.isPresent = true;
-          break;
-        }
-
       }
       for (int k = 0; k < 3; k++) {
-        answer = wrong_answers[k].toString();
-        question.wrong_answer.add(answer);
+        answer = wrongAnswers[k].toString();
+        question.wrongAnswers.add(answer);
       }
 
-      _questions.add(question);
-      type_question ++;
+      setState(() {
+        _questions = [
+          ..._questions,
+          question,
+        ];
+      });
+      typeQuestion++;
     }
+    _questions.shuffle();
   }
+
   @override
   void initState() {
     _done = readJson();
 
     super.initState();
-    _controller = PageController(initialPage:0);
+    _controller = PageController(initialPage: 0);
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: Colors.lightGreen,
-        padding: const EdgeInsets.all(25),
-        child: Column(
-            children: [
-              FutureBuilder(
-                future: _done,
-                builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                  if (snapshot.hasData && snapshot.connectionState == ConnectionState.done){
-                  return Expanded(
+      color: Colors.lightGreen,
+      padding: const EdgeInsets.all(25),
+      child: Column(children: [
+        FutureBuilder(
+            future: _done,
+            builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+              if (snapshot.hasData &&
+                  snapshot.connectionState == ConnectionState.done) {
+                return Expanded(
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text("Question $_question_number/$_question_tot", style: TextStyle(color: Color(0xFF101010), fontSize: 20, fontWeight: FontWeight.bold),),
-                        const Divider(thickness:1, color: Colors.grey),
-                        Expanded(child: PageView.builder(
-                          itemCount: _question_tot,
-                          controller: _controller,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            double h,w;
-                            h = 0;
-                            w = 0;
-                            if (_questions[index].isPresent) {
-                              h = 300;
-                              w = 300;
-                            }
-                            return QuizView(
-                              image: Material(
-                                color: Colors.transparent,
-                                child: InkWell(
-                                  child: Ink.image(
-                                    width: w * 0.2,
-                                    height: h * 0.2,
-                                    image: _questions[index].image.image,
-                                  ),
-                                  onTap:() async {
-                                    print(_questions[index].track.previewUrl);
-                                    // print("ciao"+  _questions[index].track.previewUrl.toString());
-
-                                    await audioPlayer.setUrl(_questions[index].track.previewUrl!);
-                                    await audioPlayer.play();
-                                  } ,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                      Text(
+                        "Question $_question_number",
+                        style: const TextStyle(
+                            color: Color(0xFF101010),
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      const Divider(thickness: 1, color: Colors.grey),
+                      Expanded(
+                          child: PageView.builder(
+                        itemCount: _questions.length,
+                        controller: _controller,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          double h, w;
+                          h = 0;
+                          w = 0;
+                          if (_questions[index].isPresent) {
+                            h = 300;
+                            w = 300;
+                          }
+                          return QuizView(
+                            image: Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                child: Ink.image(
+                                  width: w * 0.2,
+                                  height: h * 0.2,
+                                  image: _questions[index].image.image,
                                 ),
-                              ),
-                              showCorrect: true,
-                              answerColor: Colors.white,
-                              answerBackgroundColor: Color(0xFF101010),
-                              questionColor: Color(0xFF101010),
-                              backgroundColor: Colors.lightGreen,
-                              width: 600,
-                              height: 700,
-                              question: _questions[index].question1 + _questions[index].artist_album + _questions[index].question2,
-                              rightAnswer: _questions[index].right_answer,
-                              wrongAnswers: [_questions[index].wrong_answer[0], _questions[index].wrong_answer[1], _questions[index].wrong_answer[2]],
-                              onRightAnswer: () => {
-                                audioPlayer.stop(),
-                                buildElevatedButton(),
-                                setState(() {
-                                  _score++;
-                                })
-                              },
-                              onWrongAnswer: () => {
-                                  audioPlayer.stop(),
-                                  setState(() {
-                                    end = true;
-                                    Timer(Duration(milliseconds: 500),
-                                    (){Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ResultPage(score: _score,total: _question_tot,end: end,),),);});
-                                  })
-                              },
-                            );
-                            },
-                        )
-                        )])
-                  );
-                }else return Container();
-                }
-                )
-            ]
+                                onTap: () async {
+                                  print(_questions[index].url);
 
-        ),
+                                  await audioPlayer.setUrl(
+                                      _questions[index].url);
+                                  await audioPlayer.play();
+                                },
+                              ),
+                            ),
+                            showCorrect: true,
+                            answerColor: Colors.white,
+                            answerBackgroundColor: Color(0xFF101010),
+                            questionColor: Color(0xFF101010),
+                            backgroundColor: Colors.lightGreen,
+                            width: 600,
+                            height: 700,
+                            question: _questions[index].question1 +
+                                _questions[index].artistAlbum.toString() +
+                                _questions[index].question2,
+                            rightAnswer: _questions[index].rightAnswer,
+                            wrongAnswers: [
+                              _questions[index].wrongAnswers[0],
+                              _questions[index].wrongAnswers[1],
+                              _questions[index].wrongAnswers[2]
+                            ],
+                            onRightAnswer: () => {
+                              audioPlayer.stop(),
+                              buildElevatedButton(),
+                              setState(() {
+                                _score++;
+                              })
+                            },
+                            onWrongAnswer: () => {
+                              audioPlayer.stop(),
+                              setState(() {
+                                end = true;
+                                Timer(Duration(milliseconds: 500), () {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ResultPage(
+                                        score: _score,
+                                        total: _questions.length,
+                                        end: end,
+                                      ),
+                                    ),
+                                  );
+                                });
+                              })
+                            },
+                          );
+                        },
+                      ))
+                    ]));
+              } else
+                return CircularProgressIndicator();
+            })
+      ]),
     );
   }
 
@@ -249,60 +421,81 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
       duration: const Duration(milliseconds: 500),
       curve: Curves.easeInExpo,
     );
-    if (_question_number < _question_tot) {
+    if (_question_number < _questions.length) {
       setState(() {
         _question_number++;
       });
-    }
-    else {
-      Navigator.pushReplacement(context,
+    } else {
+      Navigator.pushReplacement(
+        context,
         MaterialPageRoute(
-          builder: (context) => ResultPage(score: _score,total: _question_tot,end: end,),
-        ),);
+          builder: (context) => ResultPage(
+            score: _score,
+            total: _questions.length,
+            end: end,
+          ),
+        ),
+      );
     }
   }
 }
-class ResultPage extends StatelessWidget{
+
+class ResultPage extends StatelessWidget {
   final int score;
   final int total;
   final bool end;
-  const ResultPage({Key?key, required this.score, required this.total, required this.end}): super (key:key);
+
+  const ResultPage(
+      {Key? key, required this.score, required this.total, required this.end})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.lightGreen,
-      body:Center(
+        backgroundColor: Colors.lightGreen,
+        body: Center(
           child: Column(
             children: [
-              SizedBox(height: 300,),
-              if (end)
-                Text("You missed a question!"),
-              Text('You got $score/$total',style: new TextStyle(color: Color(0xFF101010),fontSize: 30,fontWeight: FontWeight.bold),),
-              Divider(height: 20,),
-              ElevatedButton(style: new ButtonStyle(backgroundColor: MaterialStateColor.resolveWith((states) => Color(0xFF101010))),
+              SizedBox(
+                height: 300,
+              ),
+              if (end) Text("You missed a question!"),
+              Text(
+                'You got $score/$total',
+                style: new TextStyle(
+                    color: Color(0xFF101010),
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold),
+              ),
+              Divider(
+                height: 20,
+              ),
+              ElevatedButton(
+                style: new ButtonStyle(
+                    backgroundColor: MaterialStateColor.resolveWith(
+                        (states) => Color(0xFF101010))),
                 onPressed: () => {
                   updateScore(score),
                   Navigator.push(context,
-                  MaterialPageRoute(
-                      builder: (context) => UserProfile()))},
-                  child: Text("Exit",style: new TextStyle(color: Colors.white),),),
+                      MaterialPageRoute(builder: (context) => UserProfile()))
+                },
+                child: Text(
+                  "Exit",
+                  style: new TextStyle(color: Colors.white),
+                ),
+              ),
             ],
-
           ),
-
-        )
-    );
+        ));
   }
-  }
-void playSong(Question question) async{
-
 }
+
 Future<void> updateScore(int score) async {
   var user = FirebaseAuth.instance.currentUser;
-  var data;
+  Map<String, dynamic> data;
   var bestScore;
-  final docRef = FirebaseFirestore.instance.collection("users").doc(user?.email);
+  final docRef =
+      FirebaseFirestore.instance.collection("users").doc(user?.email);
   docRef.get().then((DocumentSnapshot doc) {
     data = doc.data() as Map<String, dynamic>;
     bestScore = data["bestScore"];
@@ -311,11 +504,5 @@ Future<void> updateScore(int score) async {
         "bestScore": score,
       });
     }
-  },
-    onError: (e) => print("Error getting document: $e")
-
-  );
-
+  }, onError: (e) => print("Error getting document: $e"));
 }
-
-
