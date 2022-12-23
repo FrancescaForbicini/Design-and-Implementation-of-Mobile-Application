@@ -1,6 +1,8 @@
 import 'package:dima_project/screens/profile/userprofile_screen.dart';
 import 'package:dima_project/screens/authentication/authentication.dart';
 import 'package:dima_project/services/authentication_service.dart';
+import 'package:dima_project/services/questions_artist.dart';
+import 'package:dima_project/services/questions_playlist.dart';
 import 'package:dima_project/services/spotify_service.dart';
 import 'package:flutter/material.dart';
 import 'package:spotify/spotify.dart' as sp;
@@ -222,9 +224,11 @@ class _HomeScreenState extends State<HomeScreen>{
                             _tracksPages = await _playlists_quiz.getTracksByPlaylistId(_playlists[index].id);
                             _tracksIterator = await _tracksPages.all();
                             _tracks = _tracksIterator.toList();
+                            var quizGenerator = QuestionsPlaylist();
+                            quizGenerator.buildAllAnswersQuestions(_tracks);
                             Navigator.push(context,
                                 MaterialPageRoute(
-                                    builder: (context) => QuizGenerator(_tracks,"playlists",0)));
+                                    builder: (context) => QuizGenerator(_tracks,"playlists",0,quizGenerator)));
                           } ,
                         ),
                       ),
@@ -302,10 +306,12 @@ class _HomeScreenState extends State<HomeScreen>{
                             image: getImage(_artists[index].images),
                           ),
                           onTap:()async{
+                            var quizGenerator  = QuestionsArtist();
                             sp.Artist artist = await _artists_quiz.get(_artists[index].id);
+                            await quizGenerator.buildAllAnswersQuestions(artist);
                             Navigator.push(context,
                                 MaterialPageRoute(
-                                    builder: (context) => QuizGenerator(artist,"artists",0)));
+                                    builder: (context) => QuizGenerator(artist,"artists",0,quizGenerator)));
 
                           },
                         ),

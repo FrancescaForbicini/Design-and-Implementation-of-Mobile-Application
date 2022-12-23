@@ -11,13 +11,19 @@ class QuestionsPlaylist {
 
   QuestionsPlaylist._QuestionsPlaylistConstructor();
 
+  List<String> allArtists = [];
+  List<String?> allAlbums = [];
+  List<String> allTracks = [];
 
+  void buildAllAnswersQuestions(List<sp.Track> tracks){
+    allArtists = getAllArtists(tracks);
+    allAlbums = getAllAlbums(tracks);
+    allTracks = getAllTracks(tracks);
+  }
 
   Future<void> buildQuestionsPlaylist(List<Question> questions, List<sp.Track> tracks,List questionsFromJSON) async{
     tracks.shuffle();
-    List<String> allArtists = getAllArtists(tracks);
-    List<String?> allAlbums = getAllAlbums(tracks);
-    List<String> allTracks = getAllTracks(tracks);
+
     int i = 0;
     int typeQuestion = 0;
 

@@ -14,13 +14,21 @@ class QuestionsArtist {
 
   QuestionsArtist._QuestionsArtistConstructor();
 
+  List<sp.AlbumSimple?> allAlbums = [];
+  List<List<sp.TrackSimple>> allTracksForAlbum = [];
+  List<sp.TrackSimple> allTracks = [];
+  List<String?> allYearsAlbum = [];
 
-  Future<void> buildQuestionArtists(List<Question> questions, sp.Artist artist,List questionsFromJSON) async {
+  Future<void> buildAllAnswersQuestions(sp.Artist artist)async{
     sp.Artists artistsRetrieve = sp.Artists(SpotifyService().spotify);
-    List<sp.AlbumSimple?> allAlbums = await getAllAlbums(artist,artistsRetrieve);
-    List<List<sp.TrackSimple>> allTracksForAlbum = await getAllTracksForAlbum(allAlbums);
-    List<sp.TrackSimple> allTracks = getAllTracks(allTracksForAlbum);
-    List<String?> allYearsAlbum = allAlbums.map((e) => e?.releaseDate?.substring(0, 4).toString()).toList();
+    allAlbums = await getAllAlbums(artist,artistsRetrieve);
+    allTracksForAlbum = await getAllTracksForAlbum(allAlbums);
+    allTracks = getAllTracks(allTracksForAlbum);
+    allYearsAlbum = allAlbums.map((e) => e?.releaseDate?.substring(0, 4).toString()).toList();
+
+  }
+  void buildQuestionArtists(List<Question> questions, sp.Artist artist,List questionsFromJSON) async {
+
     int i = 0;
     int typeQuestion = 0;
 

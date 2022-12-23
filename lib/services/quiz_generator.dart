@@ -19,8 +19,8 @@ class QuizGenerator extends StatelessWidget {
   final topic;
   final String typeQuiz;
   final int totalScore;
-
-  const QuizGenerator(this.topic, this.typeQuiz, this.totalScore);
+  final quizGenerator;
+  const QuizGenerator(this.topic, this.typeQuiz, this.totalScore,this.quizGenerator);
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +32,7 @@ class QuizGenerator extends StatelessWidget {
           style: TextStyle(color: Colors.lightGreen, fontSize: 35),
         ),
       ),
-      body: QuizGeneratorStateful(topic, typeQuiz, totalScore),
+      body: QuizGeneratorStateful(topic, typeQuiz, totalScore,quizGenerator),
     );
   }
 }
@@ -41,16 +41,18 @@ class QuizGeneratorStateful extends StatefulWidget {
   final topic;
   final String typeQuiz;
   final int totalScore;
+  final quizGenerator;
 
-  QuizGeneratorStateful(this.topic, this.typeQuiz,this.totalScore);
+  QuizGeneratorStateful(this.topic, this.typeQuiz,this.totalScore,this.quizGenerator);
 
   @override
-  _QuizGeneratorState createState() => _QuizGeneratorState(topic, typeQuiz,totalScore);
+  _QuizGeneratorState createState() => _QuizGeneratorState(topic, typeQuiz,totalScore,quizGenerator);
 }
 
 class _QuizGeneratorState extends State<QuizGeneratorStateful> {
   final topic;
   int totalScore;
+  final quizGenerator;
   final String typeQuiz;
   AudioPlayer audioPlayer = AudioPlayer();
   late List<Question> _questions;
@@ -61,7 +63,7 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
   late Future<bool> _done;
 
 
-  _QuizGeneratorState(this.topic, this.typeQuiz, this.totalScore);
+  _QuizGeneratorState(this.topic, this.typeQuiz, this.totalScore,this.quizGenerator);
 
   // Fetch content from the json file
   Future<bool> readJson() async {
@@ -75,14 +77,15 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
       case 'playlists':
         {
           _questions = [];
-          await QuestionsPlaylist().buildQuestionsPlaylist(
+          await quizGenerator.buildQuestionsPlaylist(
               _questions, topic, _questionsFromJSON);
           break;
         }
 
       case 'artists':
         {
-          await QuestionsArtist().buildQuestionArtists(
+          _questions = [];
+          await quizGenerator.buildQuestionArtists(
               _questions, topic, _questionsFromJSON);
           break;
         }
@@ -118,7 +121,7 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
                 return quizBuilder();
               }
               else {
-                return Container();
+                return CircularProgressIndicator();
               }
             })
       ]),
@@ -145,7 +148,6 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
                     physics: const NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index) {
                       print(_questions[index].rightAnswer);
-
                       double h, w;
                       h = 0;
                       w = 0;
@@ -233,12 +235,12 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
     } else {
       _questions = [];
       Navigator.pop(context);
-      Navigator.pushReplacement(
+        Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder: (context) =>
               QuizGenerator(
-                  topic,typeQuiz,totalScore),
+                  topic,typeQuiz,totalScore,quizGenerator),
         ),
       );
 
