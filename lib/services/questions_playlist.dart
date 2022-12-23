@@ -24,7 +24,7 @@ class QuestionsPlaylist {
     for (i = 0; i < tracks.length; i++) {
       Question question = Question();
 
-      if (typeQuestion > questionsFromJSON.length) {
+      if (typeQuestion > questionsFromJSON.length - 1) {
         typeQuestion = 0;
       }
 
