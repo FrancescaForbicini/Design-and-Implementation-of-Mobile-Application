@@ -25,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen>{
   late sp.Artists _artists_quiz;
   late sp.Pages<sp.Track> _tracksPages;
   late Iterable<sp.Track> _tracksIterator;
-  late List _tracks;
+  late List<sp.Track> _tracks;
 
   @override
   void initState() {
@@ -224,7 +224,7 @@ class _HomeScreenState extends State<HomeScreen>{
                             _tracks = _tracksIterator.toList();
                             Navigator.push(context,
                                 MaterialPageRoute(
-                                    builder: (context) => QuizGenerator(_tracks,"playlists")));
+                                    builder: (context) => QuizGenerator(_tracks,"playlists",0)));
                           } ,
                         ),
                       ),
@@ -305,7 +305,7 @@ class _HomeScreenState extends State<HomeScreen>{
                             sp.Artist artist = await _artists_quiz.get(_artists[index].id);
                             Navigator.push(context,
                                 MaterialPageRoute(
-                                    builder: (context) => QuizGenerator(artist,"artists")));
+                                    builder: (context) => QuizGenerator(artist,"artists",0)));
 
                           },
                         ),

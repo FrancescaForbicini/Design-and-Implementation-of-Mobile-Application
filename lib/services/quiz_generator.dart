@@ -4,22 +4,23 @@ import 'dart:math';
 import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dima_project/screens/profile/userprofile_screen.dart';
-import 'package:dima_project/services/spotify_service.dart';
+import 'package:dima_project/services/questions_artist.dart';
+import 'package:dima_project/services/questions_playlist.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:quiz_view/quiz_view.dart';
-import 'package:spotify/spotify.dart' as sp;
 
 import '../models/question.dart';
 
 class QuizGenerator extends StatelessWidget {
   final topic;
-  final String type_quiz;
+  final String typeQuiz;
+  final int totalScore;
 
-  QuizGenerator(this.topic, this.type_quiz);
+  const QuizGenerator(this.topic, this.typeQuiz, this.totalScore);
 
   @override
   Widget build(BuildContext context) {
@@ -31,53 +32,54 @@ class QuizGenerator extends StatelessWidget {
           style: new TextStyle(color: Colors.lightGreen, fontSize: 35),
         ),
       ),
-      body: QuizGeneratorStateful(topic, type_quiz),
+      body: QuizGeneratorStateful(topic, typeQuiz, totalScore),
     );
   }
 }
 
 class QuizGeneratorStateful extends StatefulWidget {
   final topic;
-  final String type_quiz;
+  final String typeQuiz;
+  final int totalScore;
 
-  QuizGeneratorStateful(this.topic, this.type_quiz);
+  QuizGeneratorStateful(this.topic, this.typeQuiz,this.totalScore);
 
   @override
-  _QuizGeneratorState createState() => _QuizGeneratorState(topic, type_quiz);
+  _QuizGeneratorState createState() => _QuizGeneratorState(topic, typeQuiz,totalScore);
 }
 
 class _QuizGeneratorState extends State<QuizGeneratorStateful> {
   final topic;
-  final String type_quiz;
+  int totalScore;
+  final String typeQuiz;
   AudioPlayer audioPlayer = AudioPlayer();
-  List<Question> _questions = [];
+  final List<Question> _questions = [];
   late PageController _controller;
-  List _questions_from_JSON = [];
+  List _questionsFromJSON = [];
   bool end = false;
-  int _score = 0;
-  int _question_number = 1;
+  int _questionNumber = 1;
   late Future<bool> _done;
 
-  _QuizGeneratorState(this.topic, this.type_quiz);
+  _QuizGeneratorState(this.topic, this.typeQuiz, this.totalScore);
 
   // Fetch content from the json file
   Future<bool> readJson() async {
     final String response = await rootBundle
-        .loadString('json/question_' + this.type_quiz + '.json');
+        .loadString('json/question_$typeQuiz.json');
     final data = await json.decode(response);
     setState(() {
-      _questions_from_JSON = data["questions"];
+      _questionsFromJSON = data["questions"];
     });
-    switch (type_quiz) {
+    switch (typeQuiz) {
       case 'playlists':
         {
-          await buildQuestionPlaylist();
+          await QuestionsPlaylist().buildQuestionsPlaylist(_questions, topic,_questionsFromJSON);
           break;
         }
 
       case 'artists':
         {
-          await buildQuestionArtists();
+          await QuestionsArtist().buildQuestionArtists(_questions, topic,_questionsFromJSON);
           break;
         }
       default:
@@ -90,205 +92,8 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
     return true;
   }
 
-  Future<void> buildQuestionArtists() async {
-    List<sp.AlbumSimple?> allAlbums = [];
-    List<sp.TrackSimple> allTracks = [];
-    List<String?> allYearsAlbum = [];
-    int i = 0;
-    int _typeQuestion = 0;
-    sp.Artist artist = topic;
-    sp.Artists artistsRetrieve = sp.Artists(SpotifyService().spotify);
-    var id = artist.id;
-    List<String> input = ["album"];
-    sp.Pages<sp.Album> _albumsPages = artistsRetrieve.albums(id!,includeGroups: input);
-    Iterable<sp.Album> _albumsLists = await _albumsPages.all();
-    allAlbums = _albumsLists.toList();
-    late List<List<sp.TrackSimple>> allTracksForAlbum = new List.generate(allAlbums.length, (i) => []);
 
-    allAlbums.shuffle();
-    for (i = 0; i < allAlbums.length; i++) {
-      String? _id = allAlbums[i]?.id.toString();
-      allTracksForAlbum[i].addAll(await sp.Albums(SpotifyService().spotify)
-          .getTracks(_id.toString())
-          .all());
-      allTracks.addAll(allTracksForAlbum[i]);
-    }
-    allYearsAlbum =
-        allAlbums.map((e) => e?.releaseDate?.substring(0, 4).toString()).toList();
 
-    for (i = 0; i < allAlbums.length; i++) {
-      Question question = new Question();
-      String? answer = "";
-      List<String?> _wrongAnswers = List.empty(growable: true);
-
-      if (_typeQuestion > 3) {
-        _typeQuestion = 0;
-      }
-
-      question.question1 = _questions_from_JSON[_typeQuestion]["question1"];
-      question.question2 = _questions_from_JSON[_typeQuestion]["question2"];
-
-      switch (_typeQuestion) {
-        case 0:
-          {
-            question.artistAlbum = allAlbums[i]?.name;
-            answer = allAlbums[i]?.releaseDate?.substring(0, 4).toString();
-            question.rightAnswer = answer;
-            allYearsAlbum.shuffle();
-            _wrongAnswers =
-                allYearsAlbum.where((element) => element != answer).take(3).toList();
-            for (int k = 0; k < 3; k++) {
-              question.wrongAnswers.add(_wrongAnswers[k]!);
-            }
-            break;
-          }
-        case 1:
-        {
-          question.artistAlbum = allAlbums[i]?.name;
-          List<sp.TrackSimple> rightAnswersTracks = allTracksForAlbum[i];
-          allTracks.shuffle();
-          List<sp.TrackSimple> wrongAnswersTracks = allTracks.where((element) => !rightAnswersTracks.contains(element)).take(3).toList();
-          int randomTrack = Random().nextInt(rightAnswersTracks.length);
-          answer = rightAnswersTracks[randomTrack].name;
-
-          question.rightAnswer = answer;
-          for (int k = 0; k < 3; k++) {
-            question.wrongAnswers.add(wrongAnswersTracks[k].name!);
-          }
-          break;
-
-        }
-
-        case 2:
-          {
-            question.artistAlbum = allAlbums[i]?.name;
-            allTracksForAlbum[i].shuffle();
-            List<sp.TrackSimple> wrongAnswerTracks = allTracksForAlbum[i];
-            allTracks.shuffle();
-            List<sp.TrackSimple> rightAnswerTracks = allTracks.where((element) => !wrongAnswerTracks.contains(element)).toList();
-            int randomTrack = Random().nextInt(rightAnswerTracks.length);
-            answer = rightAnswerTracks[randomTrack].name;
-            question.rightAnswer = answer;
-            wrongAnswerTracks.shuffle();
-            for (int k = 0; k < 3; k++) {
-              question.wrongAnswers.add(wrongAnswerTracks[k].name!);
-            }
-            break;
-          }
-        case 3:
-        {
-          int randomTrack = Random().nextInt(allTracksForAlbum[i].length);
-          sp.TrackSimple trackSelected = allTracksForAlbum[i][randomTrack];
-          question.url = trackSelected.previewUrl.toString();
-          answer = trackSelected.name.toString();
-          question.rightAnswer = trackSelected.name;
-          allTracksForAlbum[i].shuffle();
-          List<sp.TrackSimple> wrongAnswerTracks = allTracksForAlbum[i]
-              .where((element) => element.name != trackSelected.name)
-              .take(3)
-              .toList();
-          question.isPresent = true;
-          for (int k=0; k < 3; k++) {
-            question.wrongAnswers.add(wrongAnswerTracks[k].name!);
-          }
-          break;
-        }
-      }
-      _questions.add(question);
-      _typeQuestion++;
-    }
-    _questions.shuffle();
-  }
-
-  Future<void> buildQuestionPlaylist() async{
-    List<String> allArtists = List.empty(growable: true);
-    List<String> allAlbums = List.empty(growable: true);
-    List<String> allTracks = List.empty(growable: true);
-    int i = 0;
-    int _typeQuestion = 0;
-    topic.shuffle();
-    for (i = 0; i < topic.length; i++) {
-      sp.Track track = topic[i];
-      if (!allArtists.contains(track.name.toString())) {
-        allTracks.add(track.name.toString());
-      }
-      sp.Artist artist = topic[i].artists[0];
-      if (!allArtists.contains(artist.name.toString())) {
-        allArtists.add(artist.name.toString());
-      }
-      sp.AlbumSimple album = topic[i].album;
-      if (!allAlbums.contains(album.name.toString())) {
-        allAlbums.add(album.name.toString());
-      }
-    }
-    for (i = 0; i < topic.length; i++) {
-      Question question = new Question();
-      String answer = "";
-
-      if (_typeQuestion > 2)
-        _typeQuestion = 0;
-
-      question.question1 = _questions_from_JSON[_typeQuestion]["question1"];
-      question.question2 = _questions_from_JSON[_typeQuestion]["question2"];
-
-      List<String> wrongAnswers = [];
-
-      switch (_typeQuestion) {
-        case 0:
-          {
-            question.artistAlbum = topic[i].name;
-            sp.Artist artist = topic[i].artists[0];
-            answer = artist.name.toString();
-            question.rightAnswer = answer;
-            allArtists.shuffle();
-            wrongAnswers = allArtists
-                .where((element) => element != topic[i].artists[0].name)
-                .take(3)
-                .toList();
-
-            break;
-          }
-
-        case 1:
-          {
-            question.artistAlbum = topic[i].name;
-            sp.AlbumSimple album = topic[i].album;
-            answer = album.name.toString();
-            question.rightAnswer = answer;
-            allAlbums.shuffle();
-            wrongAnswers = allAlbums
-                .where((element) => element != album.name)
-                .take(3)
-                .toList();
-
-            break;
-          }
-
-        case 2:
-          {
-            sp.Track track = topic[i];
-            question.url = track.previewUrl.toString();
-            answer = track.name.toString();
-            question.rightAnswer = answer;
-            allTracks.shuffle();
-            wrongAnswers = allTracks
-                .where((element) => element != topic[i].name)
-                .take(3)
-                .toList();
-            question.isPresent = true;
-            break;
-          }
-      }
-      for (int k = 0; k < 3; k++) {
-        answer = wrongAnswers[k].toString();
-        question.wrongAnswers.add(answer);
-      }
-
-      _questions.add(question);
-      _typeQuestion++;
-    }
-    _questions.shuffle();
-  }
 
   @override
   void initState() {
@@ -315,7 +120,7 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                       Text(
-                        "Question $_question_number",
+                        "Score: $totalScore",
                         style: const TextStyle(
                             color: Color(0xFF101010),
                             fontSize: 20,
@@ -324,10 +129,12 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
                       const Divider(thickness: 1, color: Colors.grey),
                       Expanded(
                           child: PageView.builder(
-                        itemCount: _questions.length + _question_number,
+                        itemCount: _questions.length,
                         controller: _controller,
                         physics: const NeverScrollableScrollPhysics(),
                         itemBuilder: (context, index) {
+                          print(_questions[index].rightAnswer);
+
                           double h, w;
                           h = 0;
                           w = 0;
@@ -371,21 +178,21 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
                             ],
                             onRightAnswer: () => {
                               audioPlayer.stop(),
-                              buildElevatedButton(),
                               setState(() {
-                                _score++;
-                              })
+                                totalScore =  totalScore + 1;
+                              }),
+                              buildElevatedButton(totalScore),
                             },
                             onWrongAnswer: () => {
                               audioPlayer.stop(),
                               setState(() {
                                 end = true;
-                                Timer(Duration(milliseconds: 500), () {
+                                Timer(const Duration(milliseconds: 500), () {
                                   Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => ResultPage(
-                                        score: _score,
+                                        score: totalScore,
                                         end: end,
                                       ),
                                     ),
@@ -406,21 +213,22 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
     );
   }
 
-  void buildElevatedButton() async{
+  void buildElevatedButton(int score) async{
     _controller.nextPage(
       duration: const Duration(milliseconds: 500),
       curve: Curves.easeInExpo,
     );
-    if (_question_number < _questions.length) {
+    if (_questionNumber < _questions.length) {
       setState(() {
-        _question_number++;
+        _questionNumber++;
       });
     } else {
-      _question_number ++;
-      if (type_quiz == 'playlist')
-        buildQuestionPlaylist();
-      else
-        buildQuestionArtists();
+        Navigator.pop(context);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => QuizGenerator(topic, typeQuiz, score)
+          ),);
     }
   }
 }
@@ -440,32 +248,32 @@ class ResultPage extends StatelessWidget {
         body: Center(
           child: Column(
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 300,
               ),
               if (end) Text("You missed a question!"),
               Text(
                 'You got $score',
-                style: new TextStyle(
+                style: const TextStyle(
                     color: Color(0xFF101010),
                     fontSize: 30,
                     fontWeight: FontWeight.bold),
               ),
-              Divider(
+              const Divider(
                 height: 20,
               ),
               ElevatedButton(
-                style: new ButtonStyle(
+                style: ButtonStyle(
                     backgroundColor: MaterialStateColor.resolveWith(
-                        (states) => Color(0xFF101010))),
+                        (states) => const Color(0xFF101010))),
                 onPressed: () => {
                   updateScore(score),
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => UserProfile()))
                 },
-                child: Text(
+                child: const Text(
                   "Exit",
-                  style: new TextStyle(color: Colors.white),
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
             ],
