@@ -1,29 +1,24 @@
 {
   "questions": [
     {
-      "name": "",
-      "question1": "When was ",
+      "question1": "When was the album:  ",
       "artist_album": "",
-      "question2": " born? "
-    },
-    {
-      "name": "",
-      "question1": "Which album did ",
-      "artist_album": "",
-      "question2": " produce?"
-    },
-    {
-      "name": "",
-      "question1": "How old is ",
-      "artist_album": "",
-      "question2": " ?"
+      "question2": " released?"
     },
 
     {
-      "name": "",
-      "question1": "Who has produced ",
+      "question1": "Which track is in the album ",
       "artist_album": "",
       "question2": " ?"
+    },
+    {
+      "question1": "Which track is NOT in the album ",
+      "artist_album": "",
+      "question2": " ?"
+    },
+    {
+      "question1": "Which song is it",
+      "question2": "?"
     }
   ]
 }

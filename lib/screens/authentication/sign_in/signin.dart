@@ -1,4 +1,3 @@
-import 'package:dima_project/screens/profile/userprofile_screen.dart';
 import 'package:dima_project/screens/spotifyAuth_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -10,7 +9,6 @@ class SignInScreen extends StatelessWidget {
   SignInScreen({super.key});
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _usernameController = TextEditingController();
   final AuthenticationService _authService = AuthenticationService();
 
   @override
@@ -19,29 +17,25 @@ class SignInScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Color (0xFF101010),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.lightGreen,size: 30),
+          icon: const Icon(Icons.arrow_back, color: Colors.lightGreen,size: 30),
           onPressed: () => {
             Navigator.pop(context),
           },
         ),
-        title: Text('Sign In', textAlign: TextAlign.center,style: new TextStyle(fontSize: 30),),
+        title: const Text('Sign In', textAlign: TextAlign.center,style: TextStyle(fontSize: 30),),
       ),
-      backgroundColor: Color (0xFF101010),
+      backgroundColor: const Color (0xFF101010),
       body: Flex(
         direction: Axis.vertical,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          _buildEmailTextfield(),
-          SizedBox(
-            height: 25.0,
-          ),
-          _buildUsernameTextField(),
-          SizedBox(
+          _buildEmailTextField(),
+          const SizedBox(
             height: 25.0,
           ),
 
-          _buildPasswordTextfield(),
-          SizedBox(
+          _buildPasswordTextField(),
+          const SizedBox(
             height: 25.0,
           ),
           _buildButton(context),
@@ -51,60 +45,40 @@ class SignInScreen extends StatelessWidget {
   }
 
 
-  Widget _buildEmailTextfield() {
+  Widget _buildEmailTextField() {
     return TextFormField(
         controller: _emailController,
         validator: (value)=> EmailFieldValidator.validate(value!),
-        style: TextStyle(color: Colors.lightGreen),
+        style: const TextStyle(color: Colors.lightGreen),
         keyboardType: TextInputType.emailAddress,
-        decoration: InputDecoration(labelText: 'Email', filled: true,
+        decoration: const InputDecoration(labelText: 'Email', filled: true,
             icon: Icon(Icons.email, color: Colors.lightGreen,),
-            enabledBorder: const OutlineInputBorder(
-                borderSide: const BorderSide(
+            enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
                     color: Colors.lightGreen,
                     width: 2.0
                 )
             ),
-            labelStyle: new TextStyle(color: Colors.white, fontSize: 18.0,fontWeight: FontWeight.w400 , fontFamily: 'Calibri'))
+            labelStyle: TextStyle(color: Colors.white, fontSize: 18.0,fontWeight: FontWeight.w400 , fontFamily: 'Calibri'))
     );
   }
 
-  Widget _buildPasswordTextfield() {
+  Widget _buildPasswordTextField() {
     return TextFormField(
       controller: _passwordController,
       validator: (value)=> PasswordFieldValidator.validate(value!),
-      style: TextStyle(color: Colors.lightGreen),
-      decoration: InputDecoration(labelText: 'Password', filled: true,
+      style: const TextStyle(color: Colors.lightGreen),
+      decoration: const InputDecoration(labelText: 'Password', filled: true,
           icon: Icon(Icons.key, color: Colors.lightGreen),
-          enabledBorder: const OutlineInputBorder(
-              borderSide: const BorderSide(
+          enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
                   color: Colors.lightGreen,
                   width: 2.0
               )
           ),
-          labelStyle: new TextStyle(color: Colors.white, fontSize: 18.0,fontWeight: FontWeight.w400 , fontFamily: 'Calibri')
+          labelStyle: TextStyle(color: Colors.white, fontSize: 18.0,fontWeight: FontWeight.w400 , fontFamily: 'Calibri')
       ),
       obscureText: true,
-    );
-  }
-
-
-  Widget _buildUsernameTextField() {
-    return TextFormField(
-      controller: _usernameController,
-      validator: (value)=> UsernameFieldValidator.validate(value!),
-      style: TextStyle(color: Colors.lightGreen),
-      keyboardType: TextInputType.name,
-      decoration: InputDecoration(labelText: 'Username', filled: true,
-          icon: Icon(Icons.person, color: Colors.lightGreen),
-          enabledBorder: const OutlineInputBorder(
-              borderSide: const BorderSide(
-                  color: Colors.lightGreen,
-                  width: 2.0
-              )
-          ),
-          labelStyle: new TextStyle(color: Colors.white, fontSize: 18.0,fontWeight: FontWeight.w400 , fontFamily: 'Calibri')
-      ),
     );
   }
 
@@ -114,7 +88,7 @@ class SignInScreen extends StatelessWidget {
     return MaterialButton(
         color: Colors.lightGreen,
         textColor: Colors.white,
-        child: Text('SIGN IN'),
+        child: const Text('SIGN IN'),
         onPressed: () => {
           done = _authService.signIn(_emailController.text, _passwordController.text),
           done.then((value) => {
@@ -128,11 +102,11 @@ class SignInScreen extends StatelessWidget {
                   context: context,
                   builder: (BuildContext context) {
                   return AlertDialog(
-                    title: Text("Error"),
-                    content: Text("Invalid email or password"),
+                    title: const Text("Error"),
+                    content: const Text("Invalid email or password"),
                     actions: [
                       MaterialButton(
-                        child: Text("Ok"),
+                        child: const Text("Ok"),
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
