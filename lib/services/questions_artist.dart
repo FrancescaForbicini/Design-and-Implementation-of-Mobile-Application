@@ -1,6 +1,7 @@
 import 'dart:core';
 import 'dart:math';
 
+import 'package:dima_project/services/questions_playlist.dart';
 import 'package:dima_project/services/spotify_service.dart';
 import 'package:spotify/spotify.dart' as sp;
 import '../models/question.dart';
@@ -31,7 +32,6 @@ class QuestionsArtist {
 
     int i = 0;
     int typeQuestion = 0;
-
     for (i = 0; i < allAlbums.length; i++) {
       Question question = Question();
 
@@ -146,6 +146,35 @@ class QuestionsArtist {
   List<String> setWrongAnswersYears (List allWrongAnswers){
     List<String> wrongAnswers = [];
     int i = 0;
+    int year = 0;
+    int maxYear = 0;
+    int minYear = 2024;
+    int len = allWrongAnswers.length;
+    for (int j = 0; j < len; j++){
+      year = int.parse(allWrongAnswers[j]);
+
+      if (year > maxYear) {
+        maxYear = year;
+      }
+      if (year < minYear) {
+        minYear = year;
+      }
+
+    }
+
+    if (allWrongAnswers.length < 3){
+      for (i = 0; i < 3 -len; i++){
+        if ((maxYear + i + 1) > 2022){
+          minYear = minYear - i -1;
+          allWrongAnswers.add((minYear).toString());
+        }
+        else{
+          maxYear = maxYear + i + 1;
+          allWrongAnswers.add((maxYear).toString());
+
+        }
+      }
+    }
     allWrongAnswers.shuffle();
     for (i = 0; i < 3; i++){
       wrongAnswers.add(allWrongAnswers[i]);
