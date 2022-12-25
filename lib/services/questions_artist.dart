@@ -28,8 +28,8 @@ class QuestionsArtist {
     allYearsAlbum = allAlbums.map((e) => e?.releaseDate?.substring(0, 4).toString()).toList();
 
   }
-  void buildQuestionArtists(List<Question> questions, sp.Artist artist,List questionsFromJSON) async {
-
+  Future<void> buildQuestionArtists(List<Question> questions, sp.Artist artist,List questionsFromJSON) async {
+    await buildAllAnswersQuestions(artist);
     int i = 0;
     int typeQuestion = 0;
     for (i = 0; i < allAlbums.length; i++) {

@@ -22,6 +22,7 @@ class QuestionsPlaylist {
   }
 
   Future<void> buildQuestionsPlaylist(List<Question> questions, List<sp.Track> tracks,List questionsFromJSON) async{
+    buildAllAnswersQuestions(tracks);
     tracks.shuffle();
 
     int i = 0;
