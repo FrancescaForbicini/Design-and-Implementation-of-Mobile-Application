@@ -19,7 +19,6 @@ class _HomeScreenState extends State<HomeScreen>{
   final AuthenticationService _authenticationService = AuthenticationService();
   final SpotifyService _spotifyService = SpotifyService();
   late var _userId;
-  late var _username;
   late List _playlists;
   late List _artists;
   late Future<bool> _done;
@@ -42,7 +41,6 @@ class _HomeScreenState extends State<HomeScreen>{
     print("User spotify: $_user");
     print("User spotify info: ${_user.displayName}, ${_user.country}, ${_user.product}, ${_user.id}");
     _userId = _user.id;
-    _username = _user.displayName;
     print("Got the userid");
     print("UserID: $_userId");
     var _playlistsRef = _spotifyService.spotify.playlists;
@@ -70,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen>{
     final _appBar = AppBar(
       backgroundColor: Color (0xFF101010),
       leading: IconButton(
-        icon: Icon(Icons.logout, color: Colors.lightGreen,size: 30),
+        icon: const Icon(Icons.logout, color: Colors.lightGreen,size: 30),
         onPressed: () => {
           _authenticationService.signOut(),
           Navigator.push(context, MaterialPageRoute(builder: (context) => AuthenticationScreen()))
@@ -78,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen>{
       ),
       actions: [
         IconButton(
-          icon: Icon(Icons.settings, color: Colors.lightGreen,size: 30),
+          icon: const Icon(Icons.settings, color: Colors.lightGreen,size: 30),
           onPressed: () => {
             Navigator.push(context, MaterialPageRoute(builder: (context) => UserProfile()))
           },
@@ -92,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen>{
     final _statusBarHeight = MediaQuery.of(context).padding.top;
 
     return Scaffold(
-      backgroundColor: Color(0xFF101010),
+      backgroundColor: const Color(0xFF101010),
       appBar: _appBar,
 
       body: _buildHomeBody(_screenHeight - _appBarHeight - _statusBarHeight, _screenWidth),
@@ -116,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen>{
                 color: Color(0xFF101010),
                 width: width,
                 height: height * 0.1,
-                child: Text(
+                child: const Text(
                   "Start a new quiz!",
                   style: TextStyle(
                     color: Colors.lightGreen,
@@ -137,7 +135,7 @@ class _HomeScreenState extends State<HomeScreen>{
                       color: Color(0xFF101010),
                       width: width,
                       height: height * 0.05,
-                      child: Text(
+                      child: const Text(
                         "Your playlists:",
                         style: TextStyle(
                           color: Colors.lightGreen,
@@ -167,7 +165,7 @@ class _HomeScreenState extends State<HomeScreen>{
                       color: Color(0xFF101010),
                       width: width,
                       height: height * 0.05,
-                      child: Text(
+                      child: const Text(
                         "Your artists:",
                         style: TextStyle(
                           color: Colors.lightGreen,
@@ -224,20 +222,18 @@ class _HomeScreenState extends State<HomeScreen>{
                             _tracksPages = await _playlists_quiz.getTracksByPlaylistId(_playlists[index].id);
                             _tracksIterator = await _tracksPages.all();
                             _tracks = _tracksIterator.toList();
-                            var quizGenerator = QuestionsPlaylist();
-                            quizGenerator.buildAllAnswersQuestions(_tracks);
                             Navigator.push(context,
                                 MaterialPageRoute(
-                                    builder: (context) => QuizGenerator(_tracks,"playlists",0,quizGenerator)));
+                                    builder: (context) => QuizGenerator(_tracks,"playlists",0,1)));
                           } ,
                         ),
                       ),
-                      Container(
+                      SizedBox(
                         width: width * 0.2,
                         height: height * 0.1,
                         child: Text(
                           _playlists[index].name,
-                          style: TextStyle(
+                          style: const TextStyle(
                               color: Colors.white,
                               fontSize: 15
                           ),
@@ -254,7 +250,7 @@ class _HomeScreenState extends State<HomeScreen>{
               color: Color(0xFF101010),
               width: width,
               height: height * 0.3,
-              child: Text(
+              child: const Text(
                 "You don't have any playlist yet!",
                 style: TextStyle(
                   color: Colors.lightGreen,
@@ -267,7 +263,7 @@ class _HomeScreenState extends State<HomeScreen>{
           return child;
         }
         else {
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(
               color: Colors.lightGreen,
             ),
@@ -289,7 +285,7 @@ class _HomeScreenState extends State<HomeScreen>{
               itemCount: _artists.length,
               itemBuilder: (context, index){
                 return Container(
-                  color: Color(0xFF101010),
+                  color: const Color(0xFF101010),
                   width: width * 0.3,
                   height: height * 0.3,
                   child: Column(
@@ -306,22 +302,20 @@ class _HomeScreenState extends State<HomeScreen>{
                             image: getImage(_artists[index].images),
                           ),
                           onTap:()async{
-                            var quizGenerator  = QuestionsArtist();
                             sp.Artist artist = await _artists_quiz.get(_artists[index].id);
-                            await quizGenerator.buildAllAnswersQuestions(artist);
                             Navigator.push(context,
                                 MaterialPageRoute(
-                                    builder: (context) => QuizGenerator(artist,"artists",0,quizGenerator)));
+                                    builder: (context) => QuizGenerator(artist,"artists",0,1)));
 
                           },
                         ),
                       ),
-                      Container(
+                      SizedBox(
                         width: width * 0.2,
                         height: height * 0.1,
                         child: Text(
                           _artists[index].name,
-                          style: TextStyle(
+                          style: const TextStyle(
                               color: Colors.white,
                               fontSize: 15
                           ),
@@ -342,7 +336,7 @@ class _HomeScreenState extends State<HomeScreen>{
               color: Color(0xFF101010),
               width: width,
               height: height * 0.3,
-              child: Text(
+              child: const Text(
                 "You don't have any favourite artist yet!",
                 style: TextStyle(
                   color: Colors.lightGreen,
@@ -355,7 +349,7 @@ class _HomeScreenState extends State<HomeScreen>{
           return child;
         }
         else {
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(
               color: Colors.lightGreen,
             ),
@@ -366,8 +360,9 @@ class _HomeScreenState extends State<HomeScreen>{
   }
 }
 ImageProvider<Object> getImage(image){
-  if (image.isEmpty)
+  if (image.isEmpty) {
     return Image.asset('images/wolf_user.png').image;
+  }
   return Image.network(image[0].url).image;
 }
 

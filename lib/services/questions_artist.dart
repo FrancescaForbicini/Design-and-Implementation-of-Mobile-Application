@@ -19,20 +19,38 @@ class QuestionsArtist {
   List<List<sp.TrackSimple>> allTracksForAlbum = [];
   List<sp.TrackSimple> allTracks = [];
   List<String?> allYearsAlbum = [];
+  List<sp.Artist>  allRelatedArtists = [];
+  late int totalAlbum;
 
   Future<void> buildAllAnswersQuestions(sp.Artist artist)async{
-    sp.Artists artistsRetrieve = sp.Artists(SpotifyService().spotify);
-    allAlbums = await getAllAlbums(artist,artistsRetrieve);
+    allAlbums = await getAllAlbums(artist);
+    totalAlbum = allAlbums.length;
     allTracksForAlbum = await getAllTracksForAlbum(allAlbums);
     allTracks = getAllTracks(allTracksForAlbum);
     allYearsAlbum = allAlbums.map((e) => e?.releaseDate?.substring(0, 4).toString()).toList();
-
+    if (allAlbums.length < 3){
+      allRelatedArtists = await getAllRelatedArtists(artist);
+      allRelatedArtists.removeRange(0, 15);
+      await buildAllAnswersQuestionsRelatedArtists();
+    }
   }
-  void buildQuestionArtists(List<Question> questions, sp.Artist artist,List questionsFromJSON) async {
 
+  Future<void> buildAllAnswersQuestionsRelatedArtists() async{
+    for (sp.Artist artist in allRelatedArtists){
+      List <sp.AlbumSimple?> allAlbumsRelatedArtist = [];
+      allAlbumsRelatedArtist = await getAllAlbums(artist);
+      allAlbums.addAll(allAlbumsRelatedArtist);
+      allYearsAlbum.addAll(allAlbumsRelatedArtist.map((e) => e?.releaseDate?.substring(0, 4).toString()).toList());
+    }
+  }
+
+
+
+  Future<void> buildQuestionArtists(List<Question> questions, sp.Artist artist,List questionsFromJSON) async {
+    await buildAllAnswersQuestions(artist);
     int i = 0;
     int typeQuestion = 0;
-    for (i = 0; i < allAlbums.length; i++) {
+    for (i = 0; i < totalAlbum; i++) {
       Question question = Question();
 
       if (typeQuestion > 3) {
@@ -104,10 +122,11 @@ class QuestionsArtist {
   }
 
 
-  Future<List<sp.AlbumSimple?>> getAllAlbums(sp.Artist artist, sp.Artists artistSelected)async{
+  Future<List<sp.AlbumSimple?>> getAllAlbums(sp.Artist artist)async{
+    sp.Artists artistsRetrieve = sp.Artists(SpotifyService().spotify);
     var id = artist.id;
     List<String> input = ["album"];
-    sp.Pages<sp.Album> albumsPages = artistSelected.albums(id!,includeGroups: input);
+    sp.Pages<sp.Album> albumsPages = artistsRetrieve.albums(id!,includeGroups: input);
     Iterable<sp.Album> albumsLists = await albumsPages.all();
     return albumsLists.toList();
   }
@@ -133,7 +152,15 @@ class QuestionsArtist {
     return allTracks;
   }
 
-  List<String> setWrongAnswersTracks (List allWrongAnswers){
+  Future<List<sp.Artist>> getAllRelatedArtists(sp.Artist artist)async {
+    sp.Artists artistsRetrieve = sp.Artists(SpotifyService().spotify);
+
+    var id = artist.id!;
+    Iterable<sp.Artist> relatedArtists = await artistsRetrieve.getRelatedArtists(id);
+    return relatedArtists.toList();
+  }
+
+    List<String> setWrongAnswersTracks (List allWrongAnswers){
     List<String> wrongAnswers = [];
     int i = 0;
     allWrongAnswers.shuffle();
@@ -150,31 +177,31 @@ class QuestionsArtist {
     int maxYear = 0;
     int minYear = 2024;
     int len = allWrongAnswers.length;
-    for (int j = 0; j < len; j++){
-      year = int.parse(allWrongAnswers[j]);
-
-      if (year > maxYear) {
-        maxYear = year;
-      }
-      if (year < minYear) {
-        minYear = year;
-      }
-
-    }
-
-    if (allWrongAnswers.length < 3){
-      for (i = 0; i < 3 -len; i++){
-        if ((maxYear + i + 1) > 2022){
-          minYear = minYear - i -1;
-          allWrongAnswers.add((minYear).toString());
-        }
-        else{
-          maxYear = maxYear + i + 1;
-          allWrongAnswers.add((maxYear).toString());
-
-        }
-      }
-    }
+    // for (int j = 0; j < len; j++){
+    //   year = int.parse(allWrongAnswers[j]);
+    //
+    //   if (year > maxYear) {
+    //     maxYear = year;
+    //   }
+    //   if (year < minYear) {
+    //     minYear = year;
+    //   }
+    //
+    // }
+    //
+    // if (allWrongAnswers.length < 3){
+    //   for (i = 0; i < 3 -len; i++){
+    //     if ((maxYear + i + 1) > 2022){
+    //       minYear = minYear - i -1;
+    //       allWrongAnswers.add((minYear).toString());
+    //     }
+    //     else{
+    //       maxYear = maxYear + i + 1;
+    //       allWrongAnswers.add((maxYear).toString());
+    //
+    //     }
+    //   }
+    // }
     allWrongAnswers.shuffle();
     for (i = 0; i < 3; i++){
       wrongAnswers.add(allWrongAnswers[i]);

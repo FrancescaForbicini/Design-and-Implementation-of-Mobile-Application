@@ -1,13 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:math';
 import 'dart:ui';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dima_project/screens/profile/userprofile_screen.dart';
 import 'package:dima_project/services/questions_artist.dart';
 import 'package:dima_project/services/questions_playlist.dart';
 import 'package:dima_project/services/result_page.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -20,8 +16,8 @@ class QuizGenerator extends StatelessWidget {
   final topic;
   final String typeQuiz;
   final int totalScore;
-  final quizGenerator;
-  const QuizGenerator(this.topic, this.typeQuiz, this.totalScore,this.quizGenerator);
+  final int level;
+  const QuizGenerator(this.topic, this.typeQuiz, this.totalScore,this.level);
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +29,7 @@ class QuizGenerator extends StatelessWidget {
           style: TextStyle(color: Colors.lightGreen, fontSize: 35),
         ),
       ),
-      body: QuizGeneratorStateful(topic, typeQuiz, totalScore,quizGenerator),
+      body: QuizGeneratorStateful(topic, typeQuiz, totalScore,level),
     );
   }
 }
@@ -42,18 +38,18 @@ class QuizGeneratorStateful extends StatefulWidget {
   final topic;
   final String typeQuiz;
   final int totalScore;
-  final quizGenerator;
+  final int level;
 
-  QuizGeneratorStateful(this.topic, this.typeQuiz,this.totalScore,this.quizGenerator);
+  QuizGeneratorStateful(this.topic, this.typeQuiz,this.totalScore,this.level);
 
   @override
-  _QuizGeneratorState createState() => _QuizGeneratorState(topic, typeQuiz,totalScore,quizGenerator);
+  _QuizGeneratorState createState() => _QuizGeneratorState(topic, typeQuiz,totalScore,level);
 }
 
 class _QuizGeneratorState extends State<QuizGeneratorStateful> {
   final topic;
   int totalScore;
-  final quizGenerator;
+  int level;
   final String typeQuiz;
   AudioPlayer audioPlayer = AudioPlayer();
   late List<Question> _questions;
@@ -64,7 +60,7 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
   late Future<bool> _done;
 
 
-  _QuizGeneratorState(this.topic, this.typeQuiz, this.totalScore,this.quizGenerator);
+  _QuizGeneratorState(this.topic, this.typeQuiz, this.totalScore,this.level);
 
   // Fetch content from the json file
   Future<bool> readJson() async {
@@ -78,7 +74,7 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
       case 'playlists':
         {
           _questions = [];
-          await quizGenerator.buildQuestionsPlaylist(
+          await QuestionsPlaylist().buildQuestionsPlaylist(
               _questions, topic, _questionsFromJSON);
           break;
         }
@@ -86,13 +82,13 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
       case 'artists':
         {
           _questions = [];
-          await quizGenerator.buildQuestionArtists(
+          await QuestionsArtist().buildQuestionArtists(
               _questions, topic, _questionsFromJSON);
           break;
         }
       default:
         {
-          print("error");
+          print("Neither Playlist or Artist was selected");
           break;
         }
     }
@@ -114,7 +110,9 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
     return Container(
       color: Colors.lightGreen,
       padding: const EdgeInsets.all(25),
-      child: Column(children: [
+      child: Flex(
+      direction: Axis.horizontal,
+      children: [
         FutureBuilder(
             future: _done,
             builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
@@ -122,11 +120,18 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
                 return quizBuilder();
               }
               else {
-                return CircularProgressIndicator();
+                return const Center(
+                  //TODO parametrizzare
+                  widthFactor: 9,
+                  child: CircularProgressIndicator(
+                    backgroundColor: Colors.lightGreen,
+
+                  ),
+                );
               }
-            })
-      ]),
-    );
+            }),
+      ],
+    ),);
   }
 
   Widget quizBuilder() {
@@ -135,7 +140,7 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                "Score: $totalScore",
+                "Score: $totalScore   Level: $level",
                 style: const TextStyle(
                     color: Color(0xFF101010),
                     fontSize: 20,
@@ -176,8 +181,8 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
                         ),
                         showCorrect: true,
                         answerColor: Colors.white,
-                        answerBackgroundColor: Color(0xFF101010),
-                        questionColor: Color(0xFF101010),
+                        answerBackgroundColor: const Color(0xFF101010),
+                        questionColor: const Color(0xFF101010),
                         backgroundColor: Colors.lightGreen,
                         width: 600,
                         height: 700,
@@ -194,9 +199,9 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
                         {
                           audioPlayer.stop(),
                           setState(() {
-                            totalScore = totalScore + 1;
+                            totalScore = (totalScore + 1) * level;
                           }),
-                          onRightQuestion(totalScore,index),
+                          onRightQuestion(),
                         },
                         onWrongAnswer: () =>
                         {
@@ -224,7 +229,7 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
   }
 
 
-  void onRightQuestion(int score, int index) async{
+  void onRightQuestion() async{
     _controller.nextPage(
       duration: const Duration(milliseconds: 500),
       curve: Curves.easeInExpo,
@@ -235,15 +240,59 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
         _questionNumber++;
       });
     } else {
-      _questions = [];
-      Navigator.pop(context);
-        Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) =>
-              QuizGenerator(
-                  topic,typeQuiz,totalScore,quizGenerator),
-        ),
+      setState(() {
+        level ++;
+        _questions = [];
+      });
+      showDialog(context: context, builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('You succeed $_questionNumber questions!', style: const TextStyle(color: Color(0xFF101010), fontWeight: FontWeight.bold, fontSize: 20),),
+          content: Text('Press the button GoOn to go to the level $level\n'
+              'Otherwise press the button Exit\n',
+                style: const TextStyle(color: Color(0xFF101010), fontWeight: FontWeight.bold, fontSize: 20,)),
+          backgroundColor: Colors.lightGreenAccent,
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(
+                backgroundColor: const Color(0xFF101010),
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: const Text('Go On',style: TextStyle(color: Colors.white),),
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        QuizGenerator(
+                            topic,typeQuiz,totalScore,level),
+                  ),
+                );
+              },
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                backgroundColor: const Color(0xFF101010),
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: const Text('Exit',style: TextStyle(color: Colors.white),),
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        ResultPage(
+                            score: totalScore,
+                            end: end),
+                  ),
+                );
+
+              },
+            ),
+          ],
+        );
+      },
       );
 
     }
