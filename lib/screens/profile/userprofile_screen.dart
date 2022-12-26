@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dima_project/screens/home/home_screen.dart';
-import 'package:dima_project/screens/profile/quiz_screen.dart';
+import 'package:dima_project/screens/quiz/quiz_screen.dart';
 import 'package:dima_project/services/authentication_service.dart';
-import 'package:dima_project/services/quiz_generator.dart';
+import 'package:dima_project/screens/quiz/quiz_generator.dart';
 import 'package:dima_project/services/spotify_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 import '../../models/answer.dart';
 import '../../models/quiz.dart';
-import '../../services/quiz_generator.dart';
+import 'quiz_generator.dart';
 
 class QuizScreen extends StatelessWidget{
   var bestScore = getBestScore();

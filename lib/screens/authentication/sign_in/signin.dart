@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dima_project/screens/spotifyAuth_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -13,17 +14,27 @@ class SignInScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color (0xFF101010),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.lightGreen,size: 30),
-          onPressed: () => {
-            Navigator.pop(context),
-          },
-        ),
-        title: const Text('Sign In', textAlign: TextAlign.center,style: TextStyle(fontSize: 30),),
+    final _appBar = AppBar(
+      backgroundColor: Color (0xFF101010),
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back, color: Colors.lightGreen,size: 30),
+        onPressed: () => {
+          Navigator.pop(context),
+        },
       ),
+      title: const AutoSizeText(
+        'Sign In',
+        textAlign: TextAlign.center,
+        style: TextStyle(fontSize: 30),
+      ),
+    );
+    final _screenHeight = MediaQuery.of(context).size.height;
+    final _screenWidth = MediaQuery.of(context).size.width;
+    final _appBarHeight = _appBar.preferredSize.height;
+    final _statusBarHeight = MediaQuery.of(context).padding.top;
+
+    return Scaffold(
+      appBar: _appBar,
       backgroundColor: const Color (0xFF101010),
       body: Flex(
         direction: Axis.vertical,

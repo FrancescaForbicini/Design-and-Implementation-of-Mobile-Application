@@ -6,7 +6,7 @@ import 'package:dima_project/services/questions_playlist.dart';
 import 'package:dima_project/services/spotify_service.dart';
 import 'package:flutter/material.dart';
 import 'package:spotify/spotify.dart' as sp;
-import '../../services/quiz_generator.dart';
+import '../quiz/quiz_generator.dart';
 
 class HomeScreen extends StatefulWidget{
   HomeScreen({super.key});

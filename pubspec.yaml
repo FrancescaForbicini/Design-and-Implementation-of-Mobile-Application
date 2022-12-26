@@ -42,6 +42,7 @@ dependencies:
   webview_flutter: ^3.0.4
   firebase_database: ^10.0.6
   just_audio: ^0.9.30
+  auto_size_text: ^3.0.0
 
 dev_dependencies:
   flutter_test:

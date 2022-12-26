@@ -3,14 +3,14 @@ import 'dart:convert';
 import 'dart:ui';
 import 'package:dima_project/services/questions_artist.dart';
 import 'package:dima_project/services/questions_playlist.dart';
-import 'package:dima_project/services/result_page.dart';
+import 'package:dima_project/screens/quiz/result_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:quiz_view/quiz_view.dart';
 
-import '../models/question.dart';
+import '../../models/question.dart';
 
 class QuizGenerator extends StatelessWidget {
   final topic;
