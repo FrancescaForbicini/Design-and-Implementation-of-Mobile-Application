@@ -32,25 +32,29 @@ class SignInScreen extends StatelessWidget {
     final _screenWidth = MediaQuery.of(context).size.width;
     final _appBarHeight = _appBar.preferredSize.height;
     final _statusBarHeight = MediaQuery.of(context).padding.top;
+    final _height = _screenHeight - _appBarHeight - _statusBarHeight;
 
     return Scaffold(
       appBar: _appBar,
       backgroundColor: const Color (0xFF101010),
-      body: Flex(
-        direction: Axis.vertical,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          _buildEmailTextField(),
-          const SizedBox(
-            height: 25.0,
-          ),
+      body: Container(
+        height: _height,
+        width: _screenWidth,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            _buildEmailTextField(),
+            SizedBox(
+              height: _height * 0.05,
+            ),
 
-          _buildPasswordTextField(),
-          const SizedBox(
-            height: 25.0,
-          ),
-          _buildButton(context),
-        ],
+            _buildPasswordTextField(),
+            SizedBox(
+              height: _height * 0.05,
+            ),
+            _buildButton(context),
+          ],
+        ),
       ),
     );
   }
@@ -62,7 +66,9 @@ class SignInScreen extends StatelessWidget {
         validator: (value)=> EmailFieldValidator.validate(value!),
         style: const TextStyle(color: Colors.lightGreen),
         keyboardType: TextInputType.emailAddress,
-        decoration: const InputDecoration(labelText: 'Email', filled: true,
+        decoration: const InputDecoration(
+            labelText: 'Email',
+            filled: true,
             icon: Icon(Icons.email, color: Colors.lightGreen,),
             enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(
@@ -70,7 +76,12 @@ class SignInScreen extends StatelessWidget {
                     width: 2.0
                 )
             ),
-            labelStyle: TextStyle(color: Colors.white, fontSize: 18.0,fontWeight: FontWeight.w400 , fontFamily: 'Calibri'))
+            labelStyle: TextStyle(
+                color: Colors.white,
+                fontSize: 18.0,
+                fontWeight: FontWeight.w400 ,
+                fontFamily: 'Calibri')
+        )
     );
   }
 
@@ -79,7 +90,9 @@ class SignInScreen extends StatelessWidget {
       controller: _passwordController,
       validator: (value)=> PasswordFieldValidator.validate(value!),
       style: const TextStyle(color: Colors.lightGreen),
-      decoration: const InputDecoration(labelText: 'Password', filled: true,
+      decoration: const InputDecoration(
+          labelText: 'Password',
+          filled: true,
           icon: Icon(Icons.key, color: Colors.lightGreen),
           enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(
@@ -87,7 +100,11 @@ class SignInScreen extends StatelessWidget {
                   width: 2.0
               )
           ),
-          labelStyle: TextStyle(color: Colors.white, fontSize: 18.0,fontWeight: FontWeight.w400 , fontFamily: 'Calibri')
+          labelStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 18.0,
+              fontWeight: FontWeight.w400 ,
+              fontFamily: 'Calibri')
       ),
       obscureText: true,
     );
@@ -99,35 +116,35 @@ class SignInScreen extends StatelessWidget {
     return MaterialButton(
         color: Colors.lightGreen,
         textColor: Colors.white,
-        child: const Text('SIGN IN'),
+        child: const AutoSizeText('SIGN IN'),
         onPressed: () => {
           done = _authService.signIn(_emailController.text, _passwordController.text),
           done.then((value) => {
             if (value){
               Navigator.pop(context),
-              //TODO check if user has a non expired token
               Navigator.push(context, MaterialPageRoute(builder: (context) => SpotifyScreen()),)
             }
             else{
               showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: const Text("Error"),
-                    content: const Text("Invalid email or password"),
-                    actions: [
-                      MaterialButton(
-                        child: const Text("Ok"),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      )
-                    ],
-                  );
+                    return AlertDialog(
+                      title: const Text("Error"),
+                      content: const Text("Invalid email or password"),
+                      actions: [
+                        MaterialButton(
+                          child: const Text("Ok"),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            },
+                        )
+                      ],
+                    );
                   }
               )
             }
-          }),
+          }
+          ),
         }
     );
   }

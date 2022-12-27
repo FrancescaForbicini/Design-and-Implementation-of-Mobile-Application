@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 import '../../../services/authentication_service.dart';
@@ -41,45 +42,58 @@ class SignUpScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Color (0xFF101010),
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.lightGreen,size: 30),
-            onPressed: () => {
-              Navigator.pop(context),
-            },
-          ),
-          title: Text('Sign Up', textAlign: TextAlign.center,style: new TextStyle(fontSize: 30),),
-        ),
-        backgroundColor: Color (0xFF101010),
-      body: Form(
-        key: formGlobalKey,
-        child: Flex(
-          direction: Axis.vertical,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            _buildEmailTextfield(),
-            SizedBox(
-              height: 25.0,
-            ),
-            _buildUsernameTextField(),
-            SizedBox(
-              height: 25.0,
-            ),
+    final _appBar = AppBar(
+      backgroundColor: Color (0xFF101010),
+      leading: IconButton(
+        icon: Icon(Icons.arrow_back, color: Colors.lightGreen,size: 30),
+        onPressed: () => {
+          Navigator.pop(context),
+        },
+      ),
+      title: const AutoSizeText(
+        'Sign Up',
+        textAlign: TextAlign.center,
+        style: TextStyle(fontSize: 30),
+      ),
+    );
+    final _screenHeight = MediaQuery.of(context).size.height;
+    final _screenWidth = MediaQuery.of(context).size.width;
+    final _appBarHeight = _appBar.preferredSize.height;
+    final _statusBarHeight = MediaQuery.of(context).padding.top;
+    final _height = _screenHeight - _appBarHeight - _statusBarHeight;
 
-            _buildPasswordTextfield(),
-            SizedBox(
-              height: 25.0,
+    return Scaffold(
+        appBar: _appBar,
+        backgroundColor: Color (0xFF101010),
+        body: Container(
+          height: _height,
+          width: _screenWidth,
+          child: Form(
+            key: formGlobalKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                _buildEmailTextfield(),
+                SizedBox(
+                  height: _height * 0.05,
+                ),
+                _buildUsernameTextField(),
+                SizedBox(
+                  height: _height * 0.05,
+                ),
+                _buildPasswordTextfield(),
+                SizedBox(
+                  height: _height * 0.05,
+                ),
+                _buildPasswordConfirmTextField(),
+                SizedBox(
+                  height: _height * 0.05,
+                ),
+                _buildButton(context),
+              ],
             ),
-            _buildPasswordConfirmTextField(),
-            SizedBox(
-              height: 25.0,
-            ),
-            _buildButton(context),
-          ],
-        ),
-      )
+          ),
+        )
     );
   }
 
@@ -88,17 +102,24 @@ class SignUpScreen extends StatelessWidget {
     return TextFormField(
         controller: _emailController,
         validator: (value)=> EmailFieldValidator.validate(value!),
-        style: TextStyle(color: Colors.lightGreen),
+        style: const TextStyle(color: Colors.lightGreen),
         keyboardType: TextInputType.emailAddress,
-        decoration: InputDecoration(labelText: 'Email', filled: true,
+        decoration: const InputDecoration(
+            labelText: 'Email',
+            filled: true,
             icon: Icon(Icons.email, color: Colors.lightGreen,),
-            enabledBorder: const OutlineInputBorder(
-              borderSide: const BorderSide(
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
                   color: Colors.lightGreen,
                   width: 2.0
               )
           ),
-          labelStyle: new TextStyle(color: Colors.white, fontSize: 18.0,fontWeight: FontWeight.w400 , fontFamily: 'Calibri'))
+          labelStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 18.0,
+              fontWeight: FontWeight.w400 ,
+              fontFamily: 'Calibri')
+        )
     );
   }
 
@@ -106,16 +127,22 @@ class SignUpScreen extends StatelessWidget {
     return TextFormField(
       controller: _passwordController,
       validator: (value)=> PasswordFieldValidator.validate(value!),
-      style: TextStyle(color: Colors.lightGreen),
-      decoration: InputDecoration(labelText: 'Password', filled: true,
+      style: const TextStyle(color: Colors.lightGreen),
+      decoration: const InputDecoration(
+          labelText: 'Password',
+          filled: true,
           icon: Icon(Icons.key, color: Colors.lightGreen),
-          enabledBorder: const OutlineInputBorder(
-            borderSide: const BorderSide(
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(
                   color: Colors.lightGreen,
                   width: 2.0
             )
           ),
-          labelStyle: new TextStyle(color: Colors.white, fontSize: 18.0,fontWeight: FontWeight.w400 , fontFamily: 'Calibri')
+          labelStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 18.0,
+              fontWeight: FontWeight.w400 ,
+              fontFamily: 'Calibri')
       ),
       obscureText: true,
     );
@@ -125,16 +152,22 @@ class SignUpScreen extends StatelessWidget {
     return TextFormField(
       controller: _passConfirmController,
       validator: (value)=> PassConfirmFieldValidator.validate(value!, _passwordController),
-      style: TextStyle(color: Colors.lightGreen),
-      decoration: InputDecoration(labelText: 'Confirm Password', filled: true,
+      style: const TextStyle(color: Colors.lightGreen),
+      decoration: const InputDecoration(
+          labelText: 'Confirm Password',
+          filled: true,
           icon: Icon(Icons.key, color: Colors.lightGreen,),
-          enabledBorder: const OutlineInputBorder(
-              borderSide: const BorderSide(
+          enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
                   color: Colors.lightGreen,
                   width: 2.0
               )
           ),
-          labelStyle: new TextStyle(color: Colors.white, fontSize: 18.0,fontWeight: FontWeight.w400 , fontFamily: 'Calibri')
+          labelStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 18.0,
+              fontWeight: FontWeight.w400 ,
+              fontFamily: 'Calibri')
       ),
       obscureText: true,
     );
@@ -144,17 +177,23 @@ class SignUpScreen extends StatelessWidget {
     return TextFormField(
       controller: _usernameController,
       validator: (value)=> UsernameFieldValidator.validate(value!),
-      style: TextStyle(color: Colors.lightGreen),
+      style: const TextStyle(color: Colors.lightGreen),
       keyboardType: TextInputType.name,
-      decoration: InputDecoration(labelText: 'Username', filled: true,
+      decoration: const InputDecoration(
+          labelText: 'Username',
+          filled: true,
           icon: Icon(Icons.person, color: Colors.lightGreen),
-          enabledBorder: const OutlineInputBorder(
-              borderSide: const BorderSide(
+          enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
                   color: Colors.lightGreen,
                   width: 2.0
               )
           ),
-          labelStyle: new TextStyle(color: Colors.white, fontSize: 18.0,fontWeight: FontWeight.w400 , fontFamily: 'Calibri')
+          labelStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 18.0,
+              fontWeight: FontWeight.w400 ,
+              fontFamily: 'Calibri')
       ),
     );
   }
@@ -164,7 +203,7 @@ class SignUpScreen extends StatelessWidget {
     return MaterialButton(
         color: Colors.lightGreen,
         textColor: Colors.white,
-        child: Text('SIGN UP'),
+        child: AutoSizeText('SIGN UP'),
         onPressed: () => {
           if(formGlobalKey.currentState!.validate()){
             _authService.signUp(_emailController.text, _passwordController.text, _usernameController.text, context)

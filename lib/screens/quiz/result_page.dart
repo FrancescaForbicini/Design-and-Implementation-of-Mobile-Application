@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,24 +16,29 @@ class ResultPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _screenHeight = MediaQuery.of(context).size.height;
+    final _screenWidth = MediaQuery.of(context).size.width;
+    final _statusBarHeight = MediaQuery.of(context).padding.top;
+    final _height = _screenHeight - _statusBarHeight;
+
     return Scaffold(
         backgroundColor: Colors.lightGreen,
         body: Center(
           child: Column(
             children: [
-              const SizedBox(
-                height: 300,
+              SizedBox(
+                height: _height * 0.4,
               ),
-              if (end) Text("You missed a question!"),
-              Text(
+              if (end) AutoSizeText("You missed a question!"),
+              AutoSizeText(
                 'You got $score',
                 style: const TextStyle(
                     color: Color(0xFF101010),
                     fontSize: 30,
                     fontWeight: FontWeight.bold),
               ),
-              const Divider(
-                height: 20,
+              SizedBox(
+                height: _height * 0.02,
               ),
               ElevatedButton(
                 style: ButtonStyle(
@@ -43,7 +49,7 @@ class ResultPage extends StatelessWidget {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => UserProfile()))
                 },
-                child: const Text(
+                child: const AutoSizeText(
                   "Exit",
                   style: TextStyle(color: Colors.white),
                 ),

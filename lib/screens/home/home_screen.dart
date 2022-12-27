@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dima_project/screens/profile/userprofile_screen.dart';
 import 'package:dima_project/screens/authentication/authentication.dart';
 import 'package:dima_project/services/authentication_service.dart';
@@ -82,7 +83,11 @@ class _HomeScreenState extends State<HomeScreen>{
           },
         ),
       ],
-      title: Text('Home Page', textAlign: TextAlign.center,style: new TextStyle(fontSize: 30),),
+      title: const AutoSizeText(
+        'Home Page',
+        textAlign: TextAlign.center,
+        style: TextStyle(fontSize: 30),
+      ),
     );
     final _screenHeight = MediaQuery.of(context).size.height;
     final _screenWidth = MediaQuery.of(context).size.width;
@@ -103,6 +108,10 @@ class _HomeScreenState extends State<HomeScreen>{
       shrinkWrap: true,
       children: <Widget>[
         Container(
+          padding: EdgeInsets.only(
+            left: 8.0,
+            right: 8.0,
+          ),
           color: Color(0xFF101010),
           width: width,
           height: height,
@@ -114,8 +123,8 @@ class _HomeScreenState extends State<HomeScreen>{
                 color: Color(0xFF101010),
                 width: width,
                 height: height * 0.1,
-                child: const Text(
-                  "Start a new quiz!",
+                child: const AutoSizeText(
+                  " Start a new quiz!",
                   style: TextStyle(
                     color: Colors.lightGreen,
                     fontSize: 30,
@@ -135,8 +144,8 @@ class _HomeScreenState extends State<HomeScreen>{
                       color: Color(0xFF101010),
                       width: width,
                       height: height * 0.05,
-                      child: const Text(
-                        "Your playlists:",
+                      child: const AutoSizeText(
+                        " Your playlists:",
                         style: TextStyle(
                           color: Colors.lightGreen,
                           fontSize: 20,
@@ -165,8 +174,8 @@ class _HomeScreenState extends State<HomeScreen>{
                       color: Color(0xFF101010),
                       width: width,
                       height: height * 0.05,
-                      child: const Text(
-                        "Your artists:",
+                      child: const AutoSizeText(
+                        " Your artists:",
                         style: TextStyle(
                           color: Colors.lightGreen,
                           fontSize: 20,
@@ -204,8 +213,8 @@ class _HomeScreenState extends State<HomeScreen>{
 
                 return Container(
                   color: Color(0xFF101010),
-                  width: width * 0.3,
-                  height: height * 0.3,
+                  width: width * 0.35,
+                  height: height * 0.35,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -214,8 +223,8 @@ class _HomeScreenState extends State<HomeScreen>{
                         color: Colors.transparent,
                         child: InkWell(
                           child: Ink.image(
-                            width: width * 0.2,
-                            height: height * 0.2,
+                            width: width * 0.25,
+                            height: height * 0.25,
                             image: getImage(_playlists[index].images),
                           ),
                           onTap:() async{
@@ -229,10 +238,11 @@ class _HomeScreenState extends State<HomeScreen>{
                         ),
                       ),
                       SizedBox(
-                        width: width * 0.2,
+                        width: width * 0.25,
                         height: height * 0.1,
-                        child: Text(
+                        child: AutoSizeText(
                           _playlists[index].name,
+                          textAlign: TextAlign.center,
                           style: const TextStyle(
                               color: Colors.white,
                               fontSize: 15
@@ -249,9 +259,10 @@ class _HomeScreenState extends State<HomeScreen>{
             child = Container(
               color: Color(0xFF101010),
               width: width,
-              height: height * 0.3,
-              child: const Text(
+              height: height * 0.35,
+              child: const AutoSizeText(
                 "You don't have any playlist yet!",
+                textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.lightGreen,
                   fontSize: 18,
@@ -286,8 +297,8 @@ class _HomeScreenState extends State<HomeScreen>{
               itemBuilder: (context, index){
                 return Container(
                   color: const Color(0xFF101010),
-                  width: width * 0.3,
-                  height: height * 0.3,
+                  width: width * 0.35,
+                  height: height * 0.35,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -296,12 +307,12 @@ class _HomeScreenState extends State<HomeScreen>{
                         color: Colors.transparent,
                         child: InkWell(
                           child: Ink.image(
-                            width: width * 0.2,
-                            height: height * 0.2,
+                            width: width * 0.25,
+                            height: height * 0.25,
                             //fit: BoxFit.cover,
                             image: getImage(_artists[index].images),
                           ),
-                          onTap:()async{
+                          onTap:() async{
                             sp.Artist artist = await _artists_quiz.get(_artists[index].id);
                             Navigator.push(context,
                                 MaterialPageRoute(
@@ -311,10 +322,11 @@ class _HomeScreenState extends State<HomeScreen>{
                         ),
                       ),
                       SizedBox(
-                        width: width * 0.2,
+                        width: width * 0.25,
                         height: height * 0.1,
-                        child: Text(
+                        child: AutoSizeText(
                           _artists[index].name,
+                          textAlign: TextAlign.center,
                           style: const TextStyle(
                               color: Colors.white,
                               fontSize: 15
@@ -324,10 +336,6 @@ class _HomeScreenState extends State<HomeScreen>{
                     ],
                   ),
                 );
-/*              return ListTile(
-                leading: Image.network(_artists[index].images[0].url),
-                title: Text(_artists[index].name, style: TextStyle(fontSize: 15)),
-              );*/
               },
             );
           }
@@ -335,9 +343,10 @@ class _HomeScreenState extends State<HomeScreen>{
             child = Container(
               color: Color(0xFF101010),
               width: width,
-              height: height * 0.3,
-              child: const Text(
+              height: height * 0.35,
+              child: const AutoSizeText(
                 "You don't have any favourite artist yet!",
+                textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.lightGreen,
                   fontSize: 18,
@@ -359,6 +368,7 @@ class _HomeScreenState extends State<HomeScreen>{
     );
   }
 }
+
 ImageProvider<Object> getImage(image){
   if (image.isEmpty) {
     return Image.asset('images/wolf_user.png').image;
