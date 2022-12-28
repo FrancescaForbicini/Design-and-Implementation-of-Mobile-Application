@@ -176,16 +176,16 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
                 h = 0;
                 w = 0;
                 if (_questions[index].isPresent) {
-                  h = 300;
-                  w = 300;
+                  h = height * 0.9 * 0.15;
+                  w = height * 0.9 * 0.15;
                 }
                 return QuizView(
                   image: Material(
                     color: Colors.transparent,
                     child: InkWell(
                       child: Ink.image(
-                        width: w * 0.2,
-                        height: h * 0.2,
+                        width: w,
+                        height: h,
                         image: _questions[index].image.image,
                       ),
                       onTap: () async {
