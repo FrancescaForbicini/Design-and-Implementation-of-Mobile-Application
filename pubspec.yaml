@@ -43,6 +43,7 @@ dependencies:
   firebase_database: ^10.0.6
   just_audio: ^0.9.30
   auto_size_text: ^3.0.0
+  image_picker: ^0.8.0
 
 dev_dependencies:
   flutter_test:
