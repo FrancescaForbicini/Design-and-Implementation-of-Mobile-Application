@@ -10,16 +10,13 @@ class AcquireImage {
 
   AcquireImage._AcquireImageConstructor();
 
-  Future<XFile?> getImageFromCamera() async {
+  Future<String?> getImageFromCamera() async {
     XFile? imagePicked = await ImagePicker().pickImage(
         source: ImageSource.camera);
-    if (imagePicked != null) {
-      return imagePicked;
+    if (imagePicked != null){
+      File file = File(imagePicked.path);
+      return file.path;
     }
-    return null;
-  }
-
-  Future<XFile?> initializeFile()async{
     return null;
   }
 

@@ -49,8 +49,6 @@ class _UserProfileState extends State<UserProfile> {
       _photo = Image.asset('images/wolf_user.png').image;
     }
     _bestScore = await getBestScore();
-    print("BEEEST");
-    print( _bestScore);
     return true;
   }
 
