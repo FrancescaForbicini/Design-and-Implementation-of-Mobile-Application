@@ -108,7 +108,7 @@ class _HomeScreenState extends State<HomeScreen>{
       shrinkWrap: true,
       children: <Widget>[
         Container(
-          padding: EdgeInsets.only(
+          padding: const EdgeInsets.only(
             left: 8.0,
             right: 8.0,
           ),

@@ -130,8 +130,6 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
             }
             else {
               return const Center(
-/*                //TODO parametrizzare
-                widthFactor: 9,*/
                 child: CircularProgressIndicator(
                   backgroundColor: Colors.lightGreen,
                 ),
