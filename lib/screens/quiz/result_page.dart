@@ -104,9 +104,18 @@ class _ResultPageState extends State<ResultPage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
+                              Container(
+                                color: const Color(0xFF101010),
+                                margin: const EdgeInsets.all(5.0),
+                                alignment: Alignment.center,
+                                constraints: BoxConstraints.expand(height: _height/16, width: _screenWidth/2),
+                                child: const AutoSizeText(
+                                  "Save A Picture Of The Quiz",style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                ),
+                              ),
                               Icon( Icons.photo_camera,
                                 color: Colors.black,
-                                size: 30,
+                                size: _height/16,
                               ),
 
                             ],
