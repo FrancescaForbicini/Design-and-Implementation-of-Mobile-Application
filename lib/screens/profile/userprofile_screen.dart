@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 
 import '../../models/quiz.dart';
 import '../authentication/authentication.dart';
+import '../quiz/global_rank.dart';
 
 class UserProfile extends StatefulWidget{
   UserProfile({super.key});
@@ -162,16 +163,43 @@ class _UserProfileState extends State<UserProfile> {
                           ),
                         ),
 
-                        const ListTile(
-                          title: AutoSizeText(
-                            'My Playlists',
+                         ListTile(
+                          title: const AutoSizeText(
+                            'My Quizzes',
                             style: TextStyle(
                               color: Colors.green,
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          leading: Icon(Icons.queue_music_outlined, color: Colors.lightGreen),
+                          leading: const Icon(Icons.queue_music_outlined, color: Colors.lightGreen),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MyQuiz(_user),
+                              ),
+                            );
+                          },
+                        ),
+                        ListTile(
+                          title: const AutoSizeText(
+                            'Global Rank',
+                            style: TextStyle(
+                              color: Colors.green,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          leading: const Icon(Icons.list_alt_outlined, color: Colors.lightGreen),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => HomeScreen(),
+                              ),
+                            );
+                          },
                         ),
                       ],
                     ),

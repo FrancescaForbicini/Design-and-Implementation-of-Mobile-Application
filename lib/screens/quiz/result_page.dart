@@ -12,7 +12,10 @@ import 'dart:io';
 
 
 import '../../models/quiz.dart';
+import '../../services/spotify_service.dart';
 import '../profile/userprofile_screen.dart';
+
+Quiz quiz = Quiz();
 
 class ResultPage extends StatefulWidget {
 
@@ -25,13 +28,14 @@ class ResultPage extends StatefulWidget {
 }
 
 class _ResultPageState extends State<ResultPage> {
-  Quiz quiz = Quiz();
   String? image;
 
   @override
   void initState() {
     quiz.score = int.parse(widget.score.toString());
+    quiz.user = FirebaseAuth.instance.currentUser!;
   }
+
   @override
   Widget build(BuildContext context) {
     final _screenHeight = MediaQuery.of(context).size.height;
@@ -133,7 +137,10 @@ class _ResultPageState extends State<ResultPage> {
 }
 
 Future<void> updateScore(int score) async {
+  final SpotifyService _spotifyService = SpotifyService();
   var user = FirebaseAuth.instance.currentUser;
+  var userSpotify = await _spotifyService.spotify.me.get();
+  var username = userSpotify.displayName;
   Map<String, dynamic> data;
   var bestScore;
   final docRef =
@@ -142,11 +149,19 @@ Future<void> updateScore(int score) async {
     data = doc.data() as Map<String, dynamic>;
     bestScore = data["bestScore"];
     if (bestScore < score) {
+      final docQuiz = FirebaseFirestore.instance.collection("Quiz").doc(user?.uid);
+      docQuiz.set({
+        "user": username,
+        "points": score,
+      });
       docRef.update({
         "bestScore": score,
       });
     }
   }, onError: (e) => print("Error getting document: $e"));
+
+
+
 }
 Future<XFile?> pickImage() async {
   XFile? imagePicked = await ImagePicker().pickImage(source: ImageSource.camera);
