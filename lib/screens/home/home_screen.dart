@@ -7,6 +7,7 @@ import 'package:dima_project/services/questions_playlist.dart';
 import 'package:dima_project/services/spotify_service.dart';
 import 'package:flutter/material.dart';
 import 'package:spotify/spotify.dart' as sp;
+import '../../generated/l10n.dart';
 import '../quiz/quiz_generator.dart';
 
 class HomeScreen extends StatefulWidget{
@@ -83,8 +84,8 @@ class _HomeScreenState extends State<HomeScreen>{
           },
         ),
       ],
-      title: const AutoSizeText(
-        'Home Page',
+      title: AutoSizeText(
+        S.of(context).HomeTitle,
         textAlign: TextAlign.center,
         style: TextStyle(fontSize: 30),
       ),
@@ -98,11 +99,11 @@ class _HomeScreenState extends State<HomeScreen>{
       backgroundColor: const Color(0xFF101010),
       appBar: _appBar,
 
-      body: _buildHomeBody(_screenHeight - _appBarHeight - _statusBarHeight, _screenWidth),
+      body: _buildHomeBody(_screenHeight - _appBarHeight - _statusBarHeight, _screenWidth, context),
     );
   }
 
-  Widget _buildHomeBody(height, width){
+  Widget _buildHomeBody(height, width, BuildContext context){
     return ListView(
       scrollDirection: Axis.vertical,
       shrinkWrap: true,
@@ -123,9 +124,9 @@ class _HomeScreenState extends State<HomeScreen>{
                 color: Color(0xFF101010),
                 width: width,
                 height: height * 0.1,
-                child: const AutoSizeText(
-                  " Start a new quiz!",
-                  style: TextStyle(
+                child: AutoSizeText(
+                  S.of(context).HomeStart,
+                  style: const TextStyle(
                     color: Colors.lightGreen,
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
@@ -144,9 +145,9 @@ class _HomeScreenState extends State<HomeScreen>{
                       color: Color(0xFF101010),
                       width: width,
                       height: height * 0.05,
-                      child: const AutoSizeText(
-                        " Your playlists:",
-                        style: TextStyle(
+                      child: AutoSizeText(
+                        S.of(context).HomePlaylist,
+                        style: const TextStyle(
                           color: Colors.lightGreen,
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -157,7 +158,7 @@ class _HomeScreenState extends State<HomeScreen>{
                       color: Color(0xFF101010),
                       width: width,
                       height: height * 0.4,
-                      child: _buildPlaylists(height, width),
+                      child: _buildPlaylists(height, width, context),
                     )
                   ],
                 ),
@@ -174,9 +175,9 @@ class _HomeScreenState extends State<HomeScreen>{
                       color: Color(0xFF101010),
                       width: width,
                       height: height * 0.05,
-                      child: const AutoSizeText(
-                        " Your artists:",
-                        style: TextStyle(
+                      child: AutoSizeText(
+                        S.of(context).HomeArtists,
+                        style: const TextStyle(
                           color: Colors.lightGreen,
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -187,7 +188,7 @@ class _HomeScreenState extends State<HomeScreen>{
                       color: Color(0xFF101010),
                       width: width,
                       height: height * 0.4,
-                      child: _buildArtists(height, width),
+                      child: _buildArtists(height, width, context),
                     )
                   ],
                 ),
@@ -199,7 +200,7 @@ class _HomeScreenState extends State<HomeScreen>{
     );
   }
 
-  Widget _buildPlaylists(height, width) {
+  Widget _buildPlaylists(height, width, BuildContext context) {
     return FutureBuilder(
       future: _done,
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
@@ -260,8 +261,8 @@ class _HomeScreenState extends State<HomeScreen>{
               color: Color(0xFF101010),
               width: width,
               height: height * 0.35,
-              child: const AutoSizeText(
-                "You don't have any playlist yet!",
+              child: AutoSizeText(
+                S.of(context).HomeErrPlaylist,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.lightGreen,
@@ -284,7 +285,7 @@ class _HomeScreenState extends State<HomeScreen>{
     );
   }
 
-  Widget _buildArtists(height, width){
+  Widget _buildArtists(height, width, BuildContext context){
     return FutureBuilder(
       future: _done,
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
@@ -344,10 +345,10 @@ class _HomeScreenState extends State<HomeScreen>{
               color: Color(0xFF101010),
               width: width,
               height: height * 0.35,
-              child: const AutoSizeText(
-                "You don't have any favourite artist yet!",
+              child: AutoSizeText(
+                S.of(context).HomeErrArtists,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.lightGreen,
                   fontSize: 18,
                 ),

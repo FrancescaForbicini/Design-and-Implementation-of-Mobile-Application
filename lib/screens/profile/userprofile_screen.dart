@@ -10,6 +10,7 @@ import 'package:dima_project/services/spotify_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../../generated/l10n.dart';
 import '../../models/quiz.dart';
 import '../authentication/authentication.dart';
 
@@ -70,10 +71,10 @@ class _UserProfileState extends State<UserProfile> {
                     builder: (context) => HomeScreen()));
             }),
       ],
-      title: const AutoSizeText(
-        'User Profile',
+      title: AutoSizeText(
+        S.of(context).UserTitle,
         textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 30),
+        style: const TextStyle(fontSize: 30),
       ),
     );
     final _screenHeight = MediaQuery.of(context).size.height;
@@ -128,7 +129,7 @@ class _UserProfileState extends State<UserProfile> {
                           ),
                         ),
                         AutoSizeText(
-                          "Best Score: $_bestScore",
+                          S.of(context).UserBestScore(_bestScore),
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -145,9 +146,9 @@ class _UserProfileState extends State<UserProfile> {
                     child: Column(
                       children: <Widget>[
                         ListTile(
-                          title: const AutoSizeText(
-                            'E-mail',
-                            style: TextStyle(
+                          title: AutoSizeText(
+                            S.of(context).UserEmail,
+                            style: const TextStyle(
                               color: Colors.green,
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -162,10 +163,10 @@ class _UserProfileState extends State<UserProfile> {
                           ),
                         ),
 
-                        const ListTile(
+                        ListTile(
                           title: AutoSizeText(
-                            'My Playlists',
-                            style: TextStyle(
+                            S.of(context).UserPlaylists,
+                            style: const TextStyle(
                               color: Colors.green,
                               fontSize: 18,
                               fontWeight: FontWeight.bold,

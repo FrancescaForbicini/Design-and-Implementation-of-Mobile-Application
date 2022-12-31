@@ -4,6 +4,7 @@ import 'package:dima_project/screens/authentication/sign_up/signup.dart';
 import 'package:dima_project/screens/spotifyAuth_screen.dart';
 import 'package:flutter/material.dart';
 
+import '../../generated/l10n.dart';
 import '../../services/authentication_service.dart';
 
 class AuthenticationScreen extends StatelessWidget{
@@ -36,8 +37,8 @@ class AuthenticationScreen extends StatelessWidget{
               height: _height * 0.16,
               child: TextButton(
                 child: AutoSizeText(
-                  'Sign in',
-                  style: TextStyle(fontSize: 20.0,fontFamily: 'Hind', color: Colors.lightGreen),
+                  S.of(context).AuthSignin,
+                  style: const TextStyle(fontSize: 20.0,fontFamily: 'Hind', color: Colors.lightGreen),
                 ),
                 onPressed: () {
                   Navigator.push(
@@ -52,8 +53,8 @@ class AuthenticationScreen extends StatelessWidget{
               height: _height * 0.16,
               child: TextButton(
                 child: AutoSizeText(
-                  'Sign up',
-                  style: TextStyle(fontSize: 20.0,fontFamily: 'Hind', color: Colors.lightGreen),
+                  S.of(context).AuthSignup,
+                  style: const TextStyle(fontSize: 20.0,fontFamily: 'Hind', color: Colors.lightGreen),
                 ),
                 onPressed: () {
                   Navigator.push(
@@ -68,8 +69,8 @@ class AuthenticationScreen extends StatelessWidget{
               height: _height * 0.16,
               child: TextButton(
                 child: AutoSizeText(
-                  'Sign in with Google',
-                  style: TextStyle(fontSize: 20.0,fontFamily: 'Hind', color: Colors.lightGreen),
+                  S.of(context).AuthGoogle,
+                  style: const TextStyle(fontSize: 20.0,fontFamily: 'Hind', color: Colors.lightGreen),
                 ),
                 onPressed: () => {
                   _authService.signInWithGoogle(context),

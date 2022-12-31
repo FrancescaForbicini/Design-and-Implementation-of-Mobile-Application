@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dima_project/screens/spotifyAuth_screen.dart';
 import 'package:flutter/material.dart';
 
+import '../../../generated/l10n.dart';
 import '../../../services/authentication_service.dart';
 import '../sign_up/signup.dart';
 
@@ -22,8 +23,8 @@ class SignInScreen extends StatelessWidget {
           Navigator.pop(context),
         },
       ),
-      title: const AutoSizeText(
-        'Sign In',
+      title: AutoSizeText(
+        S.of(context).SigninTitle,
         textAlign: TextAlign.center,
         style: TextStyle(fontSize: 30),
       ),
@@ -43,12 +44,12 @@ class SignInScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            _buildEmailTextField(),
+            _buildEmailTextField(context),
             SizedBox(
               height: _height * 0.05,
             ),
 
-            _buildPasswordTextField(),
+            _buildPasswordTextField(context),
             SizedBox(
               height: _height * 0.05,
             ),
@@ -60,23 +61,23 @@ class SignInScreen extends StatelessWidget {
   }
 
 
-  Widget _buildEmailTextField() {
+  Widget _buildEmailTextField(BuildContext context) {
     return TextFormField(
         controller: _emailController,
         validator: (value)=> EmailFieldValidator.validate(value!),
         style: const TextStyle(color: Colors.lightGreen),
         keyboardType: TextInputType.emailAddress,
-        decoration: const InputDecoration(
-            labelText: 'Email',
+        decoration: InputDecoration(
+            labelText: S.of(context).SigninEmail,
             filled: true,
-            icon: Icon(Icons.email, color: Colors.lightGreen,),
-            enabledBorder: OutlineInputBorder(
+            icon: const Icon(Icons.email, color: Colors.lightGreen,),
+            enabledBorder: const OutlineInputBorder(
                 borderSide: BorderSide(
                     color: Colors.lightGreen,
                     width: 2.0
                 )
             ),
-            labelStyle: TextStyle(
+            labelStyle: const TextStyle(
                 color: Colors.white,
                 fontSize: 18.0,
                 fontWeight: FontWeight.w400 ,
@@ -85,22 +86,22 @@ class SignInScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildPasswordTextField() {
+  Widget _buildPasswordTextField(BuildContext context) {
     return TextFormField(
       controller: _passwordController,
       validator: (value)=> PasswordFieldValidator.validate(value!),
       style: const TextStyle(color: Colors.lightGreen),
-      decoration: const InputDecoration(
-          labelText: 'Password',
+      decoration: InputDecoration(
+          labelText: S.of(context).SigninPwd,
           filled: true,
-          icon: Icon(Icons.key, color: Colors.lightGreen),
-          enabledBorder: OutlineInputBorder(
+          icon: const Icon(Icons.key, color: Colors.lightGreen),
+          enabledBorder: const OutlineInputBorder(
               borderSide: BorderSide(
                   color: Colors.lightGreen,
                   width: 2.0
               )
           ),
-          labelStyle: TextStyle(
+          labelStyle: const TextStyle(
               color: Colors.white,
               fontSize: 18.0,
               fontWeight: FontWeight.w400 ,
@@ -116,7 +117,7 @@ class SignInScreen extends StatelessWidget {
     return MaterialButton(
         color: Colors.lightGreen,
         textColor: Colors.white,
-        child: const AutoSizeText('SIGN IN'),
+        child: AutoSizeText(S.of(context).SigninButton),
         onPressed: () => {
           done = _authService.signIn(_emailController.text, _passwordController.text),
           done.then((value) => {
@@ -129,11 +130,11 @@ class SignInScreen extends StatelessWidget {
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
-                      title: const Text("Error"),
-                      content: const Text("Invalid email or password"),
+                      title: AutoSizeText(S.of(context).SigninErr),
+                      content: AutoSizeText(S.of(context).SigninErrText),
                       actions: [
                         MaterialButton(
-                          child: const Text("Ok"),
+                          child: AutoSizeText(S.of(context).SigninErrButton),
                           onPressed: () {
                             Navigator.of(context).pop();
                             },

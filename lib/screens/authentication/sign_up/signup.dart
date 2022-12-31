@@ -1,31 +1,32 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
+import '../../../generated/l10n.dart';
 import '../../../services/authentication_service.dart';
 
 class EmailFieldValidator{
   static String? validate(String value){
     return (value.isEmpty || !RegExp(
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
-        .hasMatch(value) ) ? 'Invalid Email' : null;
+        .hasMatch(value) ) ? S.current.SignupErrEmail : null;
   }
 }
 
 class PasswordFieldValidator{
   static String? validate(String value){
-    return (value.isEmpty || value.length <6) ? 'Password can\'t be empty or shorter than 6 characters' : null;
+    return (value.isEmpty || value.length <6) ? S.current.SignupErrPwd : null;
   }
 }
 
 class PassConfirmFieldValidator{
   static String? validate(String value, TextEditingController pass){
-    return (value != pass.text) ? 'The passwords do not match' : null;
+    return (value != pass.text) ? S.current.SignupErrMatchPwd : null;
   }
 }
 
 class UsernameFieldValidator{
   static String? validate(String value){
-    return (value.isEmpty) ? 'Username can\'t be empty' : null;
+    return (value.isEmpty) ? S.current.SignupEmptyUser : null;
   }
 }
 
@@ -50,8 +51,8 @@ class SignUpScreen extends StatelessWidget {
           Navigator.pop(context),
         },
       ),
-      title: const AutoSizeText(
-        'Sign Up',
+      title: AutoSizeText(
+        S.of(context).SignupTitle,
         textAlign: TextAlign.center,
         style: TextStyle(fontSize: 30),
       ),
@@ -73,19 +74,19 @@ class SignUpScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                _buildEmailTextfield(),
+                _buildEmailTextfield(context),
                 SizedBox(
                   height: _height * 0.05,
                 ),
-                _buildUsernameTextField(),
+                _buildUsernameTextField(context),
                 SizedBox(
                   height: _height * 0.05,
                 ),
-                _buildPasswordTextfield(),
+                _buildPasswordTextfield(context),
                 SizedBox(
                   height: _height * 0.05,
                 ),
-                _buildPasswordConfirmTextField(),
+                _buildPasswordConfirmTextField(context),
                 SizedBox(
                   height: _height * 0.05,
                 ),
@@ -98,23 +99,23 @@ class SignUpScreen extends StatelessWidget {
   }
 
 
-  Widget _buildEmailTextfield() {
+  Widget _buildEmailTextfield(BuildContext context) {
     return TextFormField(
         controller: _emailController,
         validator: (value)=> EmailFieldValidator.validate(value!),
         style: const TextStyle(color: Colors.lightGreen),
         keyboardType: TextInputType.emailAddress,
-        decoration: const InputDecoration(
-            labelText: 'Email',
+        decoration: InputDecoration(
+            labelText: S.of(context).SignupEmail,
             filled: true,
-            icon: Icon(Icons.email, color: Colors.lightGreen,),
-            enabledBorder: OutlineInputBorder(
+            icon: const Icon(Icons.email, color: Colors.lightGreen,),
+            enabledBorder: const OutlineInputBorder(
               borderSide: BorderSide(
                   color: Colors.lightGreen,
                   width: 2.0
               )
           ),
-          labelStyle: TextStyle(
+          labelStyle: const TextStyle(
               color: Colors.white,
               fontSize: 18.0,
               fontWeight: FontWeight.w400 ,
@@ -123,22 +124,22 @@ class SignUpScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildPasswordTextfield() {
+  Widget _buildPasswordTextfield(BuildContext context) {
     return TextFormField(
       controller: _passwordController,
       validator: (value)=> PasswordFieldValidator.validate(value!),
       style: const TextStyle(color: Colors.lightGreen),
-      decoration: const InputDecoration(
-          labelText: 'Password',
+      decoration: InputDecoration(
+          labelText: S.of(context).SignupPwd,
           filled: true,
-          icon: Icon(Icons.key, color: Colors.lightGreen),
-          enabledBorder: OutlineInputBorder(
+          icon: const Icon(Icons.key, color: Colors.lightGreen),
+          enabledBorder: const OutlineInputBorder(
             borderSide: BorderSide(
                   color: Colors.lightGreen,
                   width: 2.0
             )
           ),
-          labelStyle: TextStyle(
+          labelStyle: const TextStyle(
               color: Colors.white,
               fontSize: 18.0,
               fontWeight: FontWeight.w400 ,
@@ -148,22 +149,22 @@ class SignUpScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildPasswordConfirmTextField() {
+  Widget _buildPasswordConfirmTextField(BuildContext context) {
     return TextFormField(
       controller: _passConfirmController,
       validator: (value)=> PassConfirmFieldValidator.validate(value!, _passwordController),
       style: const TextStyle(color: Colors.lightGreen),
-      decoration: const InputDecoration(
-          labelText: 'Confirm Password',
+      decoration: InputDecoration(
+          labelText: S.of(context).SignupConfirmPwd,
           filled: true,
-          icon: Icon(Icons.key, color: Colors.lightGreen,),
-          enabledBorder: OutlineInputBorder(
+          icon: const Icon(Icons.key, color: Colors.lightGreen,),
+          enabledBorder: const OutlineInputBorder(
               borderSide: BorderSide(
                   color: Colors.lightGreen,
                   width: 2.0
               )
           ),
-          labelStyle: TextStyle(
+          labelStyle: const TextStyle(
               color: Colors.white,
               fontSize: 18.0,
               fontWeight: FontWeight.w400 ,
@@ -173,23 +174,23 @@ class SignUpScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildUsernameTextField() {
+  Widget _buildUsernameTextField(BuildContext context) {
     return TextFormField(
       controller: _usernameController,
       validator: (value)=> UsernameFieldValidator.validate(value!),
       style: const TextStyle(color: Colors.lightGreen),
       keyboardType: TextInputType.name,
-      decoration: const InputDecoration(
-          labelText: 'Username',
+      decoration: InputDecoration(
+          labelText: S.of(context).SignupUser,
           filled: true,
-          icon: Icon(Icons.person, color: Colors.lightGreen),
-          enabledBorder: OutlineInputBorder(
+          icon: const Icon(Icons.person, color: Colors.lightGreen),
+          enabledBorder: const OutlineInputBorder(
               borderSide: BorderSide(
                   color: Colors.lightGreen,
                   width: 2.0
               )
           ),
-          labelStyle: TextStyle(
+          labelStyle: const TextStyle(
               color: Colors.white,
               fontSize: 18.0,
               fontWeight: FontWeight.w400 ,
@@ -203,7 +204,7 @@ class SignUpScreen extends StatelessWidget {
     return MaterialButton(
         color: Colors.lightGreen,
         textColor: Colors.white,
-        child: AutoSizeText('SIGN UP'),
+        child: AutoSizeText(S.of(context).SignupButton),
         onPressed: () => {
           if(formGlobalKey.currentState!.validate()){
             _authService.signUp(_emailController.text, _passwordController.text, _usernameController.text, context)

@@ -11,6 +11,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 
+import '../../generated/l10n.dart';
 import '../../models/quiz.dart';
 import '../profile/userprofile_screen.dart';
 
@@ -49,9 +50,9 @@ class _ResultPageState extends State<ResultPage> {
               SizedBox(
                 height: _height * 0.4,
               ),
-              if (widget.end) AutoSizeText("You missed a question!"),
+              if (widget.end) AutoSizeText(S.of(context).ResultTitle),
               AutoSizeText(
-                'You got ${(widget.score).toString()}',
+                S.of(context).ResultMessage(widget.score),
                 style: const TextStyle(
                     color: Color(0xFF101010),
                     fontSize: 30,
@@ -69,8 +70,8 @@ class _ResultPageState extends State<ResultPage> {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => UserProfile()))
                 },
-                child: const AutoSizeText(
-                  "Exit",
+                child: AutoSizeText(
+                  S.of(context).ResultButton,
                   style: TextStyle(color: Colors.white),
                 ),
               ),

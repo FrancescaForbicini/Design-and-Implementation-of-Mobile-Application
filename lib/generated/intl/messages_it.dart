@@ -20,47 +20,74 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'it';
 
+  static String m0(questionNumber) =>
+      "Hai risposto correttamente a ${questionNumber} domande!";
+
+  static String m1(level) =>
+      "Premi il pulsante Continua per procedere al livello ${level}\nAltrimenti premi il pulsante Esci\n";
+
+  static String m2(totalScore, level) =>
+      "Punteggio: ${totalScore}   Livello: ${level}";
+
+  static String m3(score) => "Punteggio: ${score}";
+
+  static String m4(bestScore) => "Miglior punteggio: ${bestScore}";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
-        "AuthGoogle": MessageLookupByLibrary.simpleMessage(""),
-        "AuthSignin": MessageLookupByLibrary.simpleMessage(""),
-        "AuthSignup": MessageLookupByLibrary.simpleMessage(""),
-        "HomeArtists": MessageLookupByLibrary.simpleMessage(""),
-        "HomeErrArtists": MessageLookupByLibrary.simpleMessage(""),
-        "HomeErrPlaylist": MessageLookupByLibrary.simpleMessage(""),
-        "HomePlaylist": MessageLookupByLibrary.simpleMessage(""),
-        "HomeStart": MessageLookupByLibrary.simpleMessage(""),
-        "HomeTitle": MessageLookupByLibrary.simpleMessage(""),
-        "QuizGenExitButton": MessageLookupByLibrary.simpleMessage(""),
-        "QuizGenGoOnButton": MessageLookupByLibrary.simpleMessage(""),
-        "QuizGenNextLevel": MessageLookupByLibrary.simpleMessage(""),
-        "QuizGenNextMessage": MessageLookupByLibrary.simpleMessage(""),
-        "QuizGenScore": MessageLookupByLibrary.simpleMessage(""),
-        "QuizGenTitle": MessageLookupByLibrary.simpleMessage(""),
-        "ResultButton": MessageLookupByLibrary.simpleMessage(""),
-        "ResultMessage": MessageLookupByLibrary.simpleMessage(""),
+        "AuthGoogle": MessageLookupByLibrary.simpleMessage("Accedi con Google"),
+        "AuthSignin": MessageLookupByLibrary.simpleMessage("Accedi"),
+        "AuthSignup": MessageLookupByLibrary.simpleMessage("Registrati"),
+        "HomeArtists": MessageLookupByLibrary.simpleMessage("I tuoi artisti:"),
+        "HomeErrArtists": MessageLookupByLibrary.simpleMessage(
+            "Non hai ancora nessun artista preferito!"),
+        "HomeErrPlaylist": MessageLookupByLibrary.simpleMessage(
+            "Non hai ancora nessuna playlist!"),
+        "HomePlaylist":
+            MessageLookupByLibrary.simpleMessage("Le tue playlists:"),
+        "HomeStart":
+            MessageLookupByLibrary.simpleMessage("Comincia un nuovo quiz!"),
+        "HomeTitle": MessageLookupByLibrary.simpleMessage("La tua Home Page"),
+        "QuizGenExitButton": MessageLookupByLibrary.simpleMessage("Esci"),
+        "QuizGenGoOnButton": MessageLookupByLibrary.simpleMessage("Continua"),
+        "QuizGenNextLevel": m0,
+        "QuizGenNextMessage": m1,
+        "QuizGenScore": m2,
+        "QuizGenTitle": MessageLookupByLibrary.simpleMessage("Nuovo quiz"),
+        "ResultButton": MessageLookupByLibrary.simpleMessage("Esci"),
+        "ResultMessage": m3,
         "ResultPhoto": MessageLookupByLibrary.simpleMessage(""),
-        "ResultTitle": MessageLookupByLibrary.simpleMessage(""),
-        "SigninButton": MessageLookupByLibrary.simpleMessage(""),
-        "SigninEmail": MessageLookupByLibrary.simpleMessage(""),
-        "SigninErr": MessageLookupByLibrary.simpleMessage(""),
-        "SigninErrText": MessageLookupByLibrary.simpleMessage(""),
-        "SigninPwd": MessageLookupByLibrary.simpleMessage(""),
-        "SigninTitle": MessageLookupByLibrary.simpleMessage(""),
-        "SignupButton": MessageLookupByLibrary.simpleMessage(""),
-        "SignupConfirmPwd": MessageLookupByLibrary.simpleMessage(""),
-        "SignupEmail": MessageLookupByLibrary.simpleMessage(""),
-        "SignupEmptyUser": MessageLookupByLibrary.simpleMessage(""),
-        "SignupErrEmail": MessageLookupByLibrary.simpleMessage(""),
-        "SignupErrMatchPwd": MessageLookupByLibrary.simpleMessage(""),
-        "SignupErrPwd": MessageLookupByLibrary.simpleMessage(""),
-        "SignupPwd": MessageLookupByLibrary.simpleMessage(""),
-        "SignupTitle": MessageLookupByLibrary.simpleMessage(""),
-        "SignupUser": MessageLookupByLibrary.simpleMessage(""),
-        "SpotyTitle": MessageLookupByLibrary.simpleMessage(""),
-        "UserBestScore": MessageLookupByLibrary.simpleMessage(""),
-        "UserEmail": MessageLookupByLibrary.simpleMessage(""),
-        "UserPlaylists": MessageLookupByLibrary.simpleMessage(""),
-        "UserTitle": MessageLookupByLibrary.simpleMessage("")
+        "ResultTitle":
+            MessageLookupByLibrary.simpleMessage("Hai commesso un errore!"),
+        "SigninButton": MessageLookupByLibrary.simpleMessage("ACCEDI"),
+        "SigninEmail": MessageLookupByLibrary.simpleMessage("Email"),
+        "SigninErr": MessageLookupByLibrary.simpleMessage("Errore"),
+        "SigninErrButton": MessageLookupByLibrary.simpleMessage("Ok"),
+        "SigninErrText": MessageLookupByLibrary.simpleMessage(
+            "Email o password non corrette"),
+        "SigninPwd": MessageLookupByLibrary.simpleMessage("Password"),
+        "SigninTitle": MessageLookupByLibrary.simpleMessage("Accedi"),
+        "SignupButton": MessageLookupByLibrary.simpleMessage("REGISTRATI"),
+        "SignupConfirmPwd":
+            MessageLookupByLibrary.simpleMessage("Conferma password"),
+        "SignupEmail": MessageLookupByLibrary.simpleMessage("Email"),
+        "SignupEmptyUser": MessageLookupByLibrary.simpleMessage(
+            "Lo username non può essere vuoto"),
+        "SignupErrEmail":
+            MessageLookupByLibrary.simpleMessage("Email non valida"),
+        "SignupErrMatchPwd": MessageLookupByLibrary.simpleMessage(
+            "Le password non corrispondono"),
+        "SignupErrPwd": MessageLookupByLibrary.simpleMessage(
+            "La password non può essere vuota o più corta di 6 caratteri"),
+        "SignupPwd": MessageLookupByLibrary.simpleMessage("Password"),
+        "SignupTitle": MessageLookupByLibrary.simpleMessage("Registrati"),
+        "SignupUser": MessageLookupByLibrary.simpleMessage("Username"),
+        "SpotyTitle":
+            MessageLookupByLibrary.simpleMessage("Autorizza accesso a Spotify"),
+        "UserBestScore": m4,
+        "UserEmail": MessageLookupByLibrary.simpleMessage("E-mail"),
+        "UserPlaylists":
+            MessageLookupByLibrary.simpleMessage("Le mie Playlist"),
+        "UserTitle": MessageLookupByLibrary.simpleMessage("Profilo Utente")
       };
 }
