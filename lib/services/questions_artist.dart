@@ -31,15 +31,14 @@ class QuestionsArtist {
     if (allAlbums.length < 3){
       allRelatedArtists = await getAllRelatedArtists(artist);
       allRelatedArtists.removeRange(0, 15);
-      await buildAllAnswersQuestionsRelatedArtists();
+      await addYearsAlbumRelatedArtists();
     }
   }
 
-  Future<void> buildAllAnswersQuestionsRelatedArtists() async{
+  Future<void> addYearsAlbumRelatedArtists() async{
     for (sp.Artist artist in allRelatedArtists){
       List <sp.AlbumSimple?> allAlbumsRelatedArtist = [];
       allAlbumsRelatedArtist = await getAllAlbums(artist);
-      allAlbums.addAll(allAlbumsRelatedArtist);
       allYearsAlbum.addAll(allAlbumsRelatedArtist.map((e) => e?.releaseDate?.substring(0, 4).toString()).toList());
     }
   }
@@ -48,6 +47,10 @@ class QuestionsArtist {
 
   Future<void> buildQuestionArtists(List<Question> questions, sp.Artist artist,List questionsFromJSON) async {
     await buildAllAnswersQuestions(artist);
+    if (allAlbums.length < 3){
+      await buildQuestionOnRelatedArtist(questions,questionsFromJSON);
+
+    }
     int i = 0;
     int typeQuestion = 0;
     for (i = 0; i < totalAlbum; i++) {
@@ -120,6 +123,14 @@ class QuestionsArtist {
     }
     questions.shuffle();
   }
+
+
+  Future<void> buildQuestionOnRelatedArtist(List<Question> questions,List questionsFromJSON) async{
+    for (sp.Artist artist in  allRelatedArtists){
+      buildQuestionArtists(questions, artist, questionsFromJSON);
+    }
+  }
+
 
 
   Future<List<sp.AlbumSimple?>> getAllAlbums(sp.Artist artist)async{
