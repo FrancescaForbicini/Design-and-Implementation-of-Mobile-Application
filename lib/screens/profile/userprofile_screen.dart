@@ -10,6 +10,7 @@ import 'package:dima_project/services/spotify_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../../models/player.dart';
 import '../../models/quiz.dart';
 import '../authentication/authentication.dart';
 import '../quiz/global_rank.dart';
@@ -24,12 +25,8 @@ class UserProfile extends StatefulWidget{
 class _UserProfileState extends State<UserProfile> {
   final AuthenticationService _authenticationService = AuthenticationService();
   final SpotifyService _spotifyService = SpotifyService();
-  var _user;
-  var _username;
-  var _email;
-  var _photo;
-  var _bestScore;
   late Future<bool> _done;
+  Player currentUser = Player();
 
   @override
   void initState() {
@@ -37,19 +34,22 @@ class _UserProfileState extends State<UserProfile> {
   }
 
   Future<bool> _getUserData() async{
+    var _user;
     _user = FirebaseAuth.instance.currentUser;
-    _email = _user.email;
-
     var _spotiUser = await _spotifyService.spotify.me.get();
     var _photoRef = _spotiUser.images;
-    _username = _spotiUser.displayName;
+
+    currentUser.email = _user.email;
+
+    currentUser.username = _spotiUser.displayName;
+
     if (!_photoRef.isEmpty){
-      _photo = Image.network(_photoRef[0].url).image;
+      currentUser.image = Image.network(_photoRef[0].url).image;
     }
     else{
-      _photo = Image.asset('images/wolf_user.png').image;
+      currentUser.image = Image.asset('images/wolf_user.png').image;
     }
-    _bestScore = await getBestScore();
+    currentUser.bestScore = await getBestScore();
     return true;
   }
 
@@ -117,11 +117,11 @@ class _UserProfileState extends State<UserProfile> {
                           child: CircleAvatar(
                             backgroundColor: Colors.transparent,
                             radius: radius - 10 > 0 ? radius - 10 : 5.0,
-                            backgroundImage: _photo,
+                            backgroundImage: currentUser.image,
                           ),
                         ),
                         AutoSizeText(
-                          _username,
+                          currentUser.username,
                           style: const TextStyle(
                             fontSize: 25,
                             fontWeight: FontWeight.bold,
@@ -129,7 +129,7 @@ class _UserProfileState extends State<UserProfile> {
                           ),
                         ),
                         AutoSizeText(
-                          "Best Score: $_bestScore",
+                          "Best Score:  " + currentUser.bestScore,
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -155,7 +155,7 @@ class _UserProfileState extends State<UserProfile> {
                             ),
                           ),
                           subtitle: AutoSizeText(
-                            _email,
+                            currentUser.email,
                             style: const TextStyle(
                               fontSize: 16,
                               color: Colors.lightGreen,
@@ -177,7 +177,7 @@ class _UserProfileState extends State<UserProfile> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => MyQuiz(_user),
+                                builder: (context) => HomeScreen(),
                               ),
                             );
                           },
@@ -196,7 +196,7 @@ class _UserProfileState extends State<UserProfile> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => HomeScreen(),
+                                builder: (context) => GlobalRank(currentUser: currentUser),
                               ),
                             );
                           },
@@ -223,7 +223,7 @@ class _UserProfileState extends State<UserProfile> {
 
 }
 
-Future<int> getBestScore() async{
+Future<String> getBestScore() async{
   var _user = FirebaseAuth.instance.currentUser;
   var _data;
   var _bestScore;
@@ -232,7 +232,8 @@ Future<int> getBestScore() async{
     _data = doc.data() as Map<String, dynamic>;
     _bestScore = _data["bestScore"];
   });
-  if (_bestScore == null)
-    return 0;
-  return _bestScore;
+  if (_bestScore == null) {
+    return '0';
+  }
+  return "$_bestScore";
 }

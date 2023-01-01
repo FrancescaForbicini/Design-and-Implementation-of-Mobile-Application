@@ -3,17 +3,62 @@ import 'dart:math';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dima_project/screens/profile/userprofile_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
 
-class MyQuiz extends StatelessWidget{
-  final user;
-  const MyQuiz(this.user, {super.key});
+import '../../models/player.dart';
+
+class GlobalRank extends StatefulWidget{
+  final Player currentUser;
+  GlobalRank({required this.currentUser, super.key});
+
+  @override
+  State<StatefulWidget> createState() => _GlobalRankState();
+}
+
+class _GlobalRankState extends State<GlobalRank>{
+
+  List bestPlayersUsername = [];
+  List bestPlayerPoints = [];
+  late Future<bool> done;
+
+  @override
+  void initState() {
+    super.initState();
+    done = retrieveBestPLayers();
+  }
+
+  Future<bool> retrieveBestPLayers() async{
+    QuerySnapshot<Map<String, dynamic>> snap = await FirebaseFirestore.instance.collection("Quiz").orderBy("points",descending: true).get() ;
+    List<DocumentSnapshot> items = snap.docs.toList(); // List of Documents
+    for (int i = 0; i < items.length; i++ ){
+      DocumentSnapshot item = items[i];
+      bestPlayersUsername.add(item["user"]);
+      bestPlayerPoints.add(item["points"].toString());
+    }
+    return true;
+  }
 
   @override
   Widget build(BuildContext context) {
-
+    final _appBar = AppBar(
+      backgroundColor: Color(0xFF101010),
+      leading: IconButton(
+        icon: Icon(Icons.arrow_back, color: Colors.lightGreen, size: 30),
+        onPressed: () =>
+        {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => UserProfile()))
+        },
+      ),
+      title: const AutoSizeText(
+        'Global Rank',
+        textAlign: TextAlign.center,
+        style: TextStyle(fontSize: 30),
+      ),
+    );
     final _screenHeight = MediaQuery
         .of(context)
         .size
@@ -22,133 +67,132 @@ class MyQuiz extends StatelessWidget{
         .of(context)
         .size
         .width;
-   // final _appBarHeight = _appBar.preferredSize.height;
+    final _appBarHeight = _appBar.preferredSize.height;
     final _statusBarHeight = MediaQuery
         .of(context)
         .padding
         .top;
-   // final _height = _screenHeight - _appBarHeight - _statusBarHeight;
-    //final radius = min(_height * 0.5 * 0.25, _screenWidth * 0.25);
-    var photoUser;
-    var users;
-    var points;
-    int i = 0;
-    return Scaffold(
-      backgroundColor: Color(0xFF101010),
-      appBar: AppBar(
-        backgroundColor: Color(0xFF101010),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.lightGreen, size: 30),
-          onPressed: () =>
-          {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => UserProfile()))
-          },
-        ),
-        title: const AutoSizeText(
-          'Global Rank',
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 30),
-        ),
-      ),
+    final _height = _screenHeight - _appBarHeight - _statusBarHeight;
+    final radius = min(_height * 0.5 * 0.25, _screenWidth * 0.25);
+    final TextStyle textStyle = TextStyle(
+    color: Colors.green,
+    fontSize: 20,
+    fontWeight: FontWeight.bold,wordSpacing: 10);
 
-      body: Flexible(
-          child: StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection("Quiz").snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  i = 0;
-                  return ListView.builder(
-                      itemCount: snapshot.data?.docs.length,
-                      itemBuilder: (context, index) {
-                        QuerySnapshot? snap = snapshot.data; // Snapshot
-                        List<DocumentSnapshot> items = snap!.docs; // List of Documents
-                        DocumentSnapshot item = items[index];
-                        if (index >= 1) {
-                            points = item["points"].toString();
-                            print(points);
-                            users = item["user"].toString();
-                          //TODO how to retrieve things?
-                        }
-                        i++;
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 5.0, vertical: 5.0),
-                          child: InkWell(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: i == 0 ? Colors.amber
-                                          : i == 1 ? Colors.grey
-                                          : i == 2 ? Colors.brown
-                                          : Colors.white,
-                                      width: 3.0,
-                                      style: BorderStyle.solid),
-                                  borderRadius: BorderRadius.circular(5.0)),
-                              width: MediaQuery
-                                  .of(context)
-                                  .size
-                                  .width,
-                              // child: Column(
-                              //   children: <Widget>[
-                              //     Row(
-                              //       children: <Widget>[
-                              //         Padding(
-                              //           padding: const EdgeInsets.only(
-                              //               top: 10.0, left: 15.0),
-                              //           child: Row(
-                              //             children: <Widget>[
-                              //               CircleAvatar(
-                              //                   child: Container(
-                              //                       decoration: BoxDecoration(
-                              //                           shape: BoxShape.circle,
-                              //                           image: DecorationImage(
-                              //                               image: Image.asset("images/wolf_user.png").image,
-                              //                               // image: NetworkImage(
-                              //                               //     snapshot.data?.docs[index].get("ph")),
-                              //                               fit: BoxFit
-                              //                                   .fill)))),
-                              //             ],
-                              //           ),
-                              //         ),
-                              //         Padding(
-                              //           padding: const EdgeInsets.only(
-                              //               left: 20.0, top: 10.0),
-                              //           child: Column(
-                              //             mainAxisAlignment:
-                              //             MainAxisAlignment.center,
-                              //             crossAxisAlignment:
-                              //             CrossAxisAlignment.start,
-                              //             children: <Widget>[
-                              //               Container(
-                              //                   alignment: Alignment.centerLeft,
-                              //                   child: Text(users.username,
-                              //                     style: TextStyle(
-                              //                         color: Colors.deepPurple,
-                              //                         fontWeight: FontWeight
-                              //                             .w500), maxLines: 6,)
-                              //               ),
-                              //               Text("Points: " +
-                              //                   points),
-                              //             ],
-                              //           ),
-                              //         ),
-                              //       ],
-                              //     ),
-                              //   ],
-                              ),
-                            ),
-                          //),
+    return Scaffold(
+        backgroundColor: Color(0xFF101010),
+        appBar: _appBar,
+
+        body: ListView(
+            children: <Widget>[
+              Container(
+                height: _height * 0.5,
+                width: _screenWidth,
+                decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Colors.green, Colors.lightGreen],
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                      stops: [0.5, 0.9],
+                    )
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    CircleAvatar(
+                      backgroundColor: Color(0xFF101010),
+                      minRadius: radius,
+                      child: CircleAvatar(
+                        backgroundColor: Colors.transparent,
+                        radius: radius - 10 > 0 ? radius - 10 : 5.0,
+                        backgroundImage: widget.currentUser.image,
+                      ),
+
+                    ),
+                    AutoSizeText(
+                      widget.currentUser.username,
+                      style: const TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF101010),
+                      ),
+                    ),
+                    AutoSizeText(
+                      "Best Score " + widget.currentUser.bestScore,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF101010),
+                      ),
+                    ),
+
+                  ],
+                ),
+              ),
+              Container(
+                  width: _screenWidth,
+                  child: Row(
+                      children: <Widget>[
+                        AutoSizeText(
+                          'Position ', style: textStyle,),
+                        AutoSizeText(
+                          "Nation ", style: textStyle,),
+                        AutoSizeText(
+                          'Username ' , style: textStyle,),
+                        AutoSizeText(
+                          'Score', style: textStyle,),
+                        SizedBox(
+                          height: 30,
+                        )
+
+                      ]
+                  ),
+              ),
+              FutureBuilder(
+                  future: done,
+                  builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                    if (snapshot.hasData &&
+                        snapshot.connectionState == ConnectionState.done) {
+                      if (bestPlayersUsername.length == 0)
+                        return Center(
+                          child:  AutoSizeText("There Are No PLayers", style: textStyle,)
                         );
-                      }
-                  );
-                } else
-                  return CircularProgressIndicator();
-              }
-          )
-      ),
+                      return ListView.builder(
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: bestPlayersUsername.length,
+                          itemBuilder: (context, index) {
+                            return Container(
+                              width: _screenWidth,
+                              child: Row(
+                                  children: <Widget>[
+                                    AutoSizeText('${index+1}°  ', style: textStyle,),
+                                    AutoSizeText(
+                                      "Italy ", style: textStyle,),
+                                    AutoSizeText(
+                                      bestPlayersUsername[index] +' ' , style: textStyle,),
+                                    AutoSizeText(
+                                      bestPlayerPoints[index], style: textStyle,),
+                                    SizedBox(
+                                      height: 30,
+                                    )
+                                  ]
+                              ),
+                            );
+                          }
+                      );
+                    } else
+                      return CircularProgressIndicator();
+                  }
+              )
+            ]
+        )
     );
   }
 
+
+
 }
+
+

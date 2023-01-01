@@ -40,7 +40,7 @@ class AuthenticationService {
   }
 
   _sendVerification(auth) async{
-    await auth.user?.sendEmailVerification();
+    await auth.currentUser?.sendEmailVerification();
 
 /*    if (!_isEmailVerified) {
       _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
@@ -51,14 +51,14 @@ class AuthenticationService {
 
   _checkVerificationStatus(auth) async{
     try {
-      await auth.user!.reload();
-      _isEmailVerified = auth.user!.emailVerified;
+      await auth.currentUser!.reload();
+      _isEmailVerified = auth.currentUser!.emailVerified;
       print("User Status: ${_isEmailVerified}");
     } catch (e) {
       // handle the error here
       print(e.toString());
     }
-    _isEmailVerified = auth.user!.emailVerified;
+    _isEmailVerified = auth.currentUser!.emailVerified;
 
     if (_isEmailVerified) {
       _timer?.cancel();
