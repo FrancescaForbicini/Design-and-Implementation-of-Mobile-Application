@@ -13,7 +13,10 @@ import 'dart:io';
 
 import '../../generated/l10n.dart';
 import '../../models/quiz.dart';
+import '../../services/spotify_service.dart';
 import '../profile/userprofile_screen.dart';
+
+Quiz quiz = Quiz();
 
 class ResultPage extends StatefulWidget {
 
@@ -26,13 +29,20 @@ class ResultPage extends StatefulWidget {
 }
 
 class _ResultPageState extends State<ResultPage> {
-  Quiz quiz = Quiz();
   String? image;
+  var username;
+  late int bestScore;
+  late Future<bool> done;
+  late bool savedPicture;
+  late bool savedPosition;
 
   @override
   void initState() {
-    quiz.score = int.parse(widget.score.toString());
+    done = getBestScore();
+    savedPicture = false;
+    savedPosition = false;
   }
+
   @override
   Widget build(BuildContext context) {
     final _screenHeight = MediaQuery.of(context).size.height;
@@ -45,118 +55,155 @@ class _ResultPageState extends State<ResultPage> {
     return Scaffold(
         backgroundColor: Colors.lightGreen,
         body: Center(
-          child: Column(
-            children: [
-              SizedBox(
-                height: _height * 0.4,
-              ),
-              if (widget.end) AutoSizeText(S.of(context).ResultTitle),
-              AutoSizeText(
-                S.of(context).ResultMessage(widget.score),
-                style: const TextStyle(
-                    color: Color(0xFF101010),
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold),
-              ),
-              SizedBox(
-                height: _height * 0.02,
-              ),
-              ElevatedButton(
-                style: ButtonStyle(
-                    backgroundColor: MaterialStateColor.resolveWith(
-                            (states) => const Color(0xFF101010))),
-                onPressed: () => {
-                  updateScore(widget.score),
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => UserProfile()))
-                },
-                child: AutoSizeText(
-                  S.of(context).ResultButton,
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-              GestureDetector(
-                onTap: () async {
-                  image = (await AcquireImage().getImageFromCamera())!;
-                  if (image != null) {
-                    setState(() {
-                      quiz.image = image!;
-                    });
-                  }
-                },
-                child:
-                FutureBuilder<String?>(
-                    future: quiz.getImageQuiz(),
-                    builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
-                      if (image != null) {
-                        File file = File(image!);
-                        return CircleAvatar(
-                          backgroundColor: const Color(0xFF101010),
-                          minRadius: radius,
-                          child: CircleAvatar(
-                            backgroundColor: Colors.transparent,
-                            radius: radius - 10 > 0 ? radius - 10 : 5.0,
-                            backgroundImage: Image.file(file).image,
-                          ),
-                        );
-                      }
+          child: FutureBuilder(
+            future: done,
+            builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+             if (snapshot.hasData && snapshot.connectionState == ConnectionState.done) {
+               return Column(
+                  children: [
+                    SizedBox(
+                      height: _height * 0.4,
+                    ),
+                    if (widget.end) AutoSizeText(S.of(context).ResultTitle),
+                    AutoSizeText(
+                      S.of(context).ResultMessage(widget.score),
+                      style: const TextStyle(
+                          color: Color(0xFF101010),
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      height: _height * 0.02,
+                    ),
+                    if (bestScore < widget.score) ... [
+                      savePicture(_height, _screenWidth, radius),
+                      //savePosition(_height, _screenWidth, radius),
+                    ]
+                    else
+                      exitButton(),
 
-                      return
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                color: const Color(0xFF101010),
-                                margin: const EdgeInsets.all(5.0),
-                                alignment: Alignment.center,
-                                constraints: BoxConstraints.expand(height: _height/16, width: _screenWidth/2),
-                                child: const AutoSizeText(
-                                  "Save A Picture Of The Quiz",style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              Icon( Icons.photo_camera,
-                                color: Colors.black,
-                                size: _height/16,
-                              ),
-
-                            ],
-                          );
-                    }
-                ),
-
-
-
-              ),
-            ],
+                    savedPicture ? exitButton() : Container(),
+                  ],
+              );
+            }
+            else
+              return CircularProgressIndicator();
+          }
           ),
         ));
   }
-}
 
-Future<void> updateScore(int score) async {
-  var user = FirebaseAuth.instance.currentUser;
-  Map<String, dynamic> data;
-  var bestScore;
-  final docRef =
-  FirebaseFirestore.instance.collection("users").doc(user?.email);
-  docRef.get().then((DocumentSnapshot doc) {
-    data = doc.data() as Map<String, dynamic>;
-    bestScore = data["bestScore"];
-    if (bestScore < score) {
-      docRef.update({
-        "bestScore": score,
+  Widget savePicture(double _height, double _screenWidth, double radius){
+    updateScore(widget.score);
+    return GestureDetector(
+      onTap: () async {
+        image = (await AcquireImage().getImageFromCamera())!;
+        if (image != null) {
+          setState(() {
+            quiz.image = image!;
+            savedPicture = true;
+          });
+        }
+      },
+      child:
+      FutureBuilder<String?>(
+          future: quiz.getImageQuiz(),
+          builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
+            if (image != null) {
+              File file = File(image!);
+              return CircleAvatar(
+                backgroundColor: const Color(0xFF101010),
+                minRadius: radius,
+                child: CircleAvatar(
+                  backgroundColor: Colors.transparent,
+                  radius: radius - 10 > 0 ? radius - 10 : 5.0,
+                  backgroundImage: Image.file(file).image,
+                ),
+              );
+            }
+
+            return
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    color: const Color(0xFF101010),
+                    margin: const EdgeInsets.all(5.0),
+                    alignment: Alignment.center,
+                    constraints: BoxConstraints.expand(height: _height/16, width: _screenWidth/2),
+                    child: const AutoSizeText(
+                      "Save A Picture Of The Quiz",style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Icon( Icons.photo_camera,
+                    color: Colors.black,
+                    size: _height/16,
+                  ),
+
+                ],
+              );
+          }
+      ),
+    );
+  }
+
+  Widget savePosition(double _height, double _screenWidth, double radius) {
+    return Container();
+  }
+
+  Widget exitButton() {
+    return ElevatedButton(
+      style: ButtonStyle(
+          backgroundColor: MaterialStateColor.resolveWith(
+                  (states) => const Color(0xFF101010))),
+      onPressed: () => {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => UserProfile()))
+      },
+      child: const AutoSizeText(
+        S.of(context).ResultButton,
+        style: TextStyle(color: Colors.white),
+      ),
+    );
+  }
+
+
+  Future<bool> getBestScore() async{
+    var _user = FirebaseAuth.instance.currentUser;
+    var _data;
+    var _bestScore;
+    final docRef = FirebaseFirestore.instance.collection("users").doc(_user?.email);
+    await docRef.get().then((DocumentSnapshot doc) {
+      _data = doc.data() as Map<String, dynamic>;
+      _bestScore = _data["bestScore"];
+    });
+    if (_bestScore == null) {
+      bestScore = 0;
+    }
+    bestScore = _bestScore;
+    return true;
+  }
+
+  Future<void> updateScore(int score) async {
+    final SpotifyService _spotifyService = SpotifyService();
+    var user = FirebaseAuth.instance.currentUser;
+    var userSpotify = await _spotifyService.spotify.me.get();
+    var username = userSpotify.displayName;
+    final docRef =
+    FirebaseFirestore.instance.collection("users").doc(user?.email);
+    docRef.update({
+      "bestScore": score,
+    });
+
+    final docQuiz = FirebaseFirestore.instance.collection("quiz").doc(
+          user?.email);
+      docQuiz.set({
+        "username": username,
+        "score": score,
+        "image": image,
+        "position": "",
       });
     }
-  }, onError: (e) => print("Error getting document: $e"));
-}
-Future<XFile?> pickImage() async {
-  XFile? imagePicked = await ImagePicker().pickImage(source: ImageSource.camera);
-  print(imagePicked!.path);
 }
 
-Future<bool> initDoneFalse() async{
-  return false;
-}
-Future<bool> initDoneTrue() async{
-  return true;
-}
+

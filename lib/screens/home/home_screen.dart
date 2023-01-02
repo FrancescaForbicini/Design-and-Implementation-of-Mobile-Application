@@ -78,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen>{
       ),
       actions: [
         IconButton(
-          icon: const Icon(Icons.settings, color: Colors.lightGreen,size: 30),
+          icon: const Icon(Icons.person, color: Colors.lightGreen,size: 30),
           onPressed: () => {
             Navigator.push(context, MaterialPageRoute(builder: (context) => UserProfile()))
           },

@@ -47,6 +47,8 @@ dependencies:
   just_audio: ^0.9.30
   auto_size_text: ^3.0.0
   image_picker: ^0.8.0
+  geolocator: ^8.2.0
+  geocoding: ^2.0.4
 
 dev_dependencies:
   flutter_test:
