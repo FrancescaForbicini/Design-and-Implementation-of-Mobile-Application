@@ -110,8 +110,6 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
   @override
   void initState() {
     _done = readJson();
-
-    super.initState();
     _controller = PageController(initialPage: 0);
   }
 

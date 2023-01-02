@@ -137,7 +137,7 @@ class _GlobalRankState extends State<GlobalRank>{
                         AutoSizeText(
                           'Position ', style: textStyle,),
                         AutoSizeText(
-                          "Nation ", style: textStyle,),
+                          "Location ", style: textStyle,),
                         AutoSizeText(
                           'Username ' , style: textStyle,),
                         AutoSizeText(
@@ -154,10 +154,11 @@ class _GlobalRankState extends State<GlobalRank>{
                   builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
                     if (snapshot.hasData &&
                         snapshot.connectionState == ConnectionState.done) {
-                      if (bestPlayersUsername.length == 0)
+                      if (bestPlayersUsername.isEmpty) {
                         return Center(
-                          child:  AutoSizeText("There Are No PLayers", style: textStyle,)
+                          child: AutoSizeText("There Are No Players", style: textStyle,)
                         );
+                      }
                       return ListView.builder(
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
@@ -174,7 +175,7 @@ class _GlobalRankState extends State<GlobalRank>{
                                       bestPlayersUsername[index] +' ' , style: textStyle,),
                                     AutoSizeText(
                                       bestPlayerPoints[index], style: textStyle,),
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 30,
                                     )
                                   ]
@@ -182,8 +183,9 @@ class _GlobalRankState extends State<GlobalRank>{
                             );
                           }
                       );
-                    } else
-                      return CircularProgressIndicator();
+                    } else {
+                      return const CircularProgressIndicator();
+                    }
                   }
               )
             ]
