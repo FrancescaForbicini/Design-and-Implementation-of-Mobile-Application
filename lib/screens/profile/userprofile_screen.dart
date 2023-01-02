@@ -165,7 +165,7 @@ class _UserProfileState extends State<UserProfile> {
 
                          ListTile(
                           title: const AutoSizeText(
-                            'My Quizzes',
+                            'My Best Quiz',
                             style: TextStyle(
                               color: Colors.green,
                               fontSize: 18,

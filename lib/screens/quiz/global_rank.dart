@@ -31,12 +31,12 @@ class _GlobalRankState extends State<GlobalRank>{
   }
 
   Future<bool> retrieveBestPLayers() async{
-    QuerySnapshot<Map<String, dynamic>> snap = await FirebaseFirestore.instance.collection("Quiz").orderBy("points",descending: true).get() ;
+    QuerySnapshot<Map<String, dynamic>> snap = await FirebaseFirestore.instance.collection("quiz").orderBy("score",descending: true).get() ;
     List<DocumentSnapshot> items = snap.docs.toList(); // List of Documents
     for (int i = 0; i < items.length; i++ ){
       DocumentSnapshot item = items[i];
-      bestPlayersUsername.add(item["user"]);
-      bestPlayerPoints.add(item["points"].toString());
+      bestPlayersUsername.add(item["username"]);
+      bestPlayerPoints.add(item["score"].toString());
     }
     return true;
   }

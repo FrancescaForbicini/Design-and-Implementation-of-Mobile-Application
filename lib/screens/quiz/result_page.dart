@@ -37,7 +37,6 @@ class _ResultPageState extends State<ResultPage> {
 
   @override
   void initState() {
-    quiz.user = FirebaseAuth.instance.currentUser!;
     done = getBestScore();
     savedPicture = false;
     savedPosition = false;
@@ -75,7 +74,7 @@ class _ResultPageState extends State<ResultPage> {
                     ),
                     if (bestScore < widget.score) ... [
                       savePicture(_height, _screenWidth, radius),
-                      savePosition(_height, _screenWidth, radius),
+                      //savePosition(_height, _screenWidth, radius),
                     ]
                     else
                       exitButton(),
@@ -99,6 +98,7 @@ class _ResultPageState extends State<ResultPage> {
         if (image != null) {
           setState(() {
             quiz.image = image!;
+            savedPicture = true;
           });
         }
       },
@@ -108,7 +108,6 @@ class _ResultPageState extends State<ResultPage> {
           builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
             if (image != null) {
               File file = File(image!);
-              savedPicture = true;
               return CircleAvatar(
                 backgroundColor: const Color(0xFF101010),
                 minRadius: radius,
@@ -193,11 +192,13 @@ class _ResultPageState extends State<ResultPage> {
       "bestScore": score,
     });
 
-    final docQuiz = FirebaseFirestore.instance.collection("Quiz").doc(
-          user?.uid);
+    final docQuiz = FirebaseFirestore.instance.collection("quiz").doc(
+          user?.email);
       docQuiz.set({
         "username": username,
-        "points": score,
+        "score": score,
+        "image": image,
+        "position": "",
       });
     }
 }
