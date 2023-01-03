@@ -29,7 +29,7 @@ class QuestionsArtist {
 
   Future<void> buildQuestionArtists(List<Question> questions, sp.Artist artist,List questionsFromJSON) async {
     allAlbums = await getAllAlbums(artist);
-    if (allAlbums.length < 2){
+    if (allAlbums.length < 4){
       relatedArtist = true;
       allRelatedArtists = await getAllRelatedArtists(artist);
       // keep the first 5 artist similar to the current one
@@ -80,6 +80,7 @@ class QuestionsArtist {
 
             List<sp.TrackSimple> wrongAnswersTracks = allTracks.where((element) => element != rightAnswersTracks[randomTrack]).toList();
             question.wrongAnswers = setWrongAnswersTracks(wrongAnswersTracks);
+            questions.add(question);
 
             break;
 
@@ -96,29 +97,46 @@ class QuestionsArtist {
             question.rightAnswer = rightAnswerTracks[randomTrack].name;
 
             question.wrongAnswers = setWrongAnswersTracks(wrongAnswerTracks);
+            questions.add(question);
+
             break;
           }
         case 3:
           {
-            int randomTrack = Random().nextInt(allTracksForAlbum[i].length);
-            sp.TrackSimple trackSelected = allTracksForAlbum[i][randomTrack];
-            question.rightAnswer = trackSelected.name;
+            // takes random number of tracks in the album
+            int randomNumber = Random().nextInt(allTracksForAlbum[i].length);
+            int j = 0;
+            allTracksForAlbum[i].shuffle;
+            for (j = 0; j < randomNumber; j++){
 
-            question.url = trackSelected.previewUrl.toString();
-            question.isPresent = true;
+              Question questionTrack = Question();
+              questionTrack.question1 = question.question1;
+              questionTrack.question2 = question.question2;
 
-            List<sp.TrackSimple> wrongAnswerTracks = allTracks.where((element) => element.name != trackSelected.name).toList();
-            question.wrongAnswers = setWrongAnswersTracks(wrongAnswerTracks);
+              int randomTrack = Random().nextInt(allTracksForAlbum[i].length);
+              sp.TrackSimple trackSelected = allTracksForAlbum[i][randomTrack];
+              questionTrack.rightAnswer = trackSelected.name;
+
+              question.url = trackSelected.previewUrl.toString();
+              questionTrack.isPresent = true;
+
+              List<sp.TrackSimple> wrongAnswerTracks = allTracks.where((element) => element.name != trackSelected.name).toList();
+              questionTrack.wrongAnswers = setWrongAnswersTracks(wrongAnswerTracks);
+              questions.add(questionTrack);
+            }
 
             break;
           }
       }
-      questions.add(question);
       typeQuestion++;
     }
+
     questions.shuffle();
   }
 
+  void addQuestionsOnTracks(questions){
+
+  }
 
   Future<List<sp.AlbumSimple?>> getAllAlbums(sp.Artist artist)async{
     sp.Artists artistsRetrieve = sp.Artists(SpotifyService().spotify);

@@ -60,7 +60,6 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
   int totalScore;
   int level;
   final String typeQuiz;
-  AudioPlayer audioPlayer = AudioPlayer();
   late List<Question> _questions;
   late PageController _controller;
   List _questionsFromJSON = [];
@@ -177,6 +176,7 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
                   h = height * 0.9 * 0.15;
                   w = height * 0.9 * 0.15;
                 }
+                AudioPlayer audioPlayer = AudioPlayer();
                 return QuizView(
                   image: Material(
                     color: Colors.transparent,
@@ -188,7 +188,6 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
                       ),
                       onTap: () async {
                         print(_questions[index].url);
-
                         await audioPlayer.setUrl(
                             _questions[index].url);
                         await audioPlayer.play();
