@@ -264,8 +264,8 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
       });
       showDialog(context: context, builder: (BuildContext context) {
         return AlertDialog(
-          title: AutoSizeText('You succeed $_questionNumber questions!', style: const TextStyle(color: Color(0xFF101010), fontWeight: FontWeight.bold, fontSize: 20),),
-          content: AutoSizeText('Press the button GoOn to go to the level $level\n'
+          title: Text('You succeed $_questionNumber questions!', style: const TextStyle(color: Color(0xFF101010), fontWeight: FontWeight.bold, fontSize: 20),),
+          content: Text('Press the button GoOn to go to the level $level\n'
               'Otherwise press the button Exit\n',
                 style: const TextStyle(color: Color(0xFF101010), fontWeight: FontWeight.bold, fontSize: 20,)),
           backgroundColor: Colors.lightGreenAccent,
@@ -275,7 +275,7 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
                 backgroundColor: const Color(0xFF101010),
                 textStyle: Theme.of(context).textTheme.labelLarge,
               ),
-              child: const AutoSizeText('Go On',style: TextStyle(color: Colors.white),),
+              child: const Text('Go On',style: TextStyle(color: Colors.white),),
               onPressed: () {
                 Navigator.of(context).pop();
                 Navigator.pushReplacement(
@@ -293,7 +293,7 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
                 backgroundColor: const Color(0xFF101010),
                 textStyle: Theme.of(context).textTheme.labelLarge,
               ),
-              child: const AutoSizeText('Exit',style: TextStyle(color: Colors.white),),
+              child: const Text('Exit',style: TextStyle(color: Colors.white),),
               onPressed: () {
                 Navigator.of(context).pop();
                 Navigator.pushReplacement(

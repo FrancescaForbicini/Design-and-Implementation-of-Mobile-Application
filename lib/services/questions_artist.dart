@@ -1,7 +1,5 @@
 import 'dart:core';
 import 'dart:math';
-
-import 'package:dima_project/services/questions_playlist.dart';
 import 'package:dima_project/services/spotify_service.dart';
 import 'package:spotify/spotify.dart' as sp;
 import '../models/question.dart';
@@ -20,44 +18,41 @@ class QuestionsArtist {
   List<sp.TrackSimple> allTracks = [];
   List<String?> allYearsAlbum = [];
   List<sp.Artist>  allRelatedArtists = [];
-  late int totalAlbum;
+  bool relatedArtist = false;
 
   Future<void> buildAllAnswersQuestions(sp.Artist artist)async{
     allAlbums = await getAllAlbums(artist);
-    totalAlbum = allAlbums.length;
     allTracksForAlbum = await getAllTracksForAlbum(allAlbums);
-    allTracks = getAllTracks(allTracksForAlbum);
-    allYearsAlbum = allAlbums.map((e) => e?.releaseDate?.substring(0, 4).toString()).toList();
-    if (allAlbums.length < 3){
-      allRelatedArtists = await getAllRelatedArtists(artist);
-      allRelatedArtists.removeRange(0, 15);
-      await addYearsAlbumRelatedArtists();
-    }
+    allTracks = getAllTracks();
+    allYearsAlbum = getAllYearsAlbum(artist);
   }
-
-  Future<void> addYearsAlbumRelatedArtists() async{
-    for (sp.Artist artist in allRelatedArtists){
-      List <sp.AlbumSimple?> allAlbumsRelatedArtist = [];
-      allAlbumsRelatedArtist = await getAllAlbums(artist);
-      allYearsAlbum.addAll(allAlbumsRelatedArtist.map((e) => e?.releaseDate?.substring(0, 4).toString()).toList());
-    }
-  }
-
-
 
   Future<void> buildQuestionArtists(List<Question> questions, sp.Artist artist,List questionsFromJSON) async {
-    await buildAllAnswersQuestions(artist);
-    if (allAlbums.length < 3){
-      await buildQuestionOnRelatedArtist(questions,questionsFromJSON);
-
+    allAlbums = await getAllAlbums(artist);
+    if (allAlbums.length < 2){
+      relatedArtist = true;
+      allRelatedArtists = await getAllRelatedArtists(artist);
+      // keep the first 5 artist similar to the current one
+      allRelatedArtists.removeRange(5, allRelatedArtists.length);
+      for (sp.Artist relatedArtist in allRelatedArtists){
+        await buildAllAnswersQuestions(relatedArtist);
+        await buildQuestions(questions, relatedArtist, questionsFromJSON);
+      }
     }
+
+    await buildAllAnswersQuestions(artist);
+    await buildQuestions(questions,artist,questionsFromJSON);
+  }
+
+  Future<void> buildQuestions(List<Question> questions, sp.Artist artist,List questionsFromJSON) async {
     int i = 0;
-    int typeQuestion = 0;
-    for (i = 0; i < totalAlbum; i++) {
+    int typeQuestion;
+    relatedArtist ? typeQuestion = 1 : typeQuestion = 0;
+    for (i = 0; i < allAlbums.length; i++) {
       Question question = Question();
 
       if (typeQuestion > 3) {
-        typeQuestion = 0;
+        relatedArtist ? typeQuestion = 1 : typeQuestion = 0;
       }
 
       question.question1 = questionsFromJSON[typeQuestion]["question1"];
@@ -83,7 +78,7 @@ class QuestionsArtist {
             int randomTrack = Random().nextInt(rightAnswersTracks.length);
             question.rightAnswer = rightAnswersTracks[randomTrack].name;
 
-            List<sp.TrackSimple> wrongAnswersTracks = allTracks.where((element) => !rightAnswersTracks.contains(element)).toList();
+            List<sp.TrackSimple> wrongAnswersTracks = allTracks.where((element) => element != rightAnswersTracks[randomTrack]).toList();
             question.wrongAnswers = setWrongAnswersTracks(wrongAnswersTracks);
 
             break;
@@ -112,7 +107,7 @@ class QuestionsArtist {
             question.url = trackSelected.previewUrl.toString();
             question.isPresent = true;
 
-            List<sp.TrackSimple> wrongAnswerTracks = allTracksForAlbum[i].where((element) => element.name != trackSelected.name).toList();
+            List<sp.TrackSimple> wrongAnswerTracks = allTracks.where((element) => element.name != trackSelected.name).toList();
             question.wrongAnswers = setWrongAnswersTracks(wrongAnswerTracks);
 
             break;
@@ -123,14 +118,6 @@ class QuestionsArtist {
     }
     questions.shuffle();
   }
-
-
-  Future<void> buildQuestionOnRelatedArtist(List<Question> questions,List questionsFromJSON) async{
-    for (sp.Artist artist in  allRelatedArtists){
-      buildQuestionArtists(questions, artist, questionsFromJSON);
-    }
-  }
-
 
 
   Future<List<sp.AlbumSimple?>> getAllAlbums(sp.Artist artist)async{
@@ -144,8 +131,8 @@ class QuestionsArtist {
 
   Future<List<List<sp.TrackSimple>>> getAllTracksForAlbum(List<sp.AlbumSimple?>  albums)async{
     int i = 0;
-    List<List<sp.TrackSimple>> allTracksForAlbum = List.generate(albums.length, (i) => []);
-    for (i = 0; i < albums.length; i++) {
+    List<List<sp.TrackSimple>> allTracksForAlbum = List.generate(allAlbums.length, (i) => []);
+    for (i = 0; i < allAlbums.length; i++) {
       String? id = albums[i]?.id.toString();
       allTracksForAlbum[i].addAll(await sp.Albums(SpotifyService().spotify)
           .getTracks(id.toString())
@@ -154,13 +141,24 @@ class QuestionsArtist {
     return allTracksForAlbum;
   }
 
-  List<sp.TrackSimple> getAllTracks (List<List<sp.TrackSimple>> allTracksForAlbum){
+  List<sp.TrackSimple> getAllTracks (){
     List<sp.TrackSimple> allTracks = [];
     int i = 0;
     for (i = 0; i < allTracksForAlbum.length; i++) {
       allTracks.addAll(allTracksForAlbum[i]);
     }
     return allTracks;
+  }
+
+  List<String?> getAllYearsAlbum (artist){
+    List<String?> allYears = [];
+    allYears = allAlbums.map((e) => e?.releaseDate?.substring(0, 4).toString()).toList();
+    for (String? year in allYears) {
+      if (!allYearsAlbum.contains(year.toString())) {
+        allYearsAlbum.add(year!);
+      }
+    }
+    return allYears;
   }
 
   Future<List<sp.Artist>> getAllRelatedArtists(sp.Artist artist)async {
@@ -183,36 +181,7 @@ class QuestionsArtist {
 
   List<String> setWrongAnswersYears (List allWrongAnswers){
     List<String> wrongAnswers = [];
-    int i = 0;
-    int year = 0;
-    int maxYear = 0;
-    int minYear = 2024;
-    int len = allWrongAnswers.length;
-    // for (int j = 0; j < len; j++){
-    //   year = int.parse(allWrongAnswers[j]);
-    //
-    //   if (year > maxYear) {
-    //     maxYear = year;
-    //   }
-    //   if (year < minYear) {
-    //     minYear = year;
-    //   }
-    //
-    // }
-    //
-    // if (allWrongAnswers.length < 3){
-    //   for (i = 0; i < 3 -len; i++){
-    //     if ((maxYear + i + 1) > 2022){
-    //       minYear = minYear - i -1;
-    //       allWrongAnswers.add((minYear).toString());
-    //     }
-    //     else{
-    //       maxYear = maxYear + i + 1;
-    //       allWrongAnswers.add((maxYear).toString());
-    //
-    //     }
-    //   }
-    // }
+    int i;
     allWrongAnswers.shuffle();
     for (i = 0; i < 3; i++){
       wrongAnswers.add(allWrongAnswers[i]);
