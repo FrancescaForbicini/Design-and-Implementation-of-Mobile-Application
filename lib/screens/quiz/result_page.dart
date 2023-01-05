@@ -4,9 +4,11 @@ import 'dart:math';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dima_project/screens/settings/acquire_image.dart';
+import 'package:dima_project/screens/settings/acquire_position.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
@@ -29,6 +31,7 @@ class ResultPage extends StatefulWidget {
 
 class _ResultPageState extends State<ResultPage> {
   String? image;
+  String? position;
   var username;
   late int bestScore;
   late Future<bool> done;
@@ -74,7 +77,7 @@ class _ResultPageState extends State<ResultPage> {
                     ),
                     if (bestScore < widget.score) ... [
                       savePicture(_height, _screenWidth, radius),
-                      //savePosition(_height, _screenWidth, radius),
+                      savePosition(_height, _screenWidth, radius),
                     ]
                     else
                       exitButton(),
@@ -144,8 +147,62 @@ class _ResultPageState extends State<ResultPage> {
     );
   }
 
-  Widget savePosition(double _height, double _screenWidth, double radius) {
-    return Container();
+  Widget savePosition(double _height, double _screenWidth, double radius)  {
+    {
+      return GestureDetector(
+        onTap: () async {
+          //bool permission = await AcquirePosition().askLocationPermission();
+          position = await AcquirePosition().getPostion(true);
+          if (position != null) {
+            setState(() {
+              quiz.position = position!;
+              savedPosition = true;
+            });
+          }
+        },
+        child:
+        FutureBuilder<String?>(
+            future: quiz.getPosition(),
+            builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
+
+              if (position != null) {
+                return Container(
+                  color: Color(0xFF101010),
+                  margin: EdgeInsets.all(5.0),
+                  alignment: Alignment.center,
+                  constraints: BoxConstraints.expand(height: _height/16, width: _screenWidth/2),
+                  child: AutoSizeText(
+                    snapshot.data!.toString() ,style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
+                );
+              }
+
+              return
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      color: const Color(0xFF101010),
+                      margin: const EdgeInsets.all(5.0),
+                      alignment: Alignment.center,
+                      constraints: BoxConstraints.expand(
+                          height: _height / 16, width: _screenWidth / 2),
+                      child: const AutoSizeText(
+                        "Save The Position Of The Quiz", style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Icon(Icons.location_on,
+                      color: Colors.black,
+                      size: _height / 16,
+                    ),
+
+                  ],
+                );
+            }
+        ),
+      );
+    }
   }
 
   Widget exitButton() {
@@ -198,7 +255,7 @@ class _ResultPageState extends State<ResultPage> {
         "username": username,
         "score": score,
         "image": image,
-        "position": "",
+        "position": position,
       });
     }
 }

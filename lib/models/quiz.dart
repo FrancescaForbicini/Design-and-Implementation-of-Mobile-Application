@@ -1,7 +1,5 @@
-
 import 'dart:io';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geolocator/geolocator.dart';
 
 class Quiz {
@@ -16,6 +14,9 @@ class Quiz {
 
   File getFileImage(){
     return File(image!);
+  }
+  Future<String?> getPosition() async{
+    return position;
   }
 
 
