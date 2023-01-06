@@ -71,6 +71,8 @@ class QuizScreenState extends State<QuizScreen>{
                                 backgroundImage: Image.file(snapshot.data!.getFileImage()).image,
                               ),
                             ),
+                            AutoSizeText("${snapshot.data!.position}"
+                              ,style: new TextStyle(color: Colors.lightGreen,fontSize: 40,fontWeight: FontWeight.bold),),
                           ]
                         ),
                       ],
