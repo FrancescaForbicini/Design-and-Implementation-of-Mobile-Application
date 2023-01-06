@@ -28,7 +28,7 @@
     "UserTitle": "Profilo Utente",
     "UserBestScore": "Miglior punteggio: {bestScore}",
     "UserEmail": "E-mail",
-    "UserPlaylists": "Le mie Playlist",
+    "UserQuiz": "Il mio miglior Quiz",
     "QuizGenTitle": "Nuovo quiz",
     "QuizGenScore": "Punteggio: {totalScore}   Livello: {level}",
     "QuizGenNextLevel": "Hai risposto correttamente a {questionNumber} domande!",

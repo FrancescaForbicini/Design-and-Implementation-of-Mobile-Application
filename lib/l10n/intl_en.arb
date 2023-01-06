@@ -28,7 +28,7 @@
     "UserTitle": "User Profile",
     "UserBestScore": "Best Score: {bestScore}",
     "UserEmail": "E-mail",
-    "UserPlaylists": "My Playlists",
+    "UserQuiz": "My Best Quiz",
     "QuizGenTitle": "New Quiz",
     "QuizGenScore": "Score: {totalScore}   Level: {level}",
     "QuizGenNextLevel": "You got {questionNumber} questions right!",

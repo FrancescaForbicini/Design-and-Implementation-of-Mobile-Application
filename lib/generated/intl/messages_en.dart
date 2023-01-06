@@ -84,7 +84,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Authorize access to Spotify"),
         "UserBestScore": m4,
         "UserEmail": MessageLookupByLibrary.simpleMessage("E-mail"),
-        "UserPlaylists": MessageLookupByLibrary.simpleMessage("My Playlists"),
+        "UserQuiz": MessageLookupByLibrary.simpleMessage("My Best Quiz"),
         "UserTitle": MessageLookupByLibrary.simpleMessage("User Profile")
       };
 }

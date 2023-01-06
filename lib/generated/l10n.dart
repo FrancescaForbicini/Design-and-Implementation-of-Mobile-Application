@@ -340,11 +340,11 @@ class S {
     );
   }
 
-  /// `My Playlists`
-  String get UserPlaylists {
+  /// `My Best Quiz`
+  String get UserQuiz {
     return Intl.message(
-      'My Playlists',
-      name: 'UserPlaylists',
+      'My Best Quiz',
+      name: 'UserQuiz',
       desc: '',
       args: [],
     );

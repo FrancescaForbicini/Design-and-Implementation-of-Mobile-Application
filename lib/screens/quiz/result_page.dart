@@ -160,7 +160,7 @@ class _ResultPageState extends State<ResultPage> {
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => UserProfile()))
       },
-      child: const AutoSizeText(
+      child: AutoSizeText(
         S.of(context).ResultButton,
         style: TextStyle(color: Colors.white),
       ),

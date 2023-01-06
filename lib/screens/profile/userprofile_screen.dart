@@ -166,7 +166,7 @@ class _UserProfileState extends State<UserProfile> {
 
                         ListTile(
                           title: AutoSizeText(
-                            S.of(context).UserPlaylists,
+                            S.of(context).UserQuiz,
                             style: const TextStyle(
                               color: Colors.green,
                               fontSize: 18,
