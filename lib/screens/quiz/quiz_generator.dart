@@ -9,10 +9,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:quiz_view/quiz_view.dart';
+/*import 'package:quiz_view/quiz_view.dart';*/
 
 import '../../generated/l10n.dart';
 import '../../models/question.dart';
+import '../../services/quiz_view.dart';
 
 class QuizGenerator extends StatelessWidget {
   final topic;
@@ -34,6 +35,9 @@ class QuizGenerator extends StatelessWidget {
     final _screenWidth = MediaQuery.of(context).size.width;
     final _appBarHeight = _appBar.preferredSize.height;
     final _statusBarHeight = MediaQuery.of(context).padding.top;
+
+    print("Height in quizGen: ${_screenHeight - _appBarHeight - _statusBarHeight}");
+    print("Width in quizGen: $_screenWidth");
 
     return Scaffold(
       appBar: _appBar,
@@ -115,9 +119,12 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
 
   @override
   Widget build(BuildContext context) {
+    print("Height in quiz_generator: $height");
+    print("Width in quiz_generator: $width");
+
     return Container(
-      width: width,
-      height: height,
+      width: widget.width,
+      height: widget.height,
       color: Color (0xFF101010),
       //padding: const EdgeInsets.all(25),
       child: FutureBuilder(
@@ -144,8 +151,8 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(
-            width: width,
-            height: height * 0.01,
+            width: widget.width,
+            height: widget.height * 0.01,
           ),
           AutoSizeText(
             S.of(context).QuizGenScore(totalScore, level),
@@ -156,12 +163,12 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
                 fontWeight: FontWeight.bold),
           ),
           SizedBox(
-            width: width,
-            height: height * 0.01,
+            width: widget.width,
+            height: widget.height * 0.01,
           ),
           Container(
-            width: width * 0.9,
-            height: height * 0.9,
+            width: widget.width * 0.9,
+            height: widget.height * 0.9,
             child: PageView.builder(
               itemCount: _questions.length,
               controller: _controller,
@@ -172,8 +179,8 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
                 h = 0;
                 w = 0;
                 if (_questions[index].isPresent) {
-                  h = height * 0.9 * 0.15;
-                  w = height * 0.9 * 0.15;
+                  h = widget.height * 0.9 * 0.15;
+                  w = widget.height * 0.9 * 0.15;
                 }
                 AudioPlayer audioPlayer = AudioPlayer();
                 return QuizView(
@@ -198,12 +205,12 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
                   answerBackgroundColor: const Color(0xFF101010),
                   questionColor: const Color(0xFF101010),
                   backgroundColor: Colors.lightGreen,
-                  width: width * 0.9,
-                  height: height * 0.9,
+                  width: widget.width * 0.9,
+                  height: widget.height * 0.9,
                   question: _questions[index].question1 +
                       _questions[index].artistAlbum.toString() +
                       _questions[index].question2,
-                  rightAnswer: _questions[index].rightAnswer,
+                  rightAnswer: _questions[index].rightAnswer!,
                   wrongAnswers: [
                     _questions[index].wrongAnswers[0],
                     _questions[index].wrongAnswers[1],
