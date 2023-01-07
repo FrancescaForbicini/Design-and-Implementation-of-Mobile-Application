@@ -82,7 +82,7 @@ class _ResultPageState extends State<ResultPage> {
                     else
                       exitButton(),
 
-                    savedPicture ? exitButton() : Container(),
+                    savedPicture && savedPosition ? exitButton() : Container(),
                   ],
               );
             }
@@ -151,8 +151,7 @@ class _ResultPageState extends State<ResultPage> {
     {
       return GestureDetector(
         onTap: () async {
-          //bool permission = await AcquirePosition().askLocationPermission();
-          position = await AcquirePosition().getPostion(true);
+          position = await AcquirePosition().getPosition();
           if (position != null) {
             setState(() {
               quiz.position = position!;
