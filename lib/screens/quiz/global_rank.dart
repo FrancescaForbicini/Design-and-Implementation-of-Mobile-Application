@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
 
+import '../../generated/l10n.dart';
 import '../../models/player.dart';
 
 class GlobalRank extends StatefulWidget{
@@ -53,10 +54,10 @@ class _GlobalRankState extends State<GlobalRank>{
               context, MaterialPageRoute(builder: (context) => UserProfile()))
         },
       ),
-      title: const AutoSizeText(
-        'Global Rank',
+      title: AutoSizeText(
+        S.of(context).GlobalTitle,
         textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 30),
+        style: const TextStyle(fontSize: 30),
       ),
     );
     final _screenHeight = MediaQuery
@@ -74,7 +75,7 @@ class _GlobalRankState extends State<GlobalRank>{
         .top;
     final _height = _screenHeight - _appBarHeight - _statusBarHeight;
     final radius = min(_height * 0.5 * 0.25, _screenWidth * 0.25);
-    final TextStyle textStyle = TextStyle(
+    const TextStyle textStyle = TextStyle(
     color: Colors.green,
     fontSize: 20,
     fontWeight: FontWeight.bold,wordSpacing: 10);
@@ -119,7 +120,7 @@ class _GlobalRankState extends State<GlobalRank>{
                       ),
                     ),
                     AutoSizeText(
-                      "Best Score " + widget.currentUser.bestScore,
+                      S.of(context).GlobalBestScore(widget.currentUser.bestScore),
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -133,17 +134,26 @@ class _GlobalRankState extends State<GlobalRank>{
               Container(
                   width: _screenWidth,
                   child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
                         AutoSizeText(
-                          'Position ', style: textStyle,),
+                          S.of(context).GlobalPosition,
+                          style: textStyle,
+                        ),
                         AutoSizeText(
-                          "Location ", style: textStyle,),
+                          S.of(context).GlobalLocation,
+                          style: textStyle,
+                        ),
                         AutoSizeText(
-                          'Username ' , style: textStyle,),
+                          S.of(context).GlobalUsername,
+                          style: textStyle,
+                        ),
                         AutoSizeText(
-                          'Score', style: textStyle,),
+                          S.of(context).GlobalScore,
+                          style: textStyle,
+                        ),
                         SizedBox(
-                          height: 30,
+                          height: _height * 0.1,
                         )
 
                       ]
@@ -156,7 +166,10 @@ class _GlobalRankState extends State<GlobalRank>{
                         snapshot.connectionState == ConnectionState.done) {
                       if (bestPlayersUsername.isEmpty) {
                         return Center(
-                          child: AutoSizeText("There Are No Players", style: textStyle,)
+                          child: AutoSizeText(
+                            S.of(context).GlobalErr,
+                            style: textStyle,
+                          )
                         );
                       }
                       return ListView.builder(
@@ -167,6 +180,7 @@ class _GlobalRankState extends State<GlobalRank>{
                             return Container(
                               width: _screenWidth,
                               child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   children: <Widget>[
                                     AutoSizeText('${index+1}°  ', style: textStyle,),
                                     AutoSizeText(
@@ -175,8 +189,8 @@ class _GlobalRankState extends State<GlobalRank>{
                                       bestPlayersUsername[index] +' ' , style: textStyle,),
                                     AutoSizeText(
                                       bestPlayerPoints[index], style: textStyle,),
-                                    const SizedBox(
-                                      height: 30,
+                                    SizedBox(
+                                      height: _height * 0.05,
                                     )
                                   ]
                               ),

@@ -4,6 +4,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
+import '../../generated/l10n.dart';
+
 class AcquirePosition {
 
   static AcquirePosition _acquirePosition = AcquirePosition._AcquirePositionConstructor();
@@ -24,23 +26,23 @@ class AcquirePosition {
     LocationPermission permission;
 
     if (!serviceEnabled) {
-      return ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Location services are disabled. Please enable the services')));
+      return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(S.of(context).PositionDisabled)));
     }
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
         return ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Location permissions are denied')));
+            SnackBar(content: Text(S.of(context).PositionDenied)));
       }
     }
     if (permission == LocationPermission.deniedForever) {
-      return ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Location permissions are permanently denied, we cannot request permissions.')));
+      return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(S.of(context).PositionSuperDenied)));
     }
-    return ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text("Error")));
+    return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(S.of(context).PositionError)));
   }
 
 
@@ -54,7 +56,7 @@ class AcquirePosition {
     });
   }
 
-  Future<String?> getPostion(bool permission) async {
+  Future<String?> getPosition(bool permission) async {
     if (!permission) {
       return null;
     }

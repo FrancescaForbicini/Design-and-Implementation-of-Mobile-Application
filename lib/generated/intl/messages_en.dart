@@ -20,18 +20,20 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
-  static String m0(questionNumber) =>
+  static String m0(score) => "Best score: ${score}";
+
+  static String m1(questionNumber) =>
       "You got ${questionNumber} questions right!";
 
-  static String m1(level) =>
+  static String m2(level) =>
       "Press the button Continue to go to the level ${level}\nOtherwise press the button Exit\n";
 
-  static String m2(totalScore, level) =>
+  static String m3(totalScore, level) =>
       "Score: ${totalScore}   Level: ${level}";
 
-  static String m3(score) => "You got ${score}";
+  static String m4(score) => "You got ${score}";
 
-  static String m4(bestScore) => "Best Score: ${bestScore}";
+  static String m5(bestScore) => "Best Score: ${bestScore}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -39,6 +41,17 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Sign in with Google"),
         "AuthSignin": MessageLookupByLibrary.simpleMessage("Sign in"),
         "AuthSignup": MessageLookupByLibrary.simpleMessage("Sign up"),
+        "BestQuizScore":
+            MessageLookupByLibrary.simpleMessage("Your best score is "),
+        "BestQuizTitle": MessageLookupByLibrary.simpleMessage("My Best Quiz"),
+        "GlobalBestScore": m0,
+        "GlobalErr":
+            MessageLookupByLibrary.simpleMessage("There Are No Players"),
+        "GlobalLocation": MessageLookupByLibrary.simpleMessage("Country"),
+        "GlobalPosition": MessageLookupByLibrary.simpleMessage("Position"),
+        "GlobalScore": MessageLookupByLibrary.simpleMessage("Score"),
+        "GlobalTitle": MessageLookupByLibrary.simpleMessage("Global Rank"),
+        "GlobalUsername": MessageLookupByLibrary.simpleMessage("Username"),
         "HomeArtists": MessageLookupByLibrary.simpleMessage("Your artists:"),
         "HomeErrArtists": MessageLookupByLibrary.simpleMessage(
             "You don\'t have any favourite artist yet!"),
@@ -47,15 +60,25 @@ class MessageLookup extends MessageLookupByLibrary {
         "HomePlaylist": MessageLookupByLibrary.simpleMessage("Your playlists:"),
         "HomeStart": MessageLookupByLibrary.simpleMessage("Start a new quiz!"),
         "HomeTitle": MessageLookupByLibrary.simpleMessage("Home Page"),
+        "PositionDenied": MessageLookupByLibrary.simpleMessage(
+            "Location permissions are denied"),
+        "PositionDisabled": MessageLookupByLibrary.simpleMessage(
+            "Location services are disabled. Please enable the services"),
+        "PositionError": MessageLookupByLibrary.simpleMessage("Error"),
+        "PositionSuperDenied": MessageLookupByLibrary.simpleMessage(
+            "Location permissions are permanently denied, we cannot request permissions"),
         "QuizGenExitButton": MessageLookupByLibrary.simpleMessage("Exit"),
         "QuizGenGoOnButton": MessageLookupByLibrary.simpleMessage("Continue"),
-        "QuizGenNextLevel": m0,
-        "QuizGenNextMessage": m1,
-        "QuizGenScore": m2,
+        "QuizGenNextLevel": m1,
+        "QuizGenNextMessage": m2,
+        "QuizGenScore": m3,
         "QuizGenTitle": MessageLookupByLibrary.simpleMessage("New Quiz"),
         "ResultButton": MessageLookupByLibrary.simpleMessage("Exit"),
-        "ResultMessage": m3,
-        "ResultPhoto": MessageLookupByLibrary.simpleMessage(""),
+        "ResultMessage": m4,
+        "ResultPicture":
+            MessageLookupByLibrary.simpleMessage("Save a Picture of the Quiz"),
+        "ResultPosition": MessageLookupByLibrary.simpleMessage(
+            "Save the Position of the Quiz"),
         "ResultTitle":
             MessageLookupByLibrary.simpleMessage("You missed a question!"),
         "SigninButton": MessageLookupByLibrary.simpleMessage("SIGN IN"),
@@ -82,9 +105,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "SignupUser": MessageLookupByLibrary.simpleMessage("Username"),
         "SpotyTitle":
             MessageLookupByLibrary.simpleMessage("Authorize access to Spotify"),
-        "UserBestScore": m4,
+        "UserBestScore": m5,
         "UserEmail": MessageLookupByLibrary.simpleMessage("E-mail"),
         "UserQuiz": MessageLookupByLibrary.simpleMessage("My Best Quiz"),
+        "UserRank": MessageLookupByLibrary.simpleMessage("Global Rank"),
         "UserTitle": MessageLookupByLibrary.simpleMessage("User Profile")
       };
 }

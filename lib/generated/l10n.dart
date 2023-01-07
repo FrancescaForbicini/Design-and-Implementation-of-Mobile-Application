@@ -350,6 +350,16 @@ class S {
     );
   }
 
+  /// `Global Rank`
+  String get UserRank {
+    return Intl.message(
+      'Global Rank',
+      name: 'UserRank',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `New Quiz`
   String get QuizGenTitle {
     return Intl.message(
@@ -440,11 +450,21 @@ class S {
     );
   }
 
-  /// ``
-  String get ResultPhoto {
+  /// `Save the Position of the Quiz`
+  String get ResultPosition {
     return Intl.message(
-      '',
-      name: 'ResultPhoto',
+      'Save the Position of the Quiz',
+      name: 'ResultPosition',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save a Picture of the Quiz`
+  String get ResultPicture {
+    return Intl.message(
+      'Save a Picture of the Quiz',
+      name: 'ResultPicture',
       desc: '',
       args: [],
     );
@@ -455,6 +475,136 @@ class S {
     return Intl.message(
       'Authorize access to Spotify',
       name: 'SpotyTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Global Rank`
+  String get GlobalTitle {
+    return Intl.message(
+      'Global Rank',
+      name: 'GlobalTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Best score: {score}`
+  String GlobalBestScore(Object score) {
+    return Intl.message(
+      'Best score: $score',
+      name: 'GlobalBestScore',
+      desc: '',
+      args: [score],
+    );
+  }
+
+  /// `Position`
+  String get GlobalPosition {
+    return Intl.message(
+      'Position',
+      name: 'GlobalPosition',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Country`
+  String get GlobalLocation {
+    return Intl.message(
+      'Country',
+      name: 'GlobalLocation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Username`
+  String get GlobalUsername {
+    return Intl.message(
+      'Username',
+      name: 'GlobalUsername',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Score`
+  String get GlobalScore {
+    return Intl.message(
+      'Score',
+      name: 'GlobalScore',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `There Are No Players`
+  String get GlobalErr {
+    return Intl.message(
+      'There Are No Players',
+      name: 'GlobalErr',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `My Best Quiz`
+  String get BestQuizTitle {
+    return Intl.message(
+      'My Best Quiz',
+      name: 'BestQuizTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your best score is `
+  String get BestQuizScore {
+    return Intl.message(
+      'Your best score is ',
+      name: 'BestQuizScore',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Location services are disabled. Please enable the services`
+  String get PositionDisabled {
+    return Intl.message(
+      'Location services are disabled. Please enable the services',
+      name: 'PositionDisabled',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Location permissions are denied`
+  String get PositionDenied {
+    return Intl.message(
+      'Location permissions are denied',
+      name: 'PositionDenied',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Location permissions are permanently denied, we cannot request permissions`
+  String get PositionSuperDenied {
+    return Intl.message(
+      'Location permissions are permanently denied, we cannot request permissions',
+      name: 'PositionSuperDenied',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error`
+  String get PositionError {
+    return Intl.message(
+      'Error',
+      name: 'PositionError',
       desc: '',
       args: [],
     );

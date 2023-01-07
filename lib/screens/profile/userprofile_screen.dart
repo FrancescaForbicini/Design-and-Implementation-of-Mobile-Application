@@ -184,9 +184,9 @@ class _UserProfileState extends State<UserProfile> {
                           },
                         ),
                         ListTile(
-                          title: const AutoSizeText(
-                            'Global Rank',
-                            style: TextStyle(
+                          title: AutoSizeText(
+                            S.of(context).UserRank,
+                            style: const TextStyle(
                               color: Colors.green,
                               fontSize: 18,
                               fontWeight: FontWeight.bold,

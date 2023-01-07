@@ -44,6 +44,7 @@ class _ResultPageState extends State<ResultPage> {
     done = getBestScore();
     savedPicture = false;
     savedPosition = false;
+    super.initState();
   }
 
   @override
@@ -134,8 +135,9 @@ class _ResultPageState extends State<ResultPage> {
                     margin: const EdgeInsets.all(5.0),
                     alignment: Alignment.center,
                     constraints: BoxConstraints.expand(height: _height/16, width: _screenWidth/2),
-                    child: const AutoSizeText(
-                      "Save A Picture Of The Quiz",style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                    child: AutoSizeText(
+                      S.of(context).ResultPicture,
+                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                     ),
                   ),
                   Icon( Icons.photo_camera,
@@ -155,7 +157,7 @@ class _ResultPageState extends State<ResultPage> {
       return GestureDetector(
         onTap: () async {
           //bool permission = await AcquirePosition().askLocationPermission();
-          position = await AcquirePosition().getPostion(true);
+          position = await AcquirePosition().getPosition(true);
           if (position != null) {
             setState(() {
               quiz.position = position!;
@@ -175,7 +177,8 @@ class _ResultPageState extends State<ResultPage> {
                   alignment: Alignment.center,
                   constraints: BoxConstraints.expand(height: _height/16, width: _screenWidth/2),
                   child: AutoSizeText(
-                    snapshot.data!.toString() ,style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                    snapshot.data!.toString(),
+                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                   ),
                 );
               }
@@ -190,9 +193,9 @@ class _ResultPageState extends State<ResultPage> {
                       alignment: Alignment.center,
                       constraints: BoxConstraints.expand(
                           height: _height / 16, width: _screenWidth / 2),
-                      child: const AutoSizeText(
-                        "Save The Position Of The Quiz", style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold),
+                      child: AutoSizeText(
+                        S.of(context).ResultPosition,
+                        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                       ),
                     ),
                     Icon(Icons.location_on,
@@ -219,7 +222,7 @@ class _ResultPageState extends State<ResultPage> {
       },
       child: AutoSizeText(
         S.of(context).ResultButton,
-        style: TextStyle(color: Colors.white),
+        style: const TextStyle(color: Colors.white),
       ),
     );
   }

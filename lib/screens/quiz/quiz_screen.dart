@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../generated/l10n.dart';
 import '../../models/quiz.dart';
 
 
@@ -28,64 +29,67 @@ class QuizScreenState extends State<QuizScreen>{
 
   @override
   Widget build(BuildContext context) {
+    final _appBar = AppBar(
+      backgroundColor: const Color(0xFF101010),
+      title: AutoSizeText(
+        S.of(context).BestQuizTitle,
+        style: const TextStyle(fontSize: 30, color: Colors.lightGreen),
+      ),
+    );
+    final _appBarHeight = _appBar.preferredSize.height;
     final _screenHeight = MediaQuery.of(context).size.height;
     final _screenWidth = MediaQuery.of(context).size.width;
     final _statusBarHeight = MediaQuery.of(context).padding.top;
-    final _height = _screenHeight - _statusBarHeight;
+    final _height = _screenHeight - _statusBarHeight - _appBarHeight;
     final radius = min(_height * 0.5 * 0.25, _screenWidth * 0.25);
 
-      return Scaffold(
-          backgroundColor: Color(0xFF101010),
-          appBar: AppBar(
-            backgroundColor: Color (0xFF101010),
-            title: const AutoSizeText(
-              'My Best Quiz',
-              style: TextStyle(fontSize: 30, color: Colors.lightGreen),
-            ),
-
-          ),
-          body: Center(
-            child: FutureBuilder<Quiz>(
-              future: getBestQuiz(),
-              builder: (BuildContext context, AsyncSnapshot<Quiz> snapshot) {
-                if (snapshot.hasData && snapshot.connectionState == ConnectionState.done ){
-                  print("image"+quiz.image.toString());
-                  return Center(
-                    child: Column(
-                      children: [
-                        SizedBox(height: 100,),
-                        AutoSizeText('Your best score is ',style: new TextStyle(color: Colors.lightGreen,fontSize: 30,fontWeight: FontWeight.bold),),
-                        Divider(height: 20,),
-                        AutoSizeText("${snapshot.data!.score}"
-                          ,style: new TextStyle(color: Colors.lightGreen,fontSize: 40,fontWeight: FontWeight.bold),),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            CircleAvatar(
-                              backgroundColor: Color(0xFF101010),
-                              minRadius: radius,
-                              child: CircleAvatar(
-                                backgroundColor: Colors.transparent,
-                                radius: radius - 10 > 0 ? radius - 10 : 5.0,
-                                backgroundImage: Image.file(snapshot.data!.getFileImage()).image,
-                              ),
+    return Scaffold(
+        backgroundColor: const Color(0xFF101010),
+        appBar: _appBar,
+        body: Center(
+          child: FutureBuilder<Quiz>(
+            future: getBestQuiz(),
+            builder: (BuildContext context, AsyncSnapshot<Quiz> snapshot) {
+              if (snapshot.hasData && snapshot.connectionState == ConnectionState.done ){
+                print("image"+quiz.image.toString());
+                return Center(
+                  child: Column(
+                    children: [
+                      SizedBox(height: _height * 0.2,),
+                      AutoSizeText(
+                        S.of(context).BestQuizScore,
+                        style: const TextStyle(color: Colors.lightGreen,fontSize: 30,fontWeight: FontWeight.bold),),
+                      Divider(height: _height * 0.03,),
+                      AutoSizeText("${snapshot.data!.score}",
+                        style: const TextStyle(color: Colors.lightGreen,fontSize: 40,fontWeight: FontWeight.bold),),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          CircleAvatar(
+                            backgroundColor: const Color(0xFF101010),
+                            minRadius: radius,
+                            child: CircleAvatar(
+                              backgroundColor: Colors.transparent,
+                              radius: radius - 10 > 0 ? radius - 10 : 5.0,
+                              backgroundImage: Image.file(snapshot.data!.getFileImage()).image,
                             ),
-                            AutoSizeText("${snapshot.data!.position}"
-                              ,style: new TextStyle(color: Colors.lightGreen,fontSize: 40,fontWeight: FontWeight.bold),),
-                          ]
-                        ),
-                      ],
+                          ),
+                          AutoSizeText("${snapshot.data!.position}",
+                            style: const TextStyle(color: Colors.lightGreen,fontSize: 40,fontWeight: FontWeight.bold),),
+                        ]
+                      ),
+                    ],
 
-                    ),
+                  ),
 
-                  );
-                }
-                else
-                  return CircularProgressIndicator();
+                );
               }
-      ),
+              else
+                return CircularProgressIndicator();
+            }
           ),
+        ),
     );
   }
 }
