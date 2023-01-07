@@ -98,10 +98,14 @@ class AuthenticationService {
 
     _user = result.user!;
 
-    FirebaseFirestore.instance.collection('users').doc(_user.email).set({
+    bool docExists = await checkIfDocExists(_user.email!);
+
+    if(docExists = false) {
+      FirebaseFirestore.instance.collection('users').doc(_user.email).set({
       "username": _user.displayName,
       "bestScore": 0,
-    });
+      });
+    }
 
     print("User Name: ${_user.displayName}");
     print("User Email: ${_user.email}");
@@ -109,5 +113,17 @@ class AuthenticationService {
 
   signOut() async{
     await FirebaseAuth.instance.signOut();
+  }
+
+  Future<bool> checkIfDocExists(String docId) async {
+    try {
+      // Get reference to Firestore collection
+      var collectionRef = FirebaseFirestore.instance.collection('users');
+
+      var doc = await collectionRef.doc(docId).get();
+      return doc.exists;
+    } catch (e) {
+      throw e;
+    }
   }
 }

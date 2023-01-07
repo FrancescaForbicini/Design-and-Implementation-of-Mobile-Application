@@ -1,10 +1,10 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dima_project/screens/authentication/sign_in/signin.dart';
 import 'package:dima_project/screens/authentication/sign_up/signup.dart';
-import 'package:dima_project/screens/settings/acquire_position.dart';
 import 'package:dima_project/screens/spotifyAuth_screen.dart';
 import 'package:flutter/material.dart';
 
+import '../../generated/l10n.dart';
 import '../../services/authentication_service.dart';
 
 class AuthenticationScreen extends StatelessWidget{
@@ -26,86 +26,63 @@ class AuthenticationScreen extends StatelessWidget{
       body: Container(
         width: _screenWidth,
         height: _height,
-        child:
-            // FutureBuilder(
-            //   future: AcquirePosition().handleLocationPermission(context),
-            //   builder: (BuildContext context, AsyncSnapshot snapshot) {
-            //     if (snapshot.hasData && snapshot.data == true) {
-                  Column(
-                      children: <Widget>[
-                        Image.asset(
-                            'images/logo.png',
-                            width: _screenWidth,
-                            height: _height * 0.5,
-                            alignment: Alignment.bottomCenter
-                        ),
-                        Container(
-                          width: _screenWidth,
-                          height: _height * 0.16,
-                          child: TextButton(
-                            child: AutoSizeText(
-                              'Sign in',
-                              style: TextStyle(fontSize: 20.0,
-                                  fontFamily: 'Hind',
-                                  color: Colors.lightGreen),
-                            ),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) =>
-                                    SignInScreen()),
-                              );
-                            },
-                          ),
-                        ),
-                        Container(
-                          width: _screenWidth,
-                          height: _height * 0.16,
-                          child: TextButton(
-                            child: AutoSizeText(
-                              'Sign up',
-                              style: TextStyle(fontSize: 20.0,
-                                  fontFamily: 'Hind',
-                                  color: Colors.lightGreen),
-                            ),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) =>
-                                    SignUpScreen()),
-                              );
-                            },
-                          ),
-                        ),
-                        Container(
-                          width: _screenWidth,
-                          height: _height * 0.16,
-                          child: TextButton(
-                            child: AutoSizeText(
-                              'Sign in with Google',
-                              style: TextStyle(fontSize: 20.0,
-                                  fontFamily: 'Hind',
-                                  color: Colors.lightGreen),
-                            ),
-                            onPressed: () =>
-                            {
-                              _authService.signInWithGoogle(context),
-                              Navigator.push(context, MaterialPageRoute(
-                                  builder: (context) => SpotifyScreen()),)
-                            },
-                          ),
-                        ),
-                      ]
-                  //);
-                //}
-                // return CircularProgressIndicator();
-              //}
-
-
-      )
-
-
+        child: Column(
+          children: <Widget>[
+            Image.asset(
+                'images/logo.png',
+                width: _screenWidth,
+                height: _height * 0.5,
+                alignment: Alignment.bottomCenter
+            ),
+            Container(
+              width: _screenWidth,
+              height: _height * 0.16,
+              child: TextButton(
+                child: AutoSizeText(
+                  S.of(context).AuthSignin,
+                  style: const TextStyle(fontSize: 20.0,fontFamily: 'Hind', color: Colors.lightGreen),
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SignInScreen()),
+                  );
+                },
+              ),
+            ),
+            Container(
+              width: _screenWidth,
+              height: _height * 0.16,
+              child: TextButton(
+                child: AutoSizeText(
+                  S.of(context).AuthSignup,
+                  style: const TextStyle(fontSize: 20.0,fontFamily: 'Hind', color: Colors.lightGreen),
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SignUpScreen()),
+                  );
+                },
+              ),
+            ),
+            Container(
+              width: _screenWidth,
+              height: _height * 0.16,
+              child: TextButton(
+                child: AutoSizeText(
+                  S.of(context).AuthGoogle,
+                  style: const TextStyle(fontSize: 20.0,fontFamily: 'Hind', color: Colors.lightGreen),
+                ),
+                onPressed: () => {
+                  _authService.signInWithGoogle(context),
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => SpotifyScreen()),)
+                },
+              ),
+            ),
+          ],
         ),
+      ),
     );
   }
 }

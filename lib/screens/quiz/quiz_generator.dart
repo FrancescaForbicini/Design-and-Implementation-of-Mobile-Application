@@ -11,6 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:quiz_view/quiz_view.dart';
 
+import '../../generated/l10n.dart';
 import '../../models/question.dart';
 
 class QuizGenerator extends StatelessWidget {
@@ -24,9 +25,9 @@ class QuizGenerator extends StatelessWidget {
   Widget build(BuildContext context) {
     final _appBar = AppBar(
       backgroundColor: const Color(0xFF101010),
-      title: const AutoSizeText(
-        "New Quiz",
-        style: TextStyle(color: Colors.lightGreen, fontSize: 30),
+      title: AutoSizeText(
+        S.of(context).QuizGenTitle,
+        style: const TextStyle(color: Colors.lightGreen, fontSize: 30),
       ),
     );
     final _screenHeight = MediaQuery.of(context).size.height;
@@ -127,8 +128,6 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
             }
             else {
               return const Center(
-/*                //TODO parametrizzare
-                widthFactor: 9,*/
                 child: CircularProgressIndicator(
                   backgroundColor: Colors.lightGreen,
                 ),
@@ -149,7 +148,7 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
             height: height * 0.01,
           ),
           AutoSizeText(
-            "Score: $totalScore   Level: $level",
+            S.of(context).QuizGenScore(totalScore, level),
             textAlign: TextAlign.end,
             style: const TextStyle(
                 color: Colors.lightGreen,
@@ -263,10 +262,14 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
       });
       showDialog(context: context, builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('You succeed $_questionNumber questions!', style: const TextStyle(color: Color(0xFF101010), fontWeight: FontWeight.bold, fontSize: 20),),
-          content: Text('Press the button GoOn to go to the level $level\n'
-              'Otherwise press the button Exit\n',
-                style: const TextStyle(color: Color(0xFF101010), fontWeight: FontWeight.bold, fontSize: 20,)),
+          title: Text(
+            S.of(context).QuizGenNextLevel(_questionNumber),
+            style: const TextStyle(color: Color(0xFF101010), fontWeight: FontWeight.bold, fontSize: 20),
+          ),
+          content: Text(
+            S.of(context).QuizGenNextMessage(level),
+            style: const TextStyle(color: Color(0xFF101010), fontWeight: FontWeight.bold, fontSize: 20,)
+          ),
           backgroundColor: Colors.lightGreenAccent,
           actions: <Widget>[
             TextButton(
@@ -274,7 +277,10 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
                 backgroundColor: const Color(0xFF101010),
                 textStyle: Theme.of(context).textTheme.labelLarge,
               ),
-              child: const Text('Go On',style: TextStyle(color: Colors.white),),
+              child: Text(
+                S.of(context).QuizGenGoOnButton,
+                style: const TextStyle(color: Colors.white),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
                 Navigator.pushReplacement(
@@ -292,7 +298,9 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
                 backgroundColor: const Color(0xFF101010),
                 textStyle: Theme.of(context).textTheme.labelLarge,
               ),
-              child: const Text('Exit',style: TextStyle(color: Colors.white),),
+              child: Text(S.of(context).QuizGenExitButton,
+                style: const TextStyle(color: Colors.white),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
                 Navigator.pushReplacement(

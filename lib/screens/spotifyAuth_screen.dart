@@ -3,6 +3,7 @@ import 'package:dima_project/services/spotify_service.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+import '../generated/l10n.dart';
 import 'home/home_screen.dart';
 
 class SpotifyScreen extends StatefulWidget {
@@ -26,8 +27,8 @@ class _SpotifyScreenState extends State<SpotifyScreen>{
   Widget build(BuildContext context){
     var responseUri;
     final _appBar = AppBar(
-      title: const AutoSizeText(
-        'Authorize access to Spotify',
+      title: AutoSizeText(
+        S.of(context).SpotyTitle,
         textAlign: TextAlign.center,
         style: TextStyle(fontSize: 30),
       ),
