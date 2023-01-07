@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 import '../../generated/l10n.dart';
 import '../../services/authentication_service.dart';
+import '../settings/acquire_position.dart';
 
 class AuthenticationScreen extends StatelessWidget{
   AuthenticationScreen({super.key});
