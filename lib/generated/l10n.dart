@@ -609,6 +609,146 @@ class S {
       args: [],
     );
   }
+
+  /// `When was the album:  `
+  String get QuestionArtist11 {
+    return Intl.message(
+      'When was the album:  ',
+      name: 'QuestionArtist11',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `released?`
+  String get QuestionArtist12 {
+    return Intl.message(
+      'released?',
+      name: 'QuestionArtist12',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Which track is in the album `
+  String get QuestionArtist21 {
+    return Intl.message(
+      'Which track is in the album ',
+      name: 'QuestionArtist21',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `?`
+  String get QuestionArtist22 {
+    return Intl.message(
+      '?',
+      name: 'QuestionArtist22',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Which track is NOT in the album `
+  String get QuestionArtist31 {
+    return Intl.message(
+      'Which track is NOT in the album ',
+      name: 'QuestionArtist31',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `?`
+  String get QuestionArtist32 {
+    return Intl.message(
+      '?',
+      name: 'QuestionArtist32',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Which song is it`
+  String get QuestionArtist41 {
+    return Intl.message(
+      'Which song is it',
+      name: 'QuestionArtist41',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `?`
+  String get QuestionArtist42 {
+    return Intl.message(
+      '?',
+      name: 'QuestionArtist42',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Who has released `
+  String get QuestionPlaylist11 {
+    return Intl.message(
+      'Who has released ',
+      name: 'QuestionPlaylist11',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `?`
+  String get QuestionPlaylist12 {
+    return Intl.message(
+      '?',
+      name: 'QuestionPlaylist12',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Which album contains `
+  String get QuestionPlaylist21 {
+    return Intl.message(
+      'Which album contains ',
+      name: 'QuestionPlaylist21',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `?`
+  String get QuestionPlaylist22 {
+    return Intl.message(
+      '?',
+      name: 'QuestionPlaylist22',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Which song is it`
+  String get QuestionPlaylist31 {
+    return Intl.message(
+      'Which song is it',
+      name: 'QuestionPlaylist31',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `?`
+  String get QuestionPlaylist32 {
+    return Intl.message(
+      '?',
+      name: 'QuestionPlaylist32',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

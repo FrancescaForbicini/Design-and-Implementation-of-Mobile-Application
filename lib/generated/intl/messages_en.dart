@@ -67,6 +67,27 @@ class MessageLookup extends MessageLookupByLibrary {
         "PositionError": MessageLookupByLibrary.simpleMessage("Error"),
         "PositionSuperDenied": MessageLookupByLibrary.simpleMessage(
             "Location permissions are permanently denied, we cannot request permissions"),
+        "QuestionArtist11":
+            MessageLookupByLibrary.simpleMessage("When was the album:  "),
+        "QuestionArtist12": MessageLookupByLibrary.simpleMessage("released?"),
+        "QuestionArtist21": MessageLookupByLibrary.simpleMessage(
+            "Which track is in the album "),
+        "QuestionArtist22": MessageLookupByLibrary.simpleMessage("?"),
+        "QuestionArtist31": MessageLookupByLibrary.simpleMessage(
+            "Which track is NOT in the album "),
+        "QuestionArtist32": MessageLookupByLibrary.simpleMessage("?"),
+        "QuestionArtist41":
+            MessageLookupByLibrary.simpleMessage("Which song is it"),
+        "QuestionArtist42": MessageLookupByLibrary.simpleMessage("?"),
+        "QuestionPlaylist11":
+            MessageLookupByLibrary.simpleMessage("Who has released "),
+        "QuestionPlaylist12": MessageLookupByLibrary.simpleMessage("?"),
+        "QuestionPlaylist21":
+            MessageLookupByLibrary.simpleMessage("Which album contains "),
+        "QuestionPlaylist22": MessageLookupByLibrary.simpleMessage("?"),
+        "QuestionPlaylist31":
+            MessageLookupByLibrary.simpleMessage("Which song is it"),
+        "QuestionPlaylist32": MessageLookupByLibrary.simpleMessage("?"),
         "QuizGenExitButton": MessageLookupByLibrary.simpleMessage("Exit"),
         "QuizGenGoOnButton": MessageLookupByLibrary.simpleMessage("Continue"),
         "QuizGenNextLevel": m1,

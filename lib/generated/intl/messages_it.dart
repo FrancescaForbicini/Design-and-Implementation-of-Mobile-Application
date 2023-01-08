@@ -70,6 +70,27 @@ class MessageLookup extends MessageLookupByLibrary {
         "PositionError": MessageLookupByLibrary.simpleMessage("Errore"),
         "PositionSuperDenied": MessageLookupByLibrary.simpleMessage(
             "Permessi di localizzazione negati permanentemente, non è possibile richiedere i permessi"),
+        "QuestionArtist11": MessageLookupByLibrary.simpleMessage(
+            "Quando è stato rilasciato l\'album "),
+        "QuestionArtist12": MessageLookupByLibrary.simpleMessage("?"),
+        "QuestionArtist21": MessageLookupByLibrary.simpleMessage(
+            "Quale canzone è presente nell\'album "),
+        "QuestionArtist22": MessageLookupByLibrary.simpleMessage("?"),
+        "QuestionArtist31": MessageLookupByLibrary.simpleMessage(
+            "Quale canzone NON è nell\'album "),
+        "QuestionArtist32": MessageLookupByLibrary.simpleMessage("?"),
+        "QuestionArtist41":
+            MessageLookupByLibrary.simpleMessage("Che canzone è"),
+        "QuestionArtist42": MessageLookupByLibrary.simpleMessage("?"),
+        "QuestionPlaylist11":
+            MessageLookupByLibrary.simpleMessage("Chi ha rilasciato "),
+        "QuestionPlaylist12": MessageLookupByLibrary.simpleMessage("?"),
+        "QuestionPlaylist21":
+            MessageLookupByLibrary.simpleMessage("Quale album contiene "),
+        "QuestionPlaylist22": MessageLookupByLibrary.simpleMessage("?"),
+        "QuestionPlaylist31":
+            MessageLookupByLibrary.simpleMessage("Che canzone è"),
+        "QuestionPlaylist32": MessageLookupByLibrary.simpleMessage("?"),
         "QuizGenExitButton": MessageLookupByLibrary.simpleMessage("Esci"),
         "QuizGenGoOnButton": MessageLookupByLibrary.simpleMessage("Continua"),
         "QuizGenNextLevel": m1,

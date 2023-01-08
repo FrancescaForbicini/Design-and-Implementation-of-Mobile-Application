@@ -1,7 +1,9 @@
 import 'dart:core';
 import 'dart:math';
 import 'package:dima_project/services/spotify_service.dart';
+import 'package:flutter/material.dart';
 import 'package:spotify/spotify.dart' as sp;
+import '../generated/l10n.dart';
 import '../models/question.dart';
 
 
@@ -27,7 +29,7 @@ class QuestionsArtist {
     allYearsAlbum = getAllYearsAlbum(artist);
   }
 
-  Future<void> buildQuestionArtists(List<Question> questions, sp.Artist artist,List questionsFromJSON) async {
+  Future<void> buildQuestionArtists(List<Question> questions, sp.Artist artist, List questionsFromJSON) async {
     allAlbums = await getAllAlbums(artist);
     if (allAlbums.length < 4){
       relatedArtist = true;
@@ -44,7 +46,7 @@ class QuestionsArtist {
     await buildQuestions(questions,artist,questionsFromJSON);
   }
 
-  Future<void> buildQuestions(List<Question> questions, sp.Artist artist,List questionsFromJSON) async {
+  Future<void> buildQuestions(List<Question> questions, sp.Artist artist, List questionsFromJSON) async {
     int i = 0;
     int typeQuestion;
     relatedArtist ? typeQuestion = 1 : typeQuestion = 0;
@@ -55,13 +57,15 @@ class QuestionsArtist {
         relatedArtist ? typeQuestion = 1 : typeQuestion = 0;
       }
 
-      question.question1 = questionsFromJSON[typeQuestion]["question1"];
-      question.question2 = questionsFromJSON[typeQuestion]["question2"];
+/*      question.question1 = questionsFromJSON[typeQuestion]["question1"];
+      question.question2 = questionsFromJSON[typeQuestion]["question2"];*/
       question.artistAlbum = allAlbums[i]?.name;
 
       switch (typeQuestion) {
         case 0:
           {
+            question.question1 = S.current.QuestionArtist11;
+            question.question2 = S.current.QuestionArtist12;
             String? yearSelected = allAlbums[i]?.releaseDate?.substring(0, 4).toString();
             question.rightAnswer = yearSelected;
 
@@ -72,6 +76,8 @@ class QuestionsArtist {
           }
         case 1:
           {
+            question.question1 = S.current.QuestionArtist21;
+            question.question2 = S.current.QuestionArtist22;
             List<sp.TrackSimple> rightAnswersTracks = allTracksForAlbum[i];
             allTracks.shuffle();
 
@@ -88,6 +94,8 @@ class QuestionsArtist {
 
         case 2:
           {
+            question.question1 = S.current.QuestionArtist31;
+            question.question2 = S.current.QuestionArtist32;
             allTracksForAlbum[i].shuffle();
             List<sp.TrackSimple> wrongAnswerTracks = allTracksForAlbum[i];
 
@@ -103,6 +111,8 @@ class QuestionsArtist {
           }
         case 3:
           {
+            question.question1 = S.current.QuestionArtist41;
+            question.question2 = S.current.QuestionArtist42;
             // takes random number of tracks in the album
             int randomNumber = Random().nextInt(allTracksForAlbum[i].length);
             int j = 0;

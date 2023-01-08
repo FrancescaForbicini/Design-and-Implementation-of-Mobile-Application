@@ -1,5 +1,7 @@
 import 'dart:core';
+import 'package:flutter/material.dart';
 import 'package:spotify/spotify.dart' as sp;
+import '../generated/l10n.dart';
 import '../models/question.dart';
 
 
@@ -21,7 +23,7 @@ class QuestionsPlaylist {
     allTracks = getAllTracks(tracks);
   }
 
-  Future<void> buildQuestionsPlaylist(List<Question> questions, List<sp.Track> tracks,List questionsFromJSON) async{
+  Future<void> buildQuestionsPlaylist(List<Question> questions, List<sp.Track> tracks, List questionsFromJSON) async{
     buildAllAnswersQuestions(tracks);
     tracks.shuffle();
 
@@ -35,14 +37,18 @@ class QuestionsPlaylist {
         typeQuestion = 0;
       }
 
-      question.question1 = questionsFromJSON[typeQuestion]["question1"];
-      question.question2 = questionsFromJSON[typeQuestion]["question2"];
+/*      question.question1 = questionsFromJSON[typeQuestion]["question1"];
+      question.question2 = questionsFromJSON[typeQuestion]["question2"];*/
 
       List<String?> wrongAnswers = [];
+
+      print(S.current);
 
       switch (typeQuestion) {
         case 0:
           {
+            question.question1 = S.current.QuestionPlaylist11;
+            question.question2 = S.current.QuestionPlaylist12;
             question.artistAlbum = tracks[i].name;
             sp.Artist artist = tracks[i].artists![0];
             question.rightAnswer = artist.name.toString();
@@ -52,6 +58,8 @@ class QuestionsPlaylist {
 
         case 1:
           {
+            question.question1 = S.current.QuestionPlaylist21;
+            question.question2 = S.current.QuestionPlaylist22;
             question.artistAlbum = tracks[i].name;
             sp.AlbumSimple? album = tracks[i].album;
             question.rightAnswer = album!.name.toString();
@@ -61,6 +69,8 @@ class QuestionsPlaylist {
 
         case 2:
           {
+            question.question1 = S.current.QuestionPlaylist31;
+            question.question2 = S.current.QuestionPlaylist32;
             sp.Track track = tracks[i];
             question.url = track.previewUrl.toString();
             question.isPresent = true;

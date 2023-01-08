@@ -54,5 +54,19 @@
     "PositionDisabled": "La Localizzazione è disattivata. Per favore, attivala",
     "PositionDenied": "I permessi di localizzazione sono stati negati",
     "PositionSuperDenied": "Permessi di localizzazione negati permanentemente, non è possibile richiedere i permessi",
-    "PositionError": "Errore"
+    "PositionError": "Errore",
+    "QuestionArtist11": "Quando è stato rilasciato l'album ",
+    "QuestionArtist12": "?",
+    "QuestionArtist21": "Quale canzone è presente nell'album ",
+    "QuestionArtist22": "?",
+    "QuestionArtist31": "Quale canzone NON è nell'album ",
+    "QuestionArtist32": "?",
+    "QuestionArtist41": "Che canzone è",
+    "QuestionArtist42": "?",
+    "QuestionPlaylist11": "Chi ha rilasciato ",
+    "QuestionPlaylist12": "?",
+    "QuestionPlaylist21": "Quale album contiene ",
+    "QuestionPlaylist22": "?",
+    "QuestionPlaylist31": "Che canzone è",
+    "QuestionPlaylist32": "?"
 }

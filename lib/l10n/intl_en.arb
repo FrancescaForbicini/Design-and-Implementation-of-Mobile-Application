@@ -54,5 +54,19 @@
     "PositionDisabled": "Location services are disabled. Please enable the services",
     "PositionDenied": "Location permissions are denied",
     "PositionSuperDenied": "Location permissions are permanently denied, we cannot request permissions",
-    "PositionError": "Error"
+    "PositionError": "Error",
+    "QuestionArtist11": "When was the album:  ",
+    "QuestionArtist12": "released?",
+    "QuestionArtist21": "Which track is in the album ",
+    "QuestionArtist22": "?",
+    "QuestionArtist31": "Which track is NOT in the album ",
+    "QuestionArtist32": "?",
+    "QuestionArtist41": "Which song is it",
+    "QuestionArtist42": "?",
+    "QuestionPlaylist11": "Who has released ",
+    "QuestionPlaylist12": "?",
+    "QuestionPlaylist21": "Which album contains ",
+    "QuestionPlaylist22": "?",
+    "QuestionPlaylist31": "Which song is it",
+    "QuestionPlaylist32": "?"
 }
