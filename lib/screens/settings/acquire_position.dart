@@ -16,35 +16,40 @@ class AcquirePosition {
   AcquirePosition._AcquirePositionConstructor();
   String? _currentAddress;
   Position? _currentPosition;
-  Future<bool> askLocationPermission() async {
-    bool serviceEnabled;
+  bool serviceEnabled = false;
+
+  Future<bool> getPermission() async {
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     return serviceEnabled;
   }
 
-  Future<ScaffoldFeatureController<SnackBar, SnackBarClosedReason>> handleLocationPermission(bool serviceEnabled, BuildContext context) async {
+  Future<bool> handleLocationPermission(BuildContext context) async {
+    bool serviceEnabled;
     LocationPermission permission;
 
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+
     if (!serviceEnabled) {
-      return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(S.of(context).PositionDisabled)));
+      return false;
     }
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        return ScaffoldMessenger.of(context).showSnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(S.of(context).PositionDenied)));
+        return false;
       }
     }
     if (permission == LocationPermission.deniedForever) {
-      return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(S.of(context).PositionSuperDenied)));
+      return false;
     }
-    return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(S.of(context).PositionError)));
+    return true;
   }
-
 
   Future<void> _getCurrentPosition() async {
     await Geolocator.getCurrentPosition(
@@ -56,8 +61,9 @@ class AcquirePosition {
     });
   }
 
-  Future<String?> getPosition(bool permission) async {
-    if (!permission) {
+  Future<String?> getPosition() async {
+    serviceEnabled = await getPermission();
+    if (!serviceEnabled) {
       return null;
     }
     await _getCurrentPosition();

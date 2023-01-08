@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 import '../../generated/l10n.dart';
 import '../../services/authentication_service.dart';
+import '../settings/acquire_position.dart';
 
 class AuthenticationScreen extends StatelessWidget{
   AuthenticationScreen({super.key});
@@ -18,6 +19,8 @@ class AuthenticationScreen extends StatelessWidget{
     final _screenWidth = MediaQuery.of(context).size.width;
     final _statusBarHeight = MediaQuery.of(context).padding.top;
     final _height = _screenHeight - _statusBarHeight;
+
+    AcquirePosition().handleLocationPermission(context);
 
     return Scaffold(
       backgroundColor: Color (0xFF101010),
