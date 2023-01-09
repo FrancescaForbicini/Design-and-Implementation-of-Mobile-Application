@@ -72,10 +72,12 @@ class QuestionsPlaylist {
             question.question1 = S.current.QuestionPlaylist31;
             question.question2 = S.current.QuestionPlaylist32;
             sp.Track track = tracks[i];
-            question.url = track.previewUrl.toString();
-            question.isPresent = true;
-            question.rightAnswer = track.name.toString();
-            wrongAnswers = allTracks.where((element) => element != tracks[i].name).toList();
+            if (track.previewUrl != null){
+              question.url = track.previewUrl!;
+              question.isPresent = true;
+              question.rightAnswer = track.name.toString();
+              wrongAnswers = allTracks.where((element) => element != tracks[i].name).toList();
+            }
 
             break;
           }
