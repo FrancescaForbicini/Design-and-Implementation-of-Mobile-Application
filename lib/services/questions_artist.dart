@@ -59,11 +59,12 @@ class QuestionsArtist {
 
 /*      question.question1 = questionsFromJSON[typeQuestion]["question1"];
       question.question2 = questionsFromJSON[typeQuestion]["question2"];*/
-      question.artistAlbum = allAlbums[i]?.name;
 
       switch (typeQuestion) {
         case 0:
           {
+            question.artistAlbum = allAlbums[i]?.name;
+
             question.question1 = S.current.QuestionArtist11;
             question.question2 = S.current.QuestionArtist12;
             String? yearSelected = allAlbums[i]?.releaseDate?.substring(0, 4).toString();
@@ -76,6 +77,8 @@ class QuestionsArtist {
           }
         case 1:
           {
+            question.artistAlbum = allAlbums[i]?.name;
+
             question.question1 = S.current.QuestionArtist21;
             question.question2 = S.current.QuestionArtist22;
             List<sp.TrackSimple> rightAnswersTracks = allTracksForAlbum[i];
@@ -94,6 +97,7 @@ class QuestionsArtist {
 
         case 2:
           {
+            question.artistAlbum = allAlbums[i]?.name;
             question.question1 = S.current.QuestionArtist31;
             question.question2 = S.current.QuestionArtist32;
             allTracksForAlbum[i].shuffle();
