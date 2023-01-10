@@ -131,7 +131,9 @@ class QuestionsArtist {
               sp.TrackSimple trackSelected = allTracksForAlbum[i][randomTrack];
               questionTrack.rightAnswer = trackSelected.name;
 
-              question.url = trackSelected.previewUrl.toString();
+              print("Preview url for ${trackSelected.name}: ${trackSelected.previewUrl}");
+
+              questionTrack.url = trackSelected.previewUrl.toString();
               questionTrack.isPresent = true;
 
               List<sp.TrackSimple> wrongAnswerTracks = allTracks.where((element) => element.name != trackSelected.name).toList();

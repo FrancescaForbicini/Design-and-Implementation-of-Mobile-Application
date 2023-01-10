@@ -36,9 +36,6 @@ class QuizGenerator extends StatelessWidget {
     final _appBarHeight = _appBar.preferredSize.height;
     final _statusBarHeight = MediaQuery.of(context).padding.top;
 
-    print("Height in quizGen: ${_screenHeight - _appBarHeight - _statusBarHeight}");
-    print("Width in quizGen: $_screenWidth");
-
     return Scaffold(
       appBar: _appBar,
       body: QuizGeneratorStateful(topic, typeQuiz, totalScore, level, _screenWidth, _screenHeight - _appBarHeight - _statusBarHeight),
@@ -120,8 +117,6 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
 
   @override
   Widget build(BuildContext context) {
-    print("Height in quiz_generator: $height");
-    print("Width in quiz_generator: $width");
 
     return Container(
       width: widget.width,
@@ -181,11 +176,22 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
                 w = 0;
                 if (_questions[index].isPresent) {
                   h = widget.height * 0.9 * 0.15;
-                  w = widget.height * 0.9 * 0.15;
+                  w = widget.height * 0.9 * 0.1;
                 }
                 AudioPlayer audioPlayer = AudioPlayer();
                 return QuizView(
-                  image: Material(
+                  image: _questions[index].url != "" ? IconButton(
+                      padding: EdgeInsets.all(0),
+                      icon: Icon(Icons.play_arrow),
+                      iconSize: widget.height * 0.9 * 0.1,
+                      onPressed: () async {
+                        print(_questions[index].url);
+                        await audioPlayer.setUrl(
+                            _questions[index].url);
+                        await audioPlayer.play();
+                      },
+                  ) : null,
+/*                  image: Material(
                     color: Colors.transparent,
                     child: InkWell(
                       child: Ink.image(
@@ -200,7 +206,7 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
                         await audioPlayer.play();
                       },
                     ),
-                  ),
+                  ),*/
                   showCorrect: true,
                   answerColor: Colors.white,
                   answerBackgroundColor: const Color(0xFF101010),

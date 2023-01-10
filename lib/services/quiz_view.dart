@@ -21,7 +21,7 @@ class QuizView extends StatefulWidget {
   final Color backgroundColor;
 
   /// Image if any
-  final Widget image;
+  final Widget? image;
 
   /// Width of the quiz view
   final double width;
@@ -83,8 +83,6 @@ class _QuizViewState extends State<QuizView> {
 
   @override
   Widget build(BuildContext context) {
-    print("Height in quiz_view: ${widget.height}");
-    print("Width in quiz_view: ${widget.width}");
 
     if (!isTapped) {
       answerIndex = _random.nextInt(widget.wrongAnswers.length + 1);
@@ -267,33 +265,35 @@ class _QuizViewState extends State<QuizView> {
                   children: widget.image != null
                       ? [
                     Container(
-                        height: widget.height * 0.2,
+                        height: widget.height * 0.38,
                         width: widget.width,
-                        padding: EdgeInsets.all(20),
-                        child: AutoSizeText(
-                          widget.question,
-                          style: TextStyle(
-                              color: widget.questionColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: widget.width > widget.height
-                                  ? widget.width / 20
-                                  : widget.height / 20
-                          ),
-                          //overflow: TextOverflow.ellipsis,
+                        padding: EdgeInsets.all(15),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            AutoSizeText(
+                              widget.question,
+                              style: TextStyle(
+                                  color: widget.questionColor,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: widget.width > widget.height
+                                      ? widget.width / 25
+                                      : widget.height / 20
+                              ),
+                            ),
+                            widget.image!
+                          ]
                         )
-/*                                  RichText(
-                                      text: TextSpan(
-                                    text:
-                                  )),*/
+
                     ),
-                    widget.image,
                     answersWidget
                   ]
                       : [
                     Container(
                         height: widget.height * 0.2,
                         width: widget.width,
-                        padding: EdgeInsets.all(20),
+                        padding: EdgeInsets.all(15),
                         child: AutoSizeText(
                           widget.question,
                           style: TextStyle(
@@ -320,6 +320,32 @@ class _QuizViewState extends State<QuizView> {
                   children: widget.image != null
                       ? [
                           Container(
+                            height: widget.height * 0.38,
+                            width: widget.width,
+                            padding: EdgeInsets.all(15),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                AutoSizeText(
+                                  widget.question,
+                                  style: TextStyle(
+                                      color: widget.questionColor,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: widget.width > widget.height
+                                          ? widget.width / 25
+                                          : widget.height / 20
+                                  ),
+                                  //overflow: TextOverflow.ellipsis,
+                                ),
+                                widget.image!
+                              ]
+                            )
+                          ),
+                          answersWidget
+                        ]
+                      : [
+                          Container(
                             height: widget.height * 0.2,
                             width: widget.width,
                             padding: EdgeInsets.all(15),
@@ -332,32 +358,12 @@ class _QuizViewState extends State<QuizView> {
                                       ? widget.width / 20
                                       : widget.height / 20
                               ),
-                              //overflow: TextOverflow.ellipsis,
-                            )
-                          ),
-                          widget.image,
-                          answersWidget
-                        ]
-                      : [
-                          Container(
-                            height: widget.height * 0.2,
-                            width: widget.width,
-                            padding: EdgeInsets.all(20),
-                            child: AutoSizeText(
-                              widget.question,
-                              style: TextStyle(
-                                  color: widget.questionColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: widget.width > widget.height
-                                      ? widget.width / 20
-                                      : widget.height / 20
-                              ),
-                              //overflow: TextOverflow.ellipsis,
                             )
                           ),
                           answersWidget
                         ],
                 ),
-              ));
+          )
+    );
   }
 }
