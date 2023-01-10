@@ -123,22 +123,25 @@ class QuestionsArtist {
             allTracksForAlbum[i].shuffle;
             for (j = 0; j < randomNumber; j++){
 
-              Question questionTrack = Question();
-              questionTrack.question1 = question.question1;
-              questionTrack.question2 = question.question2;
-
               int randomTrack = Random().nextInt(allTracksForAlbum[i].length);
               sp.TrackSimple trackSelected = allTracksForAlbum[i][randomTrack];
-              questionTrack.rightAnswer = trackSelected.name;
 
-              print("Preview url for ${trackSelected.name}: ${trackSelected.previewUrl}");
+              if (trackSelected.previewUrl != null){
+                Question questionTrack = Question();
+                questionTrack.question1 = question.question1;
+                questionTrack.question2 = question.question2;
 
-              questionTrack.url = trackSelected.previewUrl.toString();
-              questionTrack.isPresent = true;
+                questionTrack.rightAnswer = trackSelected.name;
 
-              List<sp.TrackSimple> wrongAnswerTracks = allTracks.where((element) => element.name != trackSelected.name).toList();
-              questionTrack.wrongAnswers = setWrongAnswersTracks(wrongAnswerTracks);
-              questions.add(questionTrack);
+                questionTrack.url = trackSelected.previewUrl!;
+                questionTrack.isPresent = true;
+
+                List<sp.TrackSimple> wrongAnswerTracks = allTracks.where((element) => element.name != trackSelected.name).toList();
+                questionTrack.wrongAnswers = setWrongAnswersTracks(wrongAnswerTracks);
+                questions.add(questionTrack);
+
+              }
+
             }
 
             break;
@@ -150,9 +153,6 @@ class QuestionsArtist {
     questions.shuffle();
   }
 
-  void addQuestionsOnTracks(questions){
-
-  }
 
   Future<List<sp.AlbumSimple?>> getAllAlbums(sp.Artist artist)async{
     sp.Artists artistsRetrieve = sp.Artists(SpotifyService().spotify);

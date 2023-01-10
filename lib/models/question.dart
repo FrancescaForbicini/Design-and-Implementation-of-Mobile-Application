@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:spotify/spotify.dart' as sp;
 
 class Question{
   String question1 = "";

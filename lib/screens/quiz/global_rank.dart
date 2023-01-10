@@ -23,6 +23,7 @@ class _GlobalRankState extends State<GlobalRank>{
 
   List bestPlayersUsername = [];
   List bestPlayerPoints = [];
+  List bestPlayerLocation = [];
   late Future<bool> done;
 
   @override
@@ -38,6 +39,7 @@ class _GlobalRankState extends State<GlobalRank>{
       DocumentSnapshot item = items[i];
       bestPlayersUsername.add(item["username"]);
       bestPlayerPoints.add(item["score"].toString());
+      bestPlayerLocation.add(item["position"].toString());
     }
     return true;
   }
@@ -179,21 +181,10 @@ class _GlobalRankState extends State<GlobalRank>{
                           itemBuilder: (context, index) {
                             return Container(
                               width: _screenWidth,
-                              child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: <Widget>[
-                                    AutoSizeText('${index+1}°  ', style: textStyle,),
-                                    AutoSizeText(
-                                      "Italy ", style: textStyle,),
-                                    AutoSizeText(
-                                      bestPlayersUsername[index] +' ' , style: textStyle,),
-                                    AutoSizeText(
-                                      bestPlayerPoints[index], style: textStyle,),
-                                    SizedBox(
-                                      height: _height * 0.05,
-                                    )
-                                  ]
-                              ),
+                              child:
+                                    AutoSizeText('${index+1}° ' + bestPlayerLocation[index] + ' ' + bestPlayersUsername[index] + ' '+
+                                        bestPlayerPoints[index],style: textStyle,),
+
                             );
                           }
                       );
