@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:auto_size_text/auto_size_text.dart';
@@ -15,6 +16,7 @@ import '../../models/player.dart';
 import '../../models/quiz.dart';
 import '../authentication/authentication.dart';
 import '../quiz/global_rank.dart';
+import '../settings/acquire_image.dart';
 
 class UserProfile extends StatefulWidget{
   UserProfile({super.key});
@@ -39,12 +41,16 @@ class _UserProfileState extends State<UserProfile> {
     _user = FirebaseAuth.instance.currentUser;
     var _spotiUser = await _spotifyService.spotify.me.get();
     var _photoRef = _spotiUser.images;
+    var _photo = await _authenticationService.getUserImage();
 
     currentUser.email = _user.email;
 
     currentUser.username = _spotiUser.displayName;
 
-    if (!_photoRef.isEmpty){
+    if(_photo != null){
+      currentUser.image = Image.file(File(_photo)).image;
+    }
+    else if (!_photoRef.isEmpty){
       currentUser.image = Image.network(_photoRef[0].url).image;
     }
     else{
@@ -84,6 +90,7 @@ class _UserProfileState extends State<UserProfile> {
     final _statusBarHeight = MediaQuery.of(context).padding.top;
     final _height = _screenHeight - _appBarHeight - _statusBarHeight;
     final radius = min(_height * 0.5 * 0.25, _screenWidth * 0.25);
+    late var image;
 
     return Scaffold(
       backgroundColor: Color(0xFF101010),
@@ -112,27 +119,53 @@ class _UserProfileState extends State<UserProfile> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        CircleAvatar(
-                          backgroundColor: Color(0xFF101010),
-                          minRadius: radius,
-                          child: CircleAvatar(
-                            backgroundColor: Colors.transparent,
-                            radius: radius - 10 > 0 ? radius - 10 : 5.0,
-                            backgroundImage: currentUser.image,
-                          ),
+                        Stack(
+                          fit: StackFit.passthrough,
+                          children: [
+                            CircleAvatar(
+                              backgroundColor: Colors.transparent,
+                              minRadius: radius,
+                              child: CircleAvatar(
+                                backgroundColor: Colors.transparent,
+                                radius: radius - 10 > 0 ? radius - 10 : 5.0,
+                                backgroundImage: currentUser.image,
+                              ),
+                            ),
+                            Positioned(
+                              right: _height > _screenWidth ? _screenWidth * 0.5 - radius : _screenWidth * 0.5 - 1.2 * radius,
+                              bottom: 0,
+                              child: IconButton(
+                                iconSize: radius - 10 > 0 ? (radius - 10) * 0.5 : 2.5,
+                                icon: const Icon(
+                                  Icons.edit,
+                                  color: Color(0xFF101010),
+                                ),
+                                onPressed: () async {
+                                  image = (await AcquireImage().getImageFromCamera())!;
+                                  if (image != null) {
+                                    await _authenticationService.changeUserImage(image);
+                                  }
+                                },
+                              ),
+                            ),
+                          ],
                         ),
                         AutoSizeText(
                           currentUser.username,
-                          style: const TextStyle(
-                            fontSize: 25,
+                          style: TextStyle(
+                            fontSize: _screenWidth > _height
+                                ? _screenWidth / 40
+                                : _height / 25,
                             fontWeight: FontWeight.bold,
                             color: Color(0xFF101010),
                           ),
                         ),
                         AutoSizeText(
                           S.of(context).UserBestScore(currentUser.bestScore),
-                          style: const TextStyle(
-                            fontSize: 18,
+                          style: TextStyle(
+                            fontSize: _screenWidth > _height
+                                ? _screenWidth / 60
+                                : _height / 40,
                             fontWeight: FontWeight.bold,
                             color: Color(0xFF101010),
                           ),

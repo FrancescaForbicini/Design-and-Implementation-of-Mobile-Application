@@ -13,7 +13,7 @@ import 'package:just_audio/just_audio.dart';
 
 import '../../generated/l10n.dart';
 import '../../models/question.dart';
-import '../../services/quiz_view.dart';
+import 'quiz_view.dart';
 
 class QuizGenerator extends StatelessWidget {
   final topic;
@@ -171,26 +171,26 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
               physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) {
                 print(_questions[index].rightAnswer);
-                double h, w;
+/*                double h, w;
                 h = 0;
                 w = 0;
                 if (_questions[index].isPresent) {
                   h = widget.height * 0.9 * 0.15;
                   w = widget.height * 0.9 * 0.1;
-                }
+                }*/
                 AudioPlayer audioPlayer = AudioPlayer();
                 return QuizView(
-                  image: _questions[index].url != "" ? IconButton(
-                      padding: EdgeInsets.all(0),
-                      icon: Icon(Icons.play_arrow),
-                      iconSize: widget.height * 0.9 * 0.1,
-                      onPressed: () async {
-                        print(_questions[index].url);
-                        await audioPlayer.setUrl(
-                            _questions[index].url);
-                        await audioPlayer.play();
-                      },
-                  ) : null,
+                    image: _questions[index].url != "" ? IconButton(
+                        padding: EdgeInsets.all(0),
+                        icon: Icon(Icons.play_arrow),
+                        iconSize: widget.height * 0.9 * 0.1,
+                        onPressed: () async {
+                          print(_questions[index].url);
+                          await audioPlayer.setUrl(
+                              _questions[index].url);
+                          await audioPlayer.play();
+                        },
+                    ) : null,
 /*                  image: Material(
                     color: Colors.transparent,
                     child: InkWell(

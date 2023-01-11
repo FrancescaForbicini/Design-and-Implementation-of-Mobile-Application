@@ -126,4 +126,33 @@ class AuthenticationService {
       throw e;
     }
   }
+
+  Future<void> changeUserImage(image) async{
+    var user = FirebaseAuth.instance.currentUser;
+
+    final docRef =
+    FirebaseFirestore.instance.collection("users").doc(user?.email);
+    docRef.update({
+      "userImage": image,
+    });
+  }
+
+  Future<String?> getUserImage() async {
+    var user = FirebaseAuth.instance.currentUser;
+    var _data;
+    var _image;
+
+    final docRef =
+    FirebaseFirestore.instance.collection("users").doc(user?.email);
+
+    await docRef.get().then((DocumentSnapshot doc) {
+      _data = doc.data() as Map<String, dynamic>;
+      _image = _data["userImage"];
+    });
+
+    if(_image == null){
+      return null;
+    }
+    return _image;
+  }
 }
