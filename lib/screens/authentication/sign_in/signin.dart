@@ -130,11 +130,11 @@ class SignInScreen extends StatelessWidget {
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
-                      title: AutoSizeText(S.of(context).SigninErr),
-                      content: AutoSizeText(S.of(context).SigninErrText),
+                      title: Text(S.of(context).SigninErr),
+                      content: Text(S.of(context).SigninErrText),
                       actions: [
                         MaterialButton(
-                          child: AutoSizeText(S.of(context).SigninErrButton),
+                          child: Text(S.of(context).SigninErrButton),
                           onPressed: () {
                             Navigator.of(context).pop();
                             },

@@ -58,43 +58,49 @@ class _ResultPageState extends State<ResultPage> {
 
     return Scaffold(
         backgroundColor: Colors.lightGreen,
-        body: Center(
-          child: FutureBuilder(
-            future: done,
-            builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-             if (snapshot.hasData && snapshot.connectionState == ConnectionState.done) {
-               return Column(
-                  children: [
-                    SizedBox(
-                      height: _height * 0.4,
-                    ),
-                    if (widget.end) AutoSizeText(S.of(context).ResultTitle),
-                    AutoSizeText(
-                      S.of(context).ResultMessage(widget.score),
-                      style: const TextStyle(
-                          color: Color(0xFF101010),
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(
-                      height: _height * 0.02,
-                    ),
-                    if (bestScore < widget.score) ... [
-                      savePicture(_height, _screenWidth, radius),
-                      savePosition(_height, _screenWidth, radius),
-                    ]
-                    else
-                      exitButton(),
+        body: FutureBuilder(
+          future: done,
+          builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+           if (snapshot.hasData && snapshot.connectionState == ConnectionState.done) {
+             return Column(
+               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+               crossAxisAlignment: CrossAxisAlignment.center,
+               children: [
+                 if (widget.end) AutoSizeText(
+                   S.of(context).ResultTitle,
+                   style: const TextStyle(
+                       color: Color(0xFF101010),
+                       fontSize: 24,
+                       fontWeight: FontWeight.bold),
+                 ),
+                 AutoSizeText(
+                   S.of(context).ResultMessage(widget.score),
+                   style: const TextStyle(
+                       color: Color(0xFF101010),
+                       fontSize: 30,
+                       fontWeight: FontWeight.bold),
+                 ),
+                 if (bestScore < widget.score) ... [
+                   savePicture(_height, _screenWidth, radius),
+                   savePosition(_height, _screenWidth, radius),
+                 ]
+                 else
+                   exitButton(),
 
-                    savedPicture && savedPosition ? exitButton() : Container(),
-                  ],
-              );
-            }
-            else
-              return CircularProgressIndicator();
+                 savedPicture && savedPosition ? exitButton() : Container(),
+               ],
+            );
           }
-          ),
-        ));
+          else{
+             return const Center(
+               child: CircularProgressIndicator(
+                 backgroundColor: Colors.lightGreen,
+               ),
+             );
+           }
+        }
+      ),
+    );
   }
 
   Widget savePicture(double _height, double _screenWidth, double radius){

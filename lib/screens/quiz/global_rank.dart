@@ -24,12 +24,13 @@ class _GlobalRankState extends State<GlobalRank>{
   List bestPlayersUsername = [];
   List bestPlayerPoints = [];
   List bestPlayerLocation = [];
+  List<Player> bestPlayers = [];
   late Future<bool> done;
 
   @override
   void initState() {
-    super.initState();
     done = retrieveBestPLayers();
+    super.initState();
   }
 
   Future<bool> retrieveBestPLayers() async{
@@ -37,6 +38,7 @@ class _GlobalRankState extends State<GlobalRank>{
     List<DocumentSnapshot> items = snap.docs.toList(); // List of Documents
     for (int i = 0; i < items.length; i++ ){
       DocumentSnapshot item = items[i];
+      bestPlayers.add(Player.create(item["username"], item["score"].toString(), item["position"].toString()));
       bestPlayersUsername.add(item["username"]);
       bestPlayerPoints.add(item["score"].toString());
       bestPlayerLocation.add(item["position"].toString());
@@ -62,27 +64,86 @@ class _GlobalRankState extends State<GlobalRank>{
         style: const TextStyle(fontSize: 30),
       ),
     );
-    final _screenHeight = MediaQuery
-        .of(context)
-        .size
-        .height;
-    final _screenWidth = MediaQuery
-        .of(context)
-        .size
-        .width;
+
+    final _screenHeight = MediaQuery.of(context).size.height;
+    final _screenWidth = MediaQuery.of(context).size.width;
     final _appBarHeight = _appBar.preferredSize.height;
-    final _statusBarHeight = MediaQuery
-        .of(context)
-        .padding
-        .top;
+    final _statusBarHeight = MediaQuery.of(context).padding.top;
     final _height = _screenHeight - _appBarHeight - _statusBarHeight;
     final radius = min(_height * 0.5 * 0.25, _screenWidth * 0.25);
+
     const TextStyle textStyle = TextStyle(
-    color: Colors.green,
-    fontSize: 20,
-    fontWeight: FontWeight.bold,wordSpacing: 10);
+      color: Colors.green,
+      fontSize: 20,
+      fontWeight: FontWeight.bold,
+      wordSpacing: 10
+    );
 
     return Scaffold(
+      backgroundColor: const Color(0xFF101010),
+      appBar: _appBar,
+
+      body: FutureBuilder(
+        future: done,
+        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+          if(snapshot.hasData && snapshot.connectionState == ConnectionState.done){
+            if (bestPlayersUsername.isEmpty) {
+              print("NO USERS");
+              return Center(
+                  child: AutoSizeText(
+                    S.of(context).GlobalErr,
+                    style: textStyle,
+                  )
+              );
+            }
+
+            print("THERE ARE USERS");
+            return Container(
+              height: _height,
+              width: _screenWidth,
+              child: SingleChildScrollView(
+                child: DataTable(
+                  dataTextStyle: textStyle,
+                  columns: [
+                    DataColumn(label: AutoSizeText(S.of(context).GlobalPosition)),
+                    DataColumn(label: AutoSizeText(S.of(context).GlobalLocation)),
+                    DataColumn(label: AutoSizeText(S.of(context).GlobalUsername)),
+                    DataColumn(label: AutoSizeText(S.of(context).GlobalScore)),
+                  ],
+                  rows: bestPlayers.map((Player user) => DataRow(
+                      cells: [
+                        DataCell(AutoSizeText('1')),
+                        DataCell(AutoSizeText(user.location)),
+                        DataCell(AutoSizeText(user.username)),
+                        DataCell(AutoSizeText(user.bestScore)),
+                      ]
+                  )).toList(),
+/*                  List.generate(bestPlayersUsername.length, (index) {
+                    return DataRow(
+                      cells: [
+                        DataCell(AutoSizeText('${index+1}°')),
+                        DataCell(AutoSizeText(bestPlayerLocation[index])),
+                        DataCell(AutoSizeText(bestPlayersUsername[index])),
+                        DataCell(AutoSizeText(bestPlayerPoints[index])),
+                      ]
+                    );
+                  }),*/
+                ),
+              ),
+            );
+          }
+          else{
+            return const Center(
+              child: CircularProgressIndicator(
+                backgroundColor: Colors.lightGreen,
+              ),
+            );
+          }
+        },
+      ),
+    );
+
+/*    return Scaffold(
         backgroundColor: Color(0xFF101010),
         appBar: _appBar,
 
@@ -195,7 +256,7 @@ class _GlobalRankState extends State<GlobalRank>{
               )
             ]
         )
-    );
+    );*/
   }
 
 

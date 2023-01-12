@@ -23,8 +23,10 @@ class QuizScreen extends StatefulWidget{
 class QuizScreenState extends State<QuizScreen>{
   Quiz quiz = Quiz();
   late Future<bool> done;
+
   @override
   void initState() {
+    super.initState();
   }
 
   @override
@@ -44,52 +46,54 @@ class QuizScreenState extends State<QuizScreen>{
     final radius = min(_height * 0.5 * 0.25, _screenWidth * 0.25);
 
     return Scaffold(
-        backgroundColor: const Color(0xFF101010),
-        appBar: _appBar,
-        body: Center(
-          child: FutureBuilder<Quiz>(
-            future: getBestQuiz(),
-            builder: (BuildContext context, AsyncSnapshot<Quiz> snapshot) {
-              if (snapshot.hasData && snapshot.connectionState == ConnectionState.done ){
-                print("image"+quiz.image.toString());
-                return Center(
-                  child: Column(
-                    children: [
-                      SizedBox(height: _height * 0.2,),
-                      AutoSizeText(
-                        S.of(context).BestQuizScore,
-                        style: const TextStyle(color: Colors.lightGreen,fontSize: 30,fontWeight: FontWeight.bold),),
-                      Divider(height: _height * 0.03,),
-                      AutoSizeText("${snapshot.data!.score}",
-                        style: const TextStyle(color: Colors.lightGreen,fontSize: 40,fontWeight: FontWeight.bold),),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          CircleAvatar(
-                            backgroundColor: const Color(0xFF101010),
-                            minRadius: radius,
-                            child: CircleAvatar(
-                              backgroundColor: Colors.transparent,
-                              radius: radius - 10 > 0 ? radius - 10 : 5.0,
-                              backgroundImage: Image.file(snapshot.data!.getFileImage()).image,
-                            ),
-                          ),
-                          AutoSizeText("${snapshot.data!.position}",
-                            style: const TextStyle(color: Colors.lightGreen,fontSize: 40,fontWeight: FontWeight.bold),),
-                        ]
+      backgroundColor: const Color(0xFF101010),
+      appBar: _appBar,
+      body: FutureBuilder<Quiz>(
+        future: getBestQuiz(),
+        builder: (BuildContext context, AsyncSnapshot<Quiz> snapshot) {
+          if (snapshot.hasData && snapshot.connectionState == ConnectionState.done ){
+            print("image"+quiz.image.toString());
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                AutoSizeText(
+                  S.of(context).BestQuizScore,
+                  style: const TextStyle(color: Colors.lightGreen,fontSize: 30,fontWeight: FontWeight.bold),
+                ),
+                AutoSizeText("${snapshot.data!.score}",
+                  style: const TextStyle(color: Colors.lightGreen,fontSize: 40,fontWeight: FontWeight.bold),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    CircleAvatar(
+                      backgroundColor: const Color(0xFF101010),
+                      minRadius: radius,
+                      child: CircleAvatar(
+                        backgroundColor: Colors.transparent,
+                        radius: radius - 10 > 0 ? radius - 10 : 5.0,
+                        backgroundImage: Image.file(snapshot.data!.getFileImage()).image,
                       ),
-                    ],
-
-                  ),
-
-                );
-              }
-              else
-                return CircularProgressIndicator();
-            }
-          ),
-        ),
+                    ),
+                    AutoSizeText("${snapshot.data!.position}",
+                      style: const TextStyle(color: Colors.lightGreen,fontSize: 40,fontWeight: FontWeight.bold),
+                    ),
+                  ]
+                ),
+              ],
+            );
+          }
+          else{
+            return const Center(
+              child: CircularProgressIndicator(
+                backgroundColor: Colors.lightGreen,
+              ),
+            );
+          }
+        }
+      ),
     );
   }
 }
