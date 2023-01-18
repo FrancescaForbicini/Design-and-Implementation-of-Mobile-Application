@@ -227,7 +227,7 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
                   {
                     audioPlayer.stop(),
                     setState(() {
-                      totalScore = (totalScore + 1) * level;
+                      totalScore = totalScore + level;
                     }),
                     onRightQuestion(),
                   },
