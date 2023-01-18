@@ -16,6 +16,7 @@ import '../../models/player.dart';
 import '../../models/quiz.dart';
 import '../authentication/authentication.dart';
 import '../quiz/global_rank.dart';
+import '../quiz/rank.dart';
 import '../settings/acquire_image.dart';
 
 class UserProfile extends StatefulWidget{
@@ -232,7 +233,7 @@ class _UserProfileState extends State<UserProfile> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => GlobalRank(currentUser: currentUser),
+                                builder: (context) => Rank(currentUser: currentUser),
                               ),
                             );
                           },

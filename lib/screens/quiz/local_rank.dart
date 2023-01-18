@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dima_project/screens/profile/userprofile_screen.dart';
+import 'package:dima_project/screens/quiz/global_rank.dart';
+import 'package:dima_project/screens/settings/acquire_position.dart';
 import 'package:flag/flag_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,21 +13,20 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../generated/l10n.dart';
 import '../../models/player.dart';
 
-class GlobalRank extends StatefulWidget{
+class LocalRank extends StatefulWidget{
   final Player currentUser;
   final height;
   final width;
-  GlobalRank({required this.currentUser, required this.height, required this.width, super.key});
+  LocalRank({required this.currentUser, required this.height, required this.width, super.key});
 
   @override
-  State<StatefulWidget> createState() => _GlobalRankState();
+  State<StatefulWidget> createState() => _LocalRankState();
 }
 
-class _GlobalRankState extends State<GlobalRank>{
+class _LocalRankState extends State<LocalRank>{
 
   List bestPlayersUsername = [];
   List bestPlayerPoints = [];
-  List bestPlayerLocation = [];
   late Future<bool> done;
 
   @override
@@ -35,25 +36,25 @@ class _GlobalRankState extends State<GlobalRank>{
   }
 
   Future<bool> retrieveBestPLayers() async{
-    QuerySnapshot<Map<String, dynamic>> snap = await FirebaseFirestore.instance.collection("quiz").orderBy("score",descending: true).get();
+    var position = await AcquirePosition().getPosition();
+    QuerySnapshot<Map<String, dynamic>> snap = await FirebaseFirestore.instance.collection("quiz").where("position", isEqualTo: position?.toUpperCase()).orderBy("score",descending: true).get();
     List<DocumentSnapshot> items = snap.docs.toList(); // List of Documents
     for (int i = 0; i < items.length; i++ ){
       DocumentSnapshot item = items[i];
       bestPlayersUsername.add(item["username"]);
       bestPlayerPoints.add(item["score"].toString());
-      bestPlayerLocation.add(item["position"].toString());
     }
     return true;
   }
-
+  
   @override
   Widget build(BuildContext context) {
 
     const TextStyle textStyle = TextStyle(
-      color: Colors.green,
-      fontSize: 20,
-      fontWeight: FontWeight.bold,
-      wordSpacing: 10
+        color: Colors.green,
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+        wordSpacing: 10
     );
 
     return FutureBuilder(
@@ -73,12 +74,12 @@ class _GlobalRankState extends State<GlobalRank>{
           //print("THERE ARE USERS");
 
           return Container(
-            height: widget.height,
-            width: widget.width,
-            child: ListView.builder(
-              itemCount: bestPlayersUsername.length,
-              itemBuilder: (BuildContext ctx, int idx) => buildLeaderboard(ctx, idx, widget.height, widget.width),
-            )
+              height: widget.height,
+              width: widget.width,
+              child: ListView.builder(
+                itemCount: bestPlayersUsername.length,
+                itemBuilder: (BuildContext ctx, int idx) => buildLeaderboard(ctx, idx, widget.height, widget.width),
+              )
           );
         }
         else{
@@ -92,7 +93,7 @@ class _GlobalRankState extends State<GlobalRank>{
     );
   }
 
-  Widget buildLeaderboard(BuildContext ctx, int idx, var height, var width){
+  buildLeaderboard(BuildContext ctx, int idx, height, width) {
     int pos = idx + 1;
     Widget crown;
 
@@ -148,9 +149,9 @@ class _GlobalRankState extends State<GlobalRank>{
         child: AutoSizeText(
           pos.toString(),
           style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-            fontSize: 16
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+              fontSize: 16
           ),
         ),
       );
@@ -161,9 +162,9 @@ class _GlobalRankState extends State<GlobalRank>{
       child: Container(
         height: height > width ? height * 0.1 : width * 0.1,
         decoration: BoxDecoration(
-          color: Colors.lightGreen,
-          borderRadius: BorderRadius.all(Radius.circular(15.0)),
-          boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 5.0)]
+            color: Colors.lightGreen,
+            borderRadius: BorderRadius.all(Radius.circular(15.0)),
+            boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 5.0)]
         ),
         child: Row(
           children: <Widget>[
@@ -179,23 +180,6 @@ class _GlobalRankState extends State<GlobalRank>{
                         child: Padding(
                           padding: const EdgeInsets.only(left: 15.0, right: 25),
                           child: crown,
-                        ),
-                      ),
-
-                      Align(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.only(left: 8.0, top: 5),
-                              child: Flag.fromString(
-                                bestPlayerLocation[idx].toString().toUpperCase(),
-                                height: height * 0.03,
-                                width: height * 0.03 * 4/3,
-                              )
-                            )
-                          ],
                         ),
                       ),
 
@@ -244,5 +228,3 @@ class _GlobalRankState extends State<GlobalRank>{
   }
 
 }
-
-

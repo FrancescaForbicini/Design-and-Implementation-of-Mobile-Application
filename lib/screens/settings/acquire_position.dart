@@ -75,7 +75,7 @@ class AcquirePosition {
     }).catchError((e) {
       debugPrint(e);
     });
-    return _currentAddress;
+    return _currentAddress?.toUpperCase();
   }
 }
 
