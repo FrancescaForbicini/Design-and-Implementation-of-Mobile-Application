@@ -4,9 +4,10 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dima_project/screens/profile/userprofile_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flag/flag_widget.dart';
 import 'package:flutter/cupertino.dart';
-
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../generated/l10n.dart';
 import '../../models/player.dart';
@@ -34,7 +35,7 @@ class _GlobalRankState extends State<GlobalRank>{
   }
 
   Future<bool> retrieveBestPLayers() async{
-    QuerySnapshot<Map<String, dynamic>> snap = await FirebaseFirestore.instance.collection("quiz").orderBy("score",descending: true).get() ;
+    QuerySnapshot<Map<String, dynamic>> snap = await FirebaseFirestore.instance.collection("quiz").orderBy("score",descending: true).get();
     List<DocumentSnapshot> items = snap.docs.toList(); // List of Documents
     for (int i = 0; i < items.length; i++ ){
       DocumentSnapshot item = items[i];
@@ -88,7 +89,7 @@ class _GlobalRankState extends State<GlobalRank>{
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
           if(snapshot.hasData && snapshot.connectionState == ConnectionState.done){
             if (bestPlayersUsername.isEmpty) {
-              print("NO USERS");
+              //print("NO USERS");
               return Center(
                   child: AutoSizeText(
                     S.of(context).GlobalErr,
@@ -97,39 +98,15 @@ class _GlobalRankState extends State<GlobalRank>{
               );
             }
 
-            print("THERE ARE USERS");
+            //print("THERE ARE USERS");
+
             return Container(
               height: _height,
               width: _screenWidth,
-              child: SingleChildScrollView(
-                child: DataTable(
-                  dataTextStyle: textStyle,
-                  columns: [
-                    DataColumn(label: AutoSizeText(S.of(context).GlobalPosition)),
-                    DataColumn(label: AutoSizeText(S.of(context).GlobalLocation)),
-                    DataColumn(label: AutoSizeText(S.of(context).GlobalUsername)),
-                    DataColumn(label: AutoSizeText(S.of(context).GlobalScore)),
-                  ],
-                  rows: bestPlayers.map((Player user) => DataRow(
-                      cells: [
-                        DataCell(AutoSizeText('1')),
-                        DataCell(AutoSizeText(user.location)),
-                        DataCell(AutoSizeText(user.username)),
-                        DataCell(AutoSizeText(user.bestScore)),
-                      ]
-                  )).toList(),
-/*                  List.generate(bestPlayersUsername.length, (index) {
-                    return DataRow(
-                      cells: [
-                        DataCell(AutoSizeText('${index+1}°')),
-                        DataCell(AutoSizeText(bestPlayerLocation[index])),
-                        DataCell(AutoSizeText(bestPlayersUsername[index])),
-                        DataCell(AutoSizeText(bestPlayerPoints[index])),
-                      ]
-                    );
-                  }),*/
-                ),
-              ),
+              child: ListView.builder(
+                itemCount: bestPlayersUsername.length,
+                itemBuilder: (BuildContext ctx, int idx) => buildLeaderboard(ctx, idx, _height, _screenWidth),
+              )
             );
           }
           else{
@@ -142,124 +119,166 @@ class _GlobalRankState extends State<GlobalRank>{
         },
       ),
     );
-
-/*    return Scaffold(
-        backgroundColor: Color(0xFF101010),
-        appBar: _appBar,
-
-        body: ListView(
-            children: <Widget>[
-              Container(
-                height: _height * 0.5,
-                width: _screenWidth,
-                decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Colors.green, Colors.lightGreen],
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                      stops: [0.5, 0.9],
-                    )
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    CircleAvatar(
-                      backgroundColor: Color(0xFF101010),
-                      minRadius: radius,
-                      child: CircleAvatar(
-                        backgroundColor: Colors.transparent,
-                        radius: radius - 10 > 0 ? radius - 10 : 5.0,
-                        backgroundImage: widget.currentUser.image,
-                      ),
-
-                    ),
-                    AutoSizeText(
-                      widget.currentUser.username,
-                      style: const TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF101010),
-                      ),
-                    ),
-                    AutoSizeText(
-                      S.of(context).GlobalBestScore(widget.currentUser.bestScore),
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF101010),
-                      ),
-                    ),
-
-                  ],
-                ),
-              ),
-              Container(
-                  width: _screenWidth,
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        AutoSizeText(
-                          S.of(context).GlobalPosition,
-                          style: textStyle,
-                        ),
-                        AutoSizeText(
-                          S.of(context).GlobalLocation,
-                          style: textStyle,
-                        ),
-                        AutoSizeText(
-                          S.of(context).GlobalUsername,
-                          style: textStyle,
-                        ),
-                        AutoSizeText(
-                          S.of(context).GlobalScore,
-                          style: textStyle,
-                        ),
-                        SizedBox(
-                          height: _height * 0.1,
-                        )
-
-                      ]
-                  ),
-              ),
-              FutureBuilder(
-                  future: done,
-                  builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                    if (snapshot.hasData &&
-                        snapshot.connectionState == ConnectionState.done) {
-                      if (bestPlayersUsername.isEmpty) {
-                        return Center(
-                          child: AutoSizeText(
-                            S.of(context).GlobalErr,
-                            style: textStyle,
-                          )
-                        );
-                      }
-                      return ListView.builder(
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          itemCount: bestPlayersUsername.length,
-                          itemBuilder: (context, index) {
-                            return Container(
-                              width: _screenWidth,
-                              child:
-                                    AutoSizeText('${index+1}° ' + bestPlayerLocation[index] + ' ' + bestPlayersUsername[index] + ' '+
-                                        bestPlayerPoints[index],style: textStyle,),
-
-                            );
-                          }
-                      );
-                    } else {
-                      return const CircularProgressIndicator();
-                    }
-                  }
-              )
-            ]
-        )
-    );*/
   }
 
+  Widget buildLeaderboard(BuildContext ctx, int idx, var height, var width){
+    int pos = idx + 1;
+    Widget crown;
 
+    if(pos == 1){
+      crown = Padding(
+        padding: const EdgeInsets.only(right: 0.0),
+        child: Stack(
+          alignment: Alignment.center,
+          children: <Widget>[
+            Center(child: Icon(FontAwesomeIcons.crown, size: 36.0, color: Colors.yellow,),),
+            Padding(
+              padding: const EdgeInsets.only(left: 6.0, top: 6),
+              child: Center(child: AutoSizeText('1', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),),
+            )
+          ],
+        ),
+      );
+    }
+    else if(pos == 2){
+      crown = Padding(
+        padding: const EdgeInsets.only(right: 0.0),
+        child: Stack(
+          alignment: Alignment.center,
+          children: <Widget>[
+            Center(child: Icon(FontAwesomeIcons.crown, size: 36.0, color: Colors.grey[300],),),
+            Padding(
+              padding: const EdgeInsets.only(left: 6.0, top: 6),
+              child: Center(child: AutoSizeText('2', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),),
+            )
+          ],
+        ),
+      );
+    }
+    else if(pos == 3){
+      crown = Padding(
+        padding: const EdgeInsets.only(right: 0.0),
+        child: Stack(
+          alignment: Alignment.center,
+          children: <Widget>[
+            Center(child: Icon(FontAwesomeIcons.crown, size: 36.0, color: Colors.orange[300],),),
+            Padding(
+              padding: const EdgeInsets.only(left: 6.0, top: 6),
+              child: Center(child: AutoSizeText('3', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),),
+            )
+          ],
+        ),
+      );
+    }
+    else{
+      crown = CircleAvatar(
+        backgroundColor: Colors.grey,
+        radius: 13,
+        child: AutoSizeText(
+          pos.toString(),
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+            fontSize: 16
+          ),
+        ),
+      );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 10.0),
+      child: Container(
+        height: height > width ? height * 0.1 : width * 0.1,
+        decoration: BoxDecoration(
+          color: Colors.lightGreen,
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+          boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 5.0)]
+        ),
+        child: Row(
+          children: <Widget>[
+            Expanded(
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 0.0),
+                  child: Row(
+                    children: <Widget>[
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 15.0, right: 25),
+                          child: crown,
+                        ),
+                      ),
+
+                      Align(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8.0, top: 5),
+                              child: Flag.fromString(
+                                bestPlayerLocation[idx].toString().toUpperCase(),
+                                height: height * 0.03,
+                                width: height * 0.03 * 4/3,
+                              )
+/*                              AutoSizeText(
+                                bestPlayerLocation[idx],
+                                style: const TextStyle(
+                                  color: Colors.green,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),*/
+                            )
+                          ],
+                        ),
+                      ),
+
+                      Align(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8.0, top: 5),
+                              child: AutoSizeText(
+                                bestPlayersUsername[idx],
+                                style: const TextStyle(
+                                  color: Color(0xFF101010),
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: AutoSizeText(
+                  bestPlayerPoints[idx],
+                  style: const TextStyle(
+                    color: Color(0xFF101010),
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
 
 }
 

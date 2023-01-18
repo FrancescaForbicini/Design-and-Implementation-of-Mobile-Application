@@ -20,7 +20,7 @@ class AuthenticationService {
       final auth = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
 
-      _sendVerification(auth);
+      //_sendVerification(auth);
 
       FirebaseFirestore.instance.collection('users').doc(email).set({
         "username": username,

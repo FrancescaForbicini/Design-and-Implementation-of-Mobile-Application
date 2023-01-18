@@ -71,7 +71,7 @@ class AcquirePosition {
         _currentPosition!.latitude, _currentPosition!.longitude)
         .then((List<Placemark> placemarks) {
       Placemark place = placemarks[0];
-      _currentAddress =  '${place.administrativeArea}, ${place.country}';
+      _currentAddress =  '${place.isoCountryCode}';
     }).catchError((e) {
       debugPrint(e);
     });

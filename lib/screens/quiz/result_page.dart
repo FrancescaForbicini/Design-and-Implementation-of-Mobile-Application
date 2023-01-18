@@ -252,13 +252,16 @@ class _ResultPageState extends State<ResultPage> {
   Future<void> updateScore(int score) async {
     final SpotifyService _spotifyService = SpotifyService();
     var user = FirebaseAuth.instance.currentUser;
-    var userSpotify = await _spotifyService.spotify.me.get();
-    var username = userSpotify.displayName;
+    //var userSpotify = await _spotifyService.spotify.me.get();
+
     final docRef =
     FirebaseFirestore.instance.collection("users").doc(user?.email);
     docRef.update({
       "bestScore": score,
     });
+    var data = await docRef.get();
+    var username = data['username'];
+    //print("username: $username");
 
     final docQuiz = FirebaseFirestore.instance.collection("quiz").doc(
           user?.email);
