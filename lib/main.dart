@@ -43,9 +43,11 @@ class MyApp extends StatelessWidget {
           seedColor: Colors.lightGreen,
           brightness: Brightness.light,
         ),
-        textTheme: const TextTheme(headline1: TextStyle(color: Colors.black)),
-        buttonTheme: const ButtonThemeData(buttonColor: Colors.lightGreen),
+        textTheme:  TextTheme(headline1: TextStyle(color: Colors.black),
+        bodyText1: TextStyle(color: Colors.lightGreen)),
+        buttonColor: const Color(0xFF101010),
         iconTheme: const IconThemeData(color: Colors.lightGreen),
+
         backgroundColor: Colors.white,
         useMaterial3: true,
       ),
@@ -60,6 +62,7 @@ class MyApp extends StatelessWidget {
             bodyText1: TextStyle(color: Colors.lightGreen),),
         buttonTheme: const ButtonThemeData(buttonColor: Colors.lightGreen),
         iconTheme: const IconThemeData(color: Colors.lightGreen),
+        buttonColor: Colors.lightGreen,
         primaryColor: Colors.lightGreen,
 
         useMaterial3: true,

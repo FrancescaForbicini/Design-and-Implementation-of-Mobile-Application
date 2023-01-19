@@ -1,4 +1,3 @@
-
 import 'dart:math';
 
 import 'package:auto_size_text/auto_size_text.dart';
@@ -12,7 +11,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
-
 import '../../generated/l10n.dart';
 import '../../models/quiz.dart';
 import '../../services/spotify_service.dart';
@@ -21,8 +19,8 @@ import '../profile/userprofile_screen.dart';
 Quiz quiz = Quiz();
 
 class ResultPage extends StatefulWidget {
+  const ResultPage({super.key, required this.score, required this.end});
 
-  const ResultPage( { super.key, required this.score, required this.end});
   final int score;
   final bool end;
 
@@ -38,6 +36,8 @@ class _ResultPageState extends State<ResultPage> {
   late Future<bool> done;
   late bool savedPicture;
   late bool savedPosition;
+  Color? backgroundColor;
+  Color? buttonColor;
 
   @override
   void initState() {
@@ -55,55 +55,54 @@ class _ResultPageState extends State<ResultPage> {
     final _height = _screenHeight - _statusBarHeight;
     final radius = min(_height * 0.5 * 0.25, _screenWidth * 0.25);
 
-
+    backgroundColor = Theme.of(context).backgroundColor;
+    buttonColor = Theme.of(context).buttonColor;
     return Scaffold(
-        backgroundColor: Colors.lightGreen,
-        body: FutureBuilder(
+      backgroundColor: backgroundColor,
+      body: FutureBuilder(
           future: done,
           builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-           if (snapshot.hasData && snapshot.connectionState == ConnectionState.done) {
-             return Column(
-               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-               crossAxisAlignment: CrossAxisAlignment.center,
-               children: [
-                 if (widget.end) AutoSizeText(
-                   S.of(context).ResultTitle,
-                   style: const TextStyle(
-                       color: Color(0xFF101010),
-                       fontSize: 24,
-                       fontWeight: FontWeight.bold),
-                 ),
-                 AutoSizeText(
-                   S.of(context).ResultMessage(widget.score),
-                   style: const TextStyle(
-                       color: Color(0xFF101010),
-                       fontSize: 30,
-                       fontWeight: FontWeight.bold),
-                 ),
-                 if (bestScore < widget.score) ... [
-                   savePicture(_height, _screenWidth, radius),
-                   savePosition(_height, _screenWidth, radius),
-                 ]
-                 else
-                   exitButton(),
-
-                 savedPicture && savedPosition ? exitButton() : Container(),
-               ],
-            );
-          }
-          else{
-             return const Center(
-               child: CircularProgressIndicator(
-                 backgroundColor: Colors.lightGreen,
-               ),
-             );
-           }
-        }
-      ),
+            if (snapshot.hasData &&
+                snapshot.connectionState == ConnectionState.done) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  if (widget.end)
+                    AutoSizeText(
+                      S.of(context).ResultTitle,
+                      style: TextStyle(
+                          color: Theme.of(context).textTheme.bodyText1?.color,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  AutoSizeText(
+                    S.of(context).ResultMessage(widget.score),
+                    style: TextStyle(
+                        color: Theme.of(context).textTheme.bodyText1?.color,
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  if (bestScore < widget.score) ...[
+                    savePicture(_height, _screenWidth, radius),
+                    savePosition(_height, _screenWidth, radius),
+                  ] else
+                    exitButton(),
+                  savedPicture && savedPosition ? exitButton() : Container(),
+                ],
+              );
+            } else {
+              return const Center(
+                child: CircularProgressIndicator(
+                  backgroundColor: Colors.lightGreen,
+                ),
+              );
+            }
+          }),
     );
   }
 
-  Widget savePicture(double _height, double _screenWidth, double radius){
+  Widget savePicture(double _height, double _screenWidth, double radius) {
     updateScore(widget.score);
     return GestureDetector(
       onTap: () async {
@@ -115,14 +114,13 @@ class _ResultPageState extends State<ResultPage> {
           });
         }
       },
-      child:
-      FutureBuilder<String?>(
+      child: FutureBuilder<String?>(
           future: quiz.getImageQuiz(),
           builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
             if (image != null) {
               File file = File(image!);
               return CircleAvatar(
-                backgroundColor: const Color(0xFF101010),
+                backgroundColor: Theme.of(context).buttonColor,
                 minRadius: radius,
                 child: CircleAvatar(
                   backgroundColor: Colors.transparent,
@@ -132,33 +130,33 @@ class _ResultPageState extends State<ResultPage> {
               );
             }
 
-            return
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    color: const Color(0xFF101010),
-                    margin: const EdgeInsets.all(5.0),
-                    alignment: Alignment.center,
-                    constraints: BoxConstraints.expand(height: _height/16, width: _screenWidth/2),
-                    child: AutoSizeText(
-                      S.of(context).ResultPicture,
-                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                    ),
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  color: buttonColor,
+                  margin: EdgeInsets.all(5.0),
+                  alignment: Alignment.center,
+                  constraints: BoxConstraints.expand(
+                      height: _height / 16, width: _screenWidth / 2),
+                  child: AutoSizeText(
+                    S.of(context).ResultPicture,
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
                   ),
-                  Icon( Icons.photo_camera,
-                    color: Colors.black,
-                    size: _height/16,
-                  ),
-
-                ],
-              );
-          }
-      ),
+                ),
+                Icon(
+                  Icons.photo_camera,
+                  color: buttonColor,
+                  size: _height / 16,
+                ),
+              ],
+            );
+          }),
     );
   }
 
-  Widget savePosition(double _height, double _screenWidth, double radius)  {
+  Widget savePosition(double _height, double _screenWidth, double radius) {
     {
       return GestureDetector(
         onTap: () async {
@@ -171,48 +169,47 @@ class _ResultPageState extends State<ResultPage> {
             });
           }
         },
-        child:
-        FutureBuilder<String?>(
+        child: FutureBuilder<String?>(
             future: quiz.getPosition(),
             builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
-
               if (position != null) {
                 return Container(
-                  color: Color(0xFF101010),
+                  color: buttonColor,
                   margin: EdgeInsets.all(5.0),
                   alignment: Alignment.center,
-                  constraints: BoxConstraints.expand(height: _height/16, width: _screenWidth/2),
+                  constraints: BoxConstraints.expand(
+                      height: _height / 16, width: _screenWidth / 2),
                   child: AutoSizeText(
                     snapshot.data!.toString(),
-                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
                   ),
                 );
               }
 
-              return
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      color: const Color(0xFF101010),
-                      margin: const EdgeInsets.all(5.0),
-                      alignment: Alignment.center,
-                      constraints: BoxConstraints.expand(
-                          height: _height / 16, width: _screenWidth / 2),
-                      child: AutoSizeText(
-                        S.of(context).ResultPosition,
-                        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    color: buttonColor,
+                    margin: const EdgeInsets.all(5.0),
+                    alignment: Alignment.center,
+                    constraints: BoxConstraints.expand(
+                        height: _height / 16, width: _screenWidth / 2),
+                    child: AutoSizeText(
+                      S.of(context).ResultPosition,
+                      style: const TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
                     ),
-                    Icon(Icons.location_on,
-                      color: Colors.black,
-                      size: _height / 16,
-                    ),
-
-                  ],
-                );
-            }
-        ),
+                  ),
+                  Icon(
+                    Icons.location_on,
+                    color: buttonColor,
+                    size: _height / 16,
+                  ),
+                ],
+              );
+            }),
       );
     }
   }
@@ -221,10 +218,10 @@ class _ResultPageState extends State<ResultPage> {
     return ElevatedButton(
       style: ButtonStyle(
           backgroundColor: MaterialStateColor.resolveWith(
-                  (states) => const Color(0xFF101010))),
+              (states) =>  buttonColor!)),
       onPressed: () => {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => UserProfile()))
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => UserProfile()))
       },
       child: AutoSizeText(
         S.of(context).ResultButton,
@@ -233,12 +230,12 @@ class _ResultPageState extends State<ResultPage> {
     );
   }
 
-
-  Future<bool> getBestScore() async{
+  Future<bool> getBestScore() async {
     var _user = FirebaseAuth.instance.currentUser;
     var _data;
     var _bestScore;
-    final docRef = FirebaseFirestore.instance.collection("users").doc(_user?.email);
+    final docRef =
+        FirebaseFirestore.instance.collection("users").doc(_user?.email);
     await docRef.get().then((DocumentSnapshot doc) {
       _data = doc.data() as Map<String, dynamic>;
       _bestScore = _data["bestScore"];
@@ -254,23 +251,21 @@ class _ResultPageState extends State<ResultPage> {
     var user = FirebaseAuth.instance.currentUser;
 
     final docRef =
-    FirebaseFirestore.instance.collection("users").doc(user?.email);
+        FirebaseFirestore.instance.collection("users").doc(user?.email);
     docRef.update({
       "bestScore": score,
     });
     var data = await docRef.get();
     var username = data['username'];
 
-    final docQuiz = FirebaseFirestore.instance.collection("quiz").doc(
-          user?.email);
-      docQuiz.set({
-        "username": username,
-        "score": score,
-        "image": image,
-        "country": position![0],
-        "position": position![1],
-      });
-    }
+    final docQuiz =
+        FirebaseFirestore.instance.collection("quiz").doc(user?.email);
+    docQuiz.set({
+      "username": username,
+      "score": score,
+      "image": image,
+      "country": position![0],
+      "position": position![1],
+    });
+  }
 }
-
-

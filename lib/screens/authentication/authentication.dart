@@ -19,11 +19,11 @@ class AuthenticationScreen extends StatelessWidget{
     final _screenWidth = MediaQuery.of(context).size.width;
     final _statusBarHeight = MediaQuery.of(context).padding.top;
     final _height = _screenHeight - _statusBarHeight;
-
+    final Color? textColor = Theme.of(context).textTheme.bodyText1?.color;
     AcquirePosition().handleLocationPermission(context);
 
     return Scaffold(
-      backgroundColor: Color (0xFF101010),
+      backgroundColor: Theme.of(context).backgroundColor,
       body: Container(
         width: _screenWidth,
         height: _height,
@@ -41,7 +41,7 @@ class AuthenticationScreen extends StatelessWidget{
               child: TextButton(
                 child: AutoSizeText(
                   S.of(context).AuthSignin,
-                  style: const TextStyle(fontSize: 20.0,fontFamily: 'Hind', color: Colors.lightGreen),
+                  style: TextStyle(fontSize: 20.0,fontFamily: 'Hind', color: textColor),
                 ),
                 onPressed: () {
                   Navigator.push(
@@ -57,7 +57,7 @@ class AuthenticationScreen extends StatelessWidget{
               child: TextButton(
                 child: AutoSizeText(
                   S.of(context).AuthSignup,
-                  style: const TextStyle(fontSize: 20.0,fontFamily: 'Hind', color: Colors.lightGreen),
+                  style: TextStyle(fontSize: 20.0,fontFamily: 'Hind', color: textColor),
                 ),
                 onPressed: () {
                   Navigator.push(
@@ -73,7 +73,7 @@ class AuthenticationScreen extends StatelessWidget{
               child: TextButton(
                 child: AutoSizeText(
                   S.of(context).AuthGoogle,
-                  style: const TextStyle(fontSize: 20.0,fontFamily: 'Hind', color: Colors.lightGreen),
+                  style: TextStyle(fontSize: 20.0,fontFamily: 'Hind', color: textColor),
                 ),
                 onPressed: () => {
                   _authService.signInWithGoogle(context),

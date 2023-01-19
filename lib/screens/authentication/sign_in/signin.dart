@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dima_project/screens/spotifyAuth_screen.dart';
 import 'package:flutter/material.dart';
 
+import '../../../customized_app_bar.dart';
 import '../../../generated/l10n.dart';
 import '../../../services/authentication_service.dart';
 import '../sign_up/signup.dart';
@@ -12,13 +13,13 @@ class SignInScreen extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final AuthenticationService _authService = AuthenticationService();
+  Color? textColor;
 
   @override
   Widget build(BuildContext context) {
-    final _appBar = AppBar(
-      backgroundColor: Color (0xFF101010),
+    final _appBar = CustomizedAppBar(
       leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: Colors.lightGreen,size: 30),
+        icon: Icon(Icons.arrow_back, color: Theme.of(context).iconTheme.color,size: 30),
         onPressed: () => {
           Navigator.pop(context),
         },
@@ -37,7 +38,7 @@ class SignInScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: _appBar,
-      backgroundColor: const Color (0xFF101010),
+      backgroundColor: Theme.of(context).backgroundColor,
       body: Container(
         height: _height,
         width: _screenWidth,
@@ -65,20 +66,18 @@ class SignInScreen extends StatelessWidget {
     return TextFormField(
         controller: _emailController,
         validator: (value)=> EmailFieldValidator.validate(value!),
-        style: const TextStyle(color: Colors.lightGreen),
         keyboardType: TextInputType.emailAddress,
         decoration: InputDecoration(
             labelText: S.of(context).SigninEmail,
             filled: true,
             icon: const Icon(Icons.email, color: Colors.lightGreen,),
-            enabledBorder: const OutlineInputBorder(
+            enabledBorder:  OutlineInputBorder(
                 borderSide: BorderSide(
-                    color: Colors.lightGreen,
+                    color: Theme.of(context).iconTheme.color!,
                     width: 2.0
                 )
             ),
             labelStyle: const TextStyle(
-                color: Colors.white,
                 fontSize: 18.0,
                 fontWeight: FontWeight.w400 ,
                 fontFamily: 'Calibri')
@@ -90,19 +89,17 @@ class SignInScreen extends StatelessWidget {
     return TextFormField(
       controller: _passwordController,
       validator: (value)=> PasswordFieldValidator.validate(value!),
-      style: const TextStyle(color: Colors.lightGreen),
       decoration: InputDecoration(
           labelText: S.of(context).SigninPwd,
           filled: true,
           icon: const Icon(Icons.key, color: Colors.lightGreen),
-          enabledBorder: const OutlineInputBorder(
+          enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(
-                  color: Colors.lightGreen,
+                  color: Theme.of(context).iconTheme.color!,
                   width: 2.0
               )
           ),
           labelStyle: const TextStyle(
-              color: Colors.white,
               fontSize: 18.0,
               fontWeight: FontWeight.w400 ,
               fontFamily: 'Calibri')

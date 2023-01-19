@@ -3,6 +3,7 @@ import 'package:dima_project/services/spotify_service.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+import '../customized_app_bar.dart';
 import '../generated/l10n.dart';
 import 'home/home_screen.dart';
 
@@ -13,7 +14,7 @@ class SpotifyScreen extends StatefulWidget {
   State<SpotifyScreen> createState() => _SpotifyScreenState();
 }
 
-class _SpotifyScreenState extends State<SpotifyScreen>{
+class _SpotifyScreenState extends State<SpotifyScreen> {
   final SpotifyService _spotifyService = SpotifyService();
   late final Future<bool> _done;
 
@@ -22,17 +23,21 @@ class _SpotifyScreenState extends State<SpotifyScreen>{
     _done = _spotifyService.init();
   }
 
-
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     var responseUri;
-    final _appBar = AppBar(
+    final _appBar = CustomizedAppBar(
       title: AutoSizeText(
         S.of(context).SpotyTitle,
         textAlign: TextAlign.center,
         style: TextStyle(fontSize: 30),
       ),
-      backgroundColor: Colors.lightGreen,
+      leading: IconButton(
+        icon: Icon(Icons.arrow_back, color: Theme.of(context).iconTheme.color!),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      ),
     );
     final _screenHeight = MediaQuery.of(context).size.height;
     final _screenWidth = MediaQuery.of(context).size.width;
@@ -41,7 +46,7 @@ class _SpotifyScreenState extends State<SpotifyScreen>{
     final _height = _screenHeight - _appBarHeight - _statusBarHeight;
 
     return Scaffold(
-      backgroundColor: Color (0xFF101010),
+      backgroundColor: Theme.of(context).backgroundColor,
       appBar: _appBar,
       body: Container(
         width: _screenWidth,
@@ -50,7 +55,7 @@ class _SpotifyScreenState extends State<SpotifyScreen>{
           future: _done,
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             Widget child;
-            if (snapshot.connectionState == ConnectionState.done){
+            if (snapshot.connectionState == ConnectionState.done) {
               print(snapshot);
               child = WebView(
                 javascriptMode: JavascriptMode.unrestricted,
@@ -68,8 +73,7 @@ class _SpotifyScreenState extends State<SpotifyScreen>{
               );
 
               return child;
-            }
-            else{
+            } else {
               return const Center(
                 child: CircularProgressIndicator(
                   color: Colors.lightGreen,
@@ -82,7 +86,7 @@ class _SpotifyScreenState extends State<SpotifyScreen>{
     );
   }
 
-  Future<void> _handleResponse(responseUri) async{
+  Future<void> _handleResponse(responseUri) async {
     _spotifyService.handleResponse(Uri.parse(responseUri), context);
   }
 }

@@ -12,14 +12,14 @@ import 'package:flutter/material.dart';
 import '../../generated/l10n.dart';
 import '../../models/quiz.dart';
 
-class QuizScreen extends StatefulWidget {
-  QuizScreen({super.key});
+class BestQuiz extends StatefulWidget {
+  BestQuiz({super.key});
 
   @override
-  State<StatefulWidget> createState() => QuizScreenState();
+  State<StatefulWidget> createState() => BestQuizState();
 }
 
-class QuizScreenState extends State<QuizScreen> {
+class BestQuizState extends State<BestQuiz> {
   Quiz quiz = Quiz();
   late Future<bool> done;
 
@@ -33,19 +33,16 @@ class QuizScreenState extends State<QuizScreen> {
     final _appBar = CustomizedAppBar(
         title: AutoSizeText(
           S.of(context).BestQuizTitle,
-          style: const TextStyle(fontSize: 30, color: Colors.lightGreen),
+          style: TextStyle(fontSize: 30, color: Theme.of(context).textTheme.headline1?.color),
         ),
-        actions: [],
-        leading:
-          IconButton(
-            icon: Icon(Icons.arrow_back,
-                color: Theme.of(context).iconTheme.color),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          )
-        );
-    Color? textColor = Theme.of(context).textTheme.bodyText1?.color;
+        leading: IconButton(
+          icon:
+              Icon(Icons.arrow_back, color: Theme.of(context).iconTheme.color),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ));
+    Color? textColor = Theme.of(context).textTheme.headline1?.color;
     final _appBarHeight = _appBar.preferredSize.height;
     final _screenHeight = MediaQuery.of(context).size.height;
     final _screenWidth = MediaQuery.of(context).size.width;

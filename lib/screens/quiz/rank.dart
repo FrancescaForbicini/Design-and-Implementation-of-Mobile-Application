@@ -14,20 +14,19 @@ import '../../generated/l10n.dart';
 import '../../models/player.dart';
 import 'local_rank.dart';
 
-class Rank extends StatelessWidget{
+class Rank extends StatelessWidget {
   final Player currentUser;
+
   const Rank({required this.currentUser, super.key});
 
   @override
   Widget build(BuildContext context) {
     final _appBar = CustomizedAppBar(
-
       leading: IconButton(
-        icon: Icon(Icons.arrow_back, color: Colors.lightGreen, size: 30),
-        onPressed: () =>
-        {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => UserProfile()))
+        icon: Icon(Icons.arrow_back,
+            color: Theme.of(context).iconTheme.color, size: 30),
+        onPressed: () => {
+          Navigator.pop(context),
         },
       ),
       title: AutoSizeText(
@@ -36,16 +35,19 @@ class Rank extends StatelessWidget{
         style: const TextStyle(fontSize: 30),
       ),
       bottom: TabBar(
-        indicatorColor: Theme.of(context).iconTheme.color,
-        tabs: <Widget>[
-          Tab(
-            icon: Icon(FontAwesomeIcons.earthAmericas,color: Theme.of(context).iconTheme.color,),
-          ),
-          Tab(
-            icon: Icon(Icons.pin_drop,color: Theme.of(context).iconTheme.color),
-          )
-        ]
-      ), actions: [],
+          indicatorColor: Theme.of(context).iconTheme.color,
+          tabs: <Widget>[
+            Tab(
+              icon: Icon(
+                FontAwesomeIcons.earthAmericas,
+                color: Theme.of(context).iconTheme.color,
+              ),
+            ),
+            Tab(
+              icon: Icon(Icons.pin_drop,
+                  color: Theme.of(context).iconTheme.color),
+            )
+          ]),
     );
 
     final _screenHeight = MediaQuery.of(context).size.height;
@@ -55,19 +57,25 @@ class Rank extends StatelessWidget{
     final _height = _screenHeight - _appBarHeight - _statusBarHeight;
 
     return DefaultTabController(
-      initialIndex: 0,
-      length: 2,
-      child: Scaffold(
-        backgroundColor: Theme.of(context).backgroundColor,
-        appBar: _appBar,
-        body: TabBarView(
-          children: <Widget>[
-            GlobalRank(currentUser: currentUser, height: _height, width: _screenWidth,),
-            LocalRank(currentUser: currentUser, height: _height, width: _screenWidth,),
-          ],
-        ),
-      )
-    );
+        initialIndex: 0,
+        length: 2,
+        child: Scaffold(
+          backgroundColor: Theme.of(context).backgroundColor,
+          appBar: _appBar,
+          body: TabBarView(
+            children: <Widget>[
+              GlobalRank(
+                currentUser: currentUser,
+                height: _height,
+                width: _screenWidth,
+              ),
+              LocalRank(
+                currentUser: currentUser,
+                height: _height,
+                width: _screenWidth,
+              ),
+            ],
+          ),
+        ));
   }
-
 }

@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
+import '../../../customized_app_bar.dart';
 import '../../../generated/l10n.dart';
 import '../../../services/authentication_service.dart';
 
@@ -43,8 +44,7 @@ class SignUpScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _appBar = AppBar(
-      backgroundColor: Color (0xFF101010),
+    final _appBar = CustomizedAppBar(
       leading: IconButton(
         icon: Icon(Icons.arrow_back, color: Colors.lightGreen,size: 30),
         onPressed: () => {
@@ -62,10 +62,11 @@ class SignUpScreen extends StatelessWidget {
     final _appBarHeight = _appBar.preferredSize.height;
     final _statusBarHeight = MediaQuery.of(context).padding.top;
     final _height = _screenHeight - _appBarHeight - _statusBarHeight;
+    Color? textColor;
 
     return Scaffold(
         appBar: _appBar,
-        backgroundColor: Color (0xFF101010),
+        backgroundColor: Theme.of(context).backgroundColor,
         body: Container(
           height: _height,
           width: _screenWidth,
@@ -109,14 +110,13 @@ class SignUpScreen extends StatelessWidget {
             labelText: S.of(context).SignupEmail,
             filled: true,
             icon: const Icon(Icons.email, color: Colors.lightGreen,),
-            enabledBorder: const OutlineInputBorder(
+            enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(
-                  color: Colors.lightGreen,
+                  color: Theme.of(context).iconTheme.color!,
                   width: 2.0
               )
           ),
           labelStyle: const TextStyle(
-              color: Colors.white,
               fontSize: 18.0,
               fontWeight: FontWeight.w400 ,
               fontFamily: 'Calibri')
@@ -133,14 +133,13 @@ class SignUpScreen extends StatelessWidget {
           labelText: S.of(context).SignupPwd,
           filled: true,
           icon: const Icon(Icons.key, color: Colors.lightGreen),
-          enabledBorder: const OutlineInputBorder(
+          enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(
-                  color: Colors.lightGreen,
+                  color: Theme.of(context).iconTheme.color!,
                   width: 2.0
             )
           ),
           labelStyle: const TextStyle(
-              color: Colors.white,
               fontSize: 18.0,
               fontWeight: FontWeight.w400 ,
               fontFamily: 'Calibri')
@@ -157,15 +156,14 @@ class SignUpScreen extends StatelessWidget {
       decoration: InputDecoration(
           labelText: S.of(context).SignupConfirmPwd,
           filled: true,
-          icon: const Icon(Icons.key, color: Colors.lightGreen,),
-          enabledBorder: const OutlineInputBorder(
+          icon: Icon(Icons.key, color: Theme.of(context).iconTheme.color,),
+          enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(
-                  color: Colors.lightGreen,
+                  color: Theme.of(context).iconTheme.color!,
                   width: 2.0
               )
           ),
           labelStyle: const TextStyle(
-              color: Colors.white,
               fontSize: 18.0,
               fontWeight: FontWeight.w400 ,
               fontFamily: 'Calibri')
@@ -183,15 +181,14 @@ class SignUpScreen extends StatelessWidget {
       decoration: InputDecoration(
           labelText: S.of(context).SignupUser,
           filled: true,
-          icon: const Icon(Icons.person, color: Colors.lightGreen),
-          enabledBorder: const OutlineInputBorder(
+          icon: Icon(Icons.person, color: Theme.of(context).iconTheme.color!),
+          enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(
-                  color: Colors.lightGreen,
+                  color: Theme.of(context).iconTheme.color!,
                   width: 2.0
               )
           ),
           labelStyle: const TextStyle(
-              color: Colors.white,
               fontSize: 18.0,
               fontWeight: FontWeight.w400 ,
               fontFamily: 'Calibri')

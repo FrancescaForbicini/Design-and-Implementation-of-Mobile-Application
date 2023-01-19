@@ -5,7 +5,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dima_project/customized_app_bar.dart';
 import 'package:dima_project/screens/home/home_screen.dart';
-import 'package:dima_project/screens/quiz/quiz_screen.dart';
+import 'package:dima_project/screens/quiz/best_quiz_screen.dart';
 import 'package:dima_project/services/authentication_service.dart';
 import 'package:dima_project/screens/quiz/quiz_generator.dart';
 import 'package:dima_project/services/spotify_service.dart';
@@ -67,7 +67,7 @@ class _UserProfileState extends State<UserProfile> {
   Widget build(BuildContext context) {
     Color iconColor = Theme.of(context).iconTheme.color!;
     Color backgroundColor = Theme.of(context).backgroundColor;
-    Color? textColor = Theme.of(context).textTheme.bodyText1?.color;
+    Color? textColor = Theme.of(context).textTheme.headline1?.color;
     final _appBar = CustomizedAppBar(
       leading: IconButton(
         icon: Icon(
@@ -228,7 +228,7 @@ class _UserProfileState extends State<UserProfile> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => QuizScreen(),
+                                  builder: (context) => BestQuiz(),
                                 ),
                               );
                             },
