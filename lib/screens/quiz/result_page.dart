@@ -32,7 +32,7 @@ class ResultPage extends StatefulWidget {
 
 class _ResultPageState extends State<ResultPage> {
   String? image;
-  String? position;
+  List<String>? position;
   var username;
   late int bestScore;
   late Future<bool> done;
@@ -165,7 +165,8 @@ class _ResultPageState extends State<ResultPage> {
           position = await AcquirePosition().getPosition();
           if (position != null) {
             setState(() {
-              quiz.position = position!;
+              quiz.country = position![0];
+              quiz.position = position![1];
               savedPosition = true;
             });
           }
@@ -250,9 +251,7 @@ class _ResultPageState extends State<ResultPage> {
   }
 
   Future<void> updateScore(int score) async {
-    final SpotifyService _spotifyService = SpotifyService();
     var user = FirebaseAuth.instance.currentUser;
-    //var userSpotify = await _spotifyService.spotify.me.get();
 
     final docRef =
     FirebaseFirestore.instance.collection("users").doc(user?.email);
@@ -261,7 +260,6 @@ class _ResultPageState extends State<ResultPage> {
     });
     var data = await docRef.get();
     var username = data['username'];
-    //print("username: $username");
 
     final docQuiz = FirebaseFirestore.instance.collection("quiz").doc(
           user?.email);
@@ -269,7 +267,8 @@ class _ResultPageState extends State<ResultPage> {
         "username": username,
         "score": score,
         "image": image,
-        "position": position,
+        "country": position![0],
+        "position": position![1],
       });
     }
 }

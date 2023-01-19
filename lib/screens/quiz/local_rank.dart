@@ -36,8 +36,10 @@ class _LocalRankState extends State<LocalRank>{
   }
 
   Future<bool> retrieveBestPLayers() async{
-    var position = await AcquirePosition().getPosition();
-    QuerySnapshot<Map<String, dynamic>> snap = await FirebaseFirestore.instance.collection("quiz").where("position", isEqualTo: position?.toUpperCase()).orderBy("score",descending: true).get();
+    List<String>? position = await AcquirePosition().getPosition();
+    var country = position![0].toUpperCase();
+    QuerySnapshot<Map<String, dynamic>> snap = await FirebaseFirestore.instance.collection("quiz").where("country", isEqualTo: country).orderBy("score",descending: true).get();
+
     List<DocumentSnapshot> items = snap.docs.toList(); // List of Documents
     for (int i = 0; i < items.length; i++ ){
       DocumentSnapshot item = items[i];
@@ -62,7 +64,6 @@ class _LocalRankState extends State<LocalRank>{
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if(snapshot.hasData && snapshot.connectionState == ConnectionState.done){
           if (bestPlayersUsername.isEmpty) {
-            //print("NO USERS");
             return Center(
                 child: AutoSizeText(
                   S.of(context).GlobalErr,

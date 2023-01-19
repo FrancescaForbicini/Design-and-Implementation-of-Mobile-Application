@@ -41,7 +41,7 @@ class _GlobalRankState extends State<GlobalRank>{
       DocumentSnapshot item = items[i];
       bestPlayersUsername.add(item["username"]);
       bestPlayerPoints.add(item["score"].toString());
-      bestPlayerLocation.add(item["position"].toString());
+      bestPlayerLocation.add(item["country"].toString());
     }
     return true;
   }
