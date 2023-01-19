@@ -60,6 +60,15 @@ class S {
     );
   }
 
+  String get NoQuizPresent {
+    return Intl.message(
+      'You have not done any quiz',
+      name: 'NoQuizPresent',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Password cannot be empty or shorter than 6 characters`
   String get SignupErrPwd {
     return Intl.message(

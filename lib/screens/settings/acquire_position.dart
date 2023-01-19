@@ -62,25 +62,18 @@ class AcquirePosition {
   }
 
   Future<List<String>?> getPosition() async {
-    print("ciao");
     serviceEnabled = await getPermission();
     if (!serviceEnabled) {
-      print("CISOO");
       return null;
     }
-    print("ADDIO");
     await _getCurrentPosition();
-    print("sss");
-    print(_currentPosition);
     await placemarkFromCoordinates(
         _currentPosition!.latitude, _currentPosition!.longitude)
         .then((List<Placemark> placemarks) {
       Placemark place = placemarks[0];
-      print("AAA");
       _currentAddress = [];
-      print(place.isoCountryCode!);
       _currentAddress!.add(place.isoCountryCode!);
-      _currentAddress!.add("${place.administrativeArea!} + ${place.country}");
+      _currentAddress!.add("${place.administrativeArea!} , ${place.country}");
     }).catchError((e) {
       debugPrint(e);
     });

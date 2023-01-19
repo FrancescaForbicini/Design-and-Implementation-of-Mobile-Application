@@ -52,43 +52,58 @@ class QuizScreenState extends State<QuizScreen>{
         future: getBestQuiz(),
         builder: (BuildContext context, AsyncSnapshot<Quiz> snapshot) {
           if (snapshot.hasData && snapshot.connectionState == ConnectionState.done ){
-            print("image"+quiz.image.toString());
             return Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 AutoSizeText(
                   S.of(context).BestQuizScore,
-                  style: const TextStyle(color: Colors.lightGreen,fontSize: 30,fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontSize: _screenWidth > _height
+                          ? _screenWidth / 40
+                          : _height / 25,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.lightGreen,
+                    ),
                 ),
                 AutoSizeText("${snapshot.data!.score}",
-                  style: const TextStyle(color: Colors.lightGreen,fontSize: 40,fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontSize: _screenWidth > _height
+                        ? _screenWidth / 20
+                        : _height / 15,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.lightGreen,
+                  ),
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    CircleAvatar(
-                      backgroundColor: const Color(0xFF101010),
-                      minRadius: radius,
-                      child: CircleAvatar(
-                        backgroundColor: Colors.transparent,
-                        radius: radius - 10 > 0 ? radius - 10 : 5.0,
-                        backgroundImage: Image.file(snapshot.data!.getFileImage()).image,
-                      ),
-                    ),
-                    AutoSizeText("${snapshot.data!.position}",
-                      style: const TextStyle(color: Colors.lightGreen,fontSize: 40,fontWeight: FontWeight.bold),
-                    ),
-                  ]
+                CircleAvatar(
+                  backgroundColor: Colors.transparent,
+                  minRadius: radius,
+                  child: CircleAvatar(
+                    backgroundColor: Colors.transparent,
+                    radius: radius - 10 > 0 ? radius - 10 : 5.0,
+                    backgroundImage:  Image.file(snapshot.data!.getFileImage()).image,
+                  ),
+                ),
+
+
+
+                AutoSizeText(
+                  snapshot.data!.position,
+                  style: TextStyle(
+                    fontSize: _screenWidth > _height
+                        ? _screenWidth / 40
+                        : _height / 25,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.lightGreen,
+                  ),
                 ),
               ],
             );
           }
           else{
-            return const Center(
-              child: CircularProgressIndicator(
-                backgroundColor: Colors.lightGreen,
+            return  Center(
+              child: AutoSizeText(S.of(context).NoQuizPresent,
+                style: const TextStyle(color: Colors.lightGreen,fontSize: 30,fontWeight: FontWeight.bold),
               ),
             );
           }
