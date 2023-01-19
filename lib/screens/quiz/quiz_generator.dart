@@ -11,6 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:just_audio/just_audio.dart';
 /*import 'package:quiz_view/quiz_view.dart';*/
 
+import '../../customized_app_bar.dart';
 import '../../generated/l10n.dart';
 import '../../models/question.dart';
 import 'quiz_view.dart';
@@ -24,12 +25,19 @@ class QuizGenerator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _appBar = AppBar(
-      backgroundColor: const Color(0xFF101010),
+    final _appBar = CustomizedAppBar(
       title: AutoSizeText(
         S.of(context).QuizGenTitle,
         style: const TextStyle(color: Colors.lightGreen, fontSize: 30),
       ),
+      leading: IconButton(
+        icon: Icon(Icons.arrow_back,
+            color: Theme.of(context).iconTheme.color),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      ),
+      actions:[],
     );
     final _screenHeight = MediaQuery.of(context).size.height;
     final _screenWidth = MediaQuery.of(context).size.width;
@@ -121,7 +129,7 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
     return Container(
       width: widget.width,
       height: widget.height,
-      color: Color (0xFF101010),
+      color: Theme.of(context).backgroundColor,
       //padding: const EdgeInsets.all(25),
       child: FutureBuilder(
           future: _done,

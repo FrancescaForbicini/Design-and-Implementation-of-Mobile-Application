@@ -14,9 +14,7 @@ import 'firebase_options.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'generated/l10n.dart';
 
-
-
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -24,7 +22,6 @@ void main() async{
 
   runApp(const MyApp());
 }
-
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -41,12 +38,40 @@ class MyApp extends StatelessWidget {
       ],
       supportedLocales: S.delegate.supportedLocales,
       home: MyHomePage(),
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.lightGreen,
+          brightness: Brightness.light,
+        ),
+        textTheme: const TextTheme(headline1: TextStyle(color: Colors.black)),
+        buttonTheme: const ButtonThemeData(buttonColor: Colors.lightGreen),
+        iconTheme: const IconThemeData(color: Colors.lightGreen),
+        backgroundColor: Colors.white,
+        useMaterial3: true,
+      ),
+      darkTheme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor:  const Color(0xFF101010),
+          brightness: Brightness.dark,
+        ),
+        backgroundColor: const Color(0xFF101010),
+        textTheme: const TextTheme(
+            headline1: TextStyle(color: Colors.lightGreen),
+            bodyText1: TextStyle(color: Colors.lightGreen),),
+        buttonTheme: const ButtonThemeData(buttonColor: Colors.lightGreen),
+        iconTheme: const IconThemeData(color: Colors.lightGreen),
+        primaryColor: Colors.lightGreen,
+
+        useMaterial3: true,
+      ),
+      themeMode: ThemeMode.system,
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({super.key});
+
   var currUser = null;
 
   @override
@@ -58,10 +83,10 @@ class _MyHomePageState extends State<MyHomePage> {
   var _tokenOk = true;
   SpotifyService _spotifyService = SpotifyService();
 
-  Future<bool> _checkLogin() async{
+  Future<bool> _checkLogin() async {
     print("First line of check login");
     await _checkFirebaseAuth();
-    if(widget.currUser != null){
+    if (widget.currUser != null) {
       print("Ready to wait for Spotify");
       await _initSpotify();
       print("Finished waiting Spotify");
@@ -70,32 +95,30 @@ class _MyHomePageState extends State<MyHomePage> {
     return true;
   }
 
-  Future<void> _checkFirebaseAuth() async{
-    FirebaseAuth.instance
-        .authStateChanges()
-        .listen((User? user) {
+  Future<void> _checkFirebaseAuth() async {
+    FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if (user != null) {
         print("user: ${user.email}");
         widget.currUser = user;
-      }
-      else{
+      } else {
         print("No user authenticated");
       }
     });
   }
 
-  Future<void> _initSpotify() async{
+  Future<void> _initSpotify() async {
     print("First line of init Spotify");
     print("Current user: ${widget.currUser.email}");
-    spotify_dart.SpotifyApiCredentials spotifyCredentials = await _spotifyService.getCredentials(widget.currUser);
+    spotify_dart.SpotifyApiCredentials spotifyCredentials =
+        await _spotifyService.getCredentials(widget.currUser);
     print("Got the credentials");
     _spotifyService.spotify = spotify_dart.SpotifyApi(spotifyCredentials);
     print("Created API");
-    try{
+    try {
       _spotifyService.spotify.me.get();
       _spotifyService.saveCredentials();
       print("Saved credentials");
-    }catch (e){
+    } catch (e) {
       _tokenOk = false;
     }
   }
@@ -114,23 +137,21 @@ class _MyHomePageState extends State<MyHomePage> {
           future: _done,
           builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
             Widget child;
-            if (snapshot.hasData && snapshot.connectionState == ConnectionState.done){
-              if (widget.currUser == null || !_tokenOk){
+            if (snapshot.hasData &&
+                snapshot.connectionState == ConnectionState.done) {
+              if (widget.currUser == null || !_tokenOk) {
                 child = AuthenticationScreen();
-              }
-              else{
-                if (_spotifyService.spotify!=null){
+              } else {
+                if (_spotifyService.spotify != null) {
                   print("Spotify ok");
                   child = HomeScreen();
-                }
-                else{
+                } else {
                   print("HERE THE PROBLEM");
                   child = AuthenticationScreen();
                 }
               }
               return child;
-            }
-            else {
+            } else {
               return Center(
                 child: CircularProgressIndicator(
                   color: Colors.lightGreen,
@@ -138,7 +159,6 @@ class _MyHomePageState extends State<MyHomePage> {
               );
             }
           },
-        )
-    );
+        ));
   }
 }

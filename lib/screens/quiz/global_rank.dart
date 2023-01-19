@@ -1,8 +1,6 @@
-import 'dart:math';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dima_project/screens/profile/userprofile_screen.dart';
 import 'package:flag/flag_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +25,9 @@ class _GlobalRankState extends State<GlobalRank>{
   List bestPlayerPoints = [];
   List bestPlayerLocation = [];
   late Future<bool> done;
+  Color colorBox = Colors.lightGreen;
+
+
 
   @override
   void initState() {
@@ -50,7 +51,7 @@ class _GlobalRankState extends State<GlobalRank>{
   Widget build(BuildContext context) {
 
     const TextStyle textStyle = TextStyle(
-      color: Colors.green,
+      //color: Colors.green,
       fontSize: 20,
       fontWeight: FontWeight.bold,
       wordSpacing: 10
@@ -96,7 +97,12 @@ class _GlobalRankState extends State<GlobalRank>{
     int pos = idx + 1;
     Widget crown;
 
+    colorBox = Colors.lightGreen;
+
     if(pos == 1){
+
+      colorBox = Colors.green;
+
       crown = Padding(
         padding: const EdgeInsets.only(right: 0.0),
         child: Stack(
@@ -112,6 +118,7 @@ class _GlobalRankState extends State<GlobalRank>{
       );
     }
     else if(pos == 2){
+
       crown = Padding(
         padding: const EdgeInsets.only(right: 0.0),
         child: Stack(
@@ -155,13 +162,15 @@ class _GlobalRankState extends State<GlobalRank>{
         ),
       );
     }
+    if (isPresent(idx))
+      colorBox = Colors.amber;
 
     return Padding(
       padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 10.0),
       child: Container(
         height: height > width ? height * 0.1 : width * 0.1,
         decoration: BoxDecoration(
-          color: Colors.lightGreen,
+          color: colorBox,
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
           boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 5.0)]
         ),
@@ -241,6 +250,10 @@ class _GlobalRankState extends State<GlobalRank>{
         ),
       ),
     );
+  }
+
+  bool isPresent(int index){
+    return bestPlayersUsername[index] == widget.currentUser.username ;
   }
 
 }

@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../customized_app_bar.dart';
 import '../../generated/l10n.dart';
 import '../../models/player.dart';
 import 'local_rank.dart';
@@ -19,8 +20,8 @@ class Rank extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    final _appBar = AppBar(
-      backgroundColor: Color(0xFF101010),
+    final _appBar = CustomizedAppBar(
+
       leading: IconButton(
         icon: Icon(Icons.arrow_back, color: Colors.lightGreen, size: 30),
         onPressed: () =>
@@ -34,16 +35,17 @@ class Rank extends StatelessWidget{
         textAlign: TextAlign.center,
         style: const TextStyle(fontSize: 30),
       ),
-      bottom: const TabBar(
+      bottom: TabBar(
+        indicatorColor: Theme.of(context).iconTheme.color,
         tabs: <Widget>[
           Tab(
-            icon: Icon(FontAwesomeIcons.earthAmericas),
+            icon: Icon(FontAwesomeIcons.earthAmericas,color: Theme.of(context).iconTheme.color,),
           ),
           Tab(
-            icon: Icon(Icons.pin_drop),
+            icon: Icon(Icons.pin_drop,color: Theme.of(context).iconTheme.color),
           )
         ]
-      ),
+      ), actions: [],
     );
 
     final _screenHeight = MediaQuery.of(context).size.height;
@@ -56,7 +58,7 @@ class Rank extends StatelessWidget{
       initialIndex: 0,
       length: 2,
       child: Scaffold(
-        backgroundColor: const Color(0xFF101010),
+        backgroundColor: Theme.of(context).backgroundColor,
         appBar: _appBar,
         body: TabBarView(
           children: <Widget>[

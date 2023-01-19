@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dima_project/customized_app_bar.dart';
 import 'package:dima_project/screens/home/home_screen.dart';
 import 'package:dima_project/screens/quiz/quiz_screen.dart';
 import 'package:dima_project/services/authentication_service.dart';
@@ -19,7 +20,7 @@ import '../quiz/global_rank.dart';
 import '../quiz/rank.dart';
 import '../settings/acquire_image.dart';
 
-class UserProfile extends StatefulWidget{
+class UserProfile extends StatefulWidget {
   UserProfile({super.key});
 
   @override
@@ -37,10 +38,11 @@ class _UserProfileState extends State<UserProfile> {
     _done = _getUserData();
   }
 
-  Future<bool> _getUserData() async{
+  Future<bool> _getUserData() async {
     var _user;
     _user = FirebaseAuth.instance.currentUser;
-    final docRef = FirebaseFirestore.instance.collection("users").doc(_user?.email);
+    final docRef =
+        FirebaseFirestore.instance.collection("users").doc(_user?.email);
     var data = await docRef.get();
     var _spotiUser = await _spotifyService.spotify.me.get();
     var _photoRef = _spotiUser.images;
@@ -50,13 +52,11 @@ class _UserProfileState extends State<UserProfile> {
 
     currentUser.username = data['username'];
 
-    if(_photo != null){
+    if (_photo != null) {
       currentUser.image = Image.file(File(_photo)).image;
-    }
-    else if (!_photoRef.isEmpty){
+    } else if (!_photoRef.isEmpty) {
       currentUser.image = Image.network(_photoRef[0].url).image;
-    }
-    else{
+    } else {
       currentUser.image = Image.asset('images/wolf_user.png').image;
     }
     currentUser.bestScore = await getBestScore();
@@ -65,20 +65,28 @@ class _UserProfileState extends State<UserProfile> {
 
   @override
   Widget build(BuildContext context) {
-    final _appBar = AppBar(
-      backgroundColor: Color (0xFF101010),
+    Color iconColor = Theme.of(context).iconTheme.color!;
+    Color backgroundColor = Theme.of(context).backgroundColor;
+    Color? textColor = Theme.of(context).textTheme.bodyText1?.color;
+    final _appBar = CustomizedAppBar(
       leading: IconButton(
-        icon: Icon(Icons.logout, color: Colors.lightGreen,size: 30),
+        icon: Icon(
+          Icons.logout,
+          size: 30,
+          color: Theme.of(context).iconTheme.color,
+        ),
         onPressed: () => {
           _authenticationService.signOut(),
-          Navigator.push(context, MaterialPageRoute(builder: (context) => AuthenticationScreen()))
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => AuthenticationScreen()))
         },
       ),
       actions: [
-        IconButton(icon: Icon(Icons.home, color: Colors.lightGreen,size: 30),
-            onPressed:(){ Navigator.push(context,
-                MaterialPageRoute(
-                    builder: (context) => HomeScreen()));
+        IconButton(
+            icon: Icon(Icons.home, size: 30, color: iconColor),
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => HomeScreen()));
             }),
       ],
       title: AutoSizeText(
@@ -87,6 +95,7 @@ class _UserProfileState extends State<UserProfile> {
         style: const TextStyle(fontSize: 30),
       ),
     );
+
     final _screenHeight = MediaQuery.of(context).size.height;
     final _screenWidth = MediaQuery.of(context).size.width;
     final _appBarHeight = _appBar.preferredSize.height;
@@ -96,175 +105,180 @@ class _UserProfileState extends State<UserProfile> {
     late var image;
 
     return Scaffold(
-      backgroundColor: Color(0xFF101010),
-      appBar: _appBar,
-
-      body: FutureBuilder(
-          future: _done,
-          builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-            Widget child;
-            if (snapshot.hasData && snapshot.connectionState == ConnectionState.done){
-              child = ListView(
-                children: <Widget>[
-                  Container(
-                    height: _height * 0.5,
-                    width: _screenWidth,
-                    decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [Colors.green, Colors.lightGreen],
-                          begin: Alignment.centerLeft,
-                          end: Alignment.centerRight,
-                          stops: [0.5, 0.9],
-                        )
-                    ),
-
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Stack(
-                          fit: StackFit.passthrough,
-                          children: [
-                            CircleAvatar(
-                              backgroundColor: Colors.transparent,
-                              minRadius: radius,
-                              child: CircleAvatar(
+        backgroundColor: backgroundColor,
+        appBar: _appBar,
+        body: FutureBuilder(
+            future: _done,
+            builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+              Widget child;
+              if (snapshot.hasData &&
+                  snapshot.connectionState == ConnectionState.done) {
+                child = ListView(
+                  children: <Widget>[
+                    Container(
+                      height: _height * 0.5,
+                      width: _screenWidth,
+                      decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                        colors: [Colors.green, Colors.lightGreen],
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                        stops: [0.5, 0.9],
+                      )),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Stack(
+                            fit: StackFit.passthrough,
+                            children: [
+                              CircleAvatar(
                                 backgroundColor: Colors.transparent,
-                                radius: radius - 10 > 0 ? radius - 10 : 5.0,
-                                backgroundImage: currentUser.image,
-                              ),
-                            ),
-                            Positioned(
-                              right: _height > _screenWidth ? _screenWidth * 0.5 - radius : _screenWidth * 0.5 - 1.2 * radius,
-                              bottom: 0,
-                              child: IconButton(
-                                iconSize: radius - 10 > 0 ? (radius - 10) * 0.5 : 2.5,
-                                icon: const Icon(
-                                  Icons.edit,
-                                  color: Color(0xFF101010),
+                                minRadius: radius,
+                                child: CircleAvatar(
+                                  backgroundColor: Colors.transparent,
+                                  radius: radius - 10 > 0 ? radius - 10 : 5.0,
+                                  backgroundImage: currentUser.image,
                                 ),
-                                onPressed: () async {
-                                  image = (await AcquireImage().getImageFromCamera())!;
-                                  if (image != null) {
-                                    await _authenticationService.changeUserImage(image);
-                                  }
-                                },
+                              ),
+                              Positioned(
+                                right: _height > _screenWidth
+                                    ? _screenWidth * 0.5 - radius
+                                    : _screenWidth * 0.5 - 1.2 * radius,
+                                bottom: 0,
+                                child: IconButton(
+                                  iconSize: radius - 10 > 0
+                                      ? (radius - 10) * 0.5
+                                      : 2.5,
+                                  icon: const Icon(
+                                    Icons.edit,
+                                    color: Color(0xFF101010),
+                                  ),
+                                  onPressed: () async {
+                                    image = (await AcquireImage()
+                                        .getImageFromCamera())!;
+                                    if (image != null) {
+                                      await _authenticationService
+                                          .changeUserImage(image);
+                                    }
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                          AutoSizeText(
+                            currentUser.username,
+                            style: TextStyle(
+                              fontSize: _screenWidth > _height
+                                  ? _screenWidth / 40
+                                  : _height / 25,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF101010),
+                            ),
+                          ),
+                          AutoSizeText(
+                            S.of(context).UserBestScore(currentUser.bestScore),
+                            style: TextStyle(
+                              fontSize: _screenWidth > _height
+                                  ? _screenWidth / 60
+                                  : _height / 40,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF101010),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      height: _screenHeight * 0.5,
+                      width: _screenWidth,
+                      child: Column(
+                        children: <Widget>[
+                          ListTile(
+                            title: AutoSizeText(
+                              S.of(context).UserEmail,
+                              style:  TextStyle(
+                                color: textColor,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                          ],
-                        ),
-                        AutoSizeText(
-                          currentUser.username,
-                          style: TextStyle(
-                            fontSize: _screenWidth > _height
-                                ? _screenWidth / 40
-                                : _height / 25,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF101010),
+                            subtitle: AutoSizeText(
+                              currentUser.email,
+                              style:  TextStyle(
+                                fontSize: 16,
+                                color: textColor,
+                              ),
+                            ),
                           ),
-                        ),
-                        AutoSizeText(
-                          S.of(context).UserBestScore(currentUser.bestScore),
-                          style: TextStyle(
-                            fontSize: _screenWidth > _height
-                                ? _screenWidth / 60
-                                : _height / 40,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF101010),
+                          ListTile(
+                            title: AutoSizeText(
+                              S.of(context).UserQuiz,
+                              style: TextStyle(
+                                color: textColor,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            leading: Icon(
+                              Icons.queue_music_outlined,
+                              color: iconColor,
+                            ),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => QuizScreen(),
+                                ),
+                              );
+                            },
                           ),
-                        ),
-
-                      ],
-                    ),
+                          ListTile(
+                            title: AutoSizeText(
+                              S.of(context).UserRank,
+                              style:  TextStyle(
+                                color: textColor,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            leading: Icon(
+                              Icons.list_alt_outlined,
+                              color: iconColor,
+                            ),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      Rank(currentUser: currentUser),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                );
+                return child;
+              } else {
+                return const Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.lightGreen,
                   ),
-                  Container(
-                    height: _screenHeight * 0.5,
-                    width: _screenWidth,
-                    child: Column(
-                      children: <Widget>[
-                        ListTile(
-                          title: AutoSizeText(
-                            S.of(context).UserEmail,
-                            style: const TextStyle(
-                              color: Colors.green,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          subtitle: AutoSizeText(
-                            currentUser.email,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.lightGreen,
-                            ),
-                          ),
-                        ),
-
-                        ListTile(
-                          title: AutoSizeText(
-                            S.of(context).UserQuiz,
-                            style: const TextStyle(
-                              color: Colors.green,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          leading: const Icon(Icons.queue_music_outlined, color: Colors.lightGreen),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => QuizScreen(),
-                              ),
-                            );
-                          },
-                        ),
-                        ListTile(
-                          title: AutoSizeText(
-                            S.of(context).UserRank,
-                            style: const TextStyle(
-                              color: Colors.green,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          leading: const Icon(Icons.list_alt_outlined, color: Colors.lightGreen),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => Rank(currentUser: currentUser),
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              );
-              return child;
-            }
-            else{
-              return const Center(
-                child: CircularProgressIndicator(
-                  color: Colors.lightGreen,
-                ),
-              );
-            }
-          }
-      )
-
-    );
+                );
+              }
+            }));
   }
-
 }
 
-Future<String> getBestScore() async{
+Future<String> getBestScore() async {
   var _user = FirebaseAuth.instance.currentUser;
   var _data;
   var _bestScore;
-  final docRef = FirebaseFirestore.instance.collection("users").doc(_user?.email);
+  final docRef =
+      FirebaseFirestore.instance.collection("users").doc(_user?.email);
   await docRef.get().then((DocumentSnapshot doc) {
     _data = doc.data() as Map<String, dynamic>;
     _bestScore = _data["bestScore"];

@@ -7,6 +7,7 @@ import 'package:dima_project/services/questions_playlist.dart';
 import 'package:dima_project/services/spotify_service.dart';
 import 'package:flutter/material.dart';
 import 'package:spotify/spotify.dart' as sp;
+import '../../customized_app_bar.dart';
 import '../../generated/l10n.dart';
 import '../quiz/quiz_generator.dart';
 
@@ -67,8 +68,8 @@ class _HomeScreenState extends State<HomeScreen>{
 
   @override
   Widget build(BuildContext context) {
-    final _appBar = AppBar(
-      backgroundColor: Color (0xFF101010),
+
+    final _appBar = CustomizedAppBar(
       leading: IconButton(
         icon: const Icon(Icons.logout, color: Colors.lightGreen,size: 30),
         onPressed: () => {
@@ -96,14 +97,14 @@ class _HomeScreenState extends State<HomeScreen>{
     final _statusBarHeight = MediaQuery.of(context).padding.top;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF101010),
       appBar: _appBar,
-
+      backgroundColor: Theme.of(context).backgroundColor,
       body: _buildHomeBody(_screenHeight - _appBarHeight - _statusBarHeight, _screenWidth, context),
     );
   }
 
   Widget _buildHomeBody(height, width, BuildContext context){
+    Color? textColor = Theme.of(context).textTheme.bodyText1?.color;
     return ListView(
       scrollDirection: Axis.vertical,
       shrinkWrap: true,
@@ -113,7 +114,6 @@ class _HomeScreenState extends State<HomeScreen>{
             left: 8.0,
             right: 8.0,
           ),
-          color: Color(0xFF101010),
           width: width,
           height: height,
           child: Column(
@@ -121,20 +121,18 @@ class _HomeScreenState extends State<HomeScreen>{
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Container(
-                color: Color(0xFF101010),
                 width: width,
                 height: height * 0.1,
                 child: AutoSizeText(
                   S.of(context).HomeStart,
-                  style: const TextStyle(
-                    color: Colors.lightGreen,
+                  style:  TextStyle(
+                    color: textColor,
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
               Container(
-                color: Color(0xFF101010),
                 width: width,
                 height: height * 0.45,
                 child: Column(
@@ -142,7 +140,6 @@ class _HomeScreenState extends State<HomeScreen>{
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Container(
-                      color: Color(0xFF101010),
                       width: width,
                       height: height * 0.05,
                       child: AutoSizeText(
@@ -155,7 +152,6 @@ class _HomeScreenState extends State<HomeScreen>{
                       ),
                     ),
                     Container(
-                      color: Color(0xFF101010),
                       width: width,
                       height: height * 0.4,
                       child: _buildPlaylists(height, width, context),
@@ -164,7 +160,6 @@ class _HomeScreenState extends State<HomeScreen>{
                 ),
               ),
               Container(
-                color: Color(0xFF101010),
                 width: width,
                 height: height * 0.45,
                 child: Column(
@@ -172,7 +167,6 @@ class _HomeScreenState extends State<HomeScreen>{
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Container(
-                      color: Color(0xFF101010),
                       width: width,
                       height: height * 0.05,
                       child: AutoSizeText(
@@ -185,7 +179,6 @@ class _HomeScreenState extends State<HomeScreen>{
                       ),
                     ),
                     Container(
-                      color: Color(0xFF101010),
                       width: width,
                       height: height * 0.4,
                       child: _buildArtists(height, width, context),
@@ -213,7 +206,6 @@ class _HomeScreenState extends State<HomeScreen>{
               itemBuilder: (context, index){
 
                 return Container(
-                  color: Color(0xFF101010),
                   width: width * 0.35,
                   height: height * 0.35,
                   child: Column(
@@ -244,8 +236,8 @@ class _HomeScreenState extends State<HomeScreen>{
                         child: AutoSizeText(
                           _playlists[index].name,
                           textAlign: TextAlign.center,
-                          style: const TextStyle(
-                              color: Colors.white,
+                          style: TextStyle(
+                              color: Theme.of(context).textTheme.bodyText2?.color,
                               fontSize: 15
                           ),
                         ),
@@ -258,14 +250,13 @@ class _HomeScreenState extends State<HomeScreen>{
           }
           else{
             child = Container(
-              color: Color(0xFF101010),
               width: width,
               height: height * 0.35,
               child: AutoSizeText(
                 S.of(context).HomeErrPlaylist,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: Colors.lightGreen,
+                  //color: Colors.lightGreen,
                   fontSize: 18,
                 ),
               ),
@@ -297,7 +288,6 @@ class _HomeScreenState extends State<HomeScreen>{
               itemCount: _artists.length,
               itemBuilder: (context, index){
                 return Container(
-                  color: const Color(0xFF101010),
                   width: width * 0.35,
                   height: height * 0.35,
                   child: Column(
@@ -328,8 +318,8 @@ class _HomeScreenState extends State<HomeScreen>{
                         child: AutoSizeText(
                           _artists[index].name,
                           textAlign: TextAlign.center,
-                          style: const TextStyle(
-                              color: Colors.white,
+                          style: TextStyle(
+                              color:Theme.of(context).textTheme.bodyText2?.color,
                               fontSize: 15
                           ),
                         ),
@@ -342,7 +332,6 @@ class _HomeScreenState extends State<HomeScreen>{
           }
           else{
             child = Container(
-              color: Color(0xFF101010),
               width: width,
               height: height * 0.35,
               child: AutoSizeText(

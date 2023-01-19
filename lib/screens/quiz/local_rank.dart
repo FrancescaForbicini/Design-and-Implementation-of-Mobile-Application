@@ -28,7 +28,7 @@ class _LocalRankState extends State<LocalRank>{
   List bestPlayersUsername = [];
   List bestPlayerPoints = [];
   late Future<bool> done;
-
+  Color colorBox = Colors.lightGreen;
   @override
   void initState() {
     done = retrieveBestPLayers();
@@ -98,7 +98,10 @@ class _LocalRankState extends State<LocalRank>{
     int pos = idx + 1;
     Widget crown;
 
+    colorBox = Colors.lightGreen;
+
     if(pos == 1){
+      colorBox = Colors.green;
       crown = Padding(
         padding: const EdgeInsets.only(right: 0.0),
         child: Stack(
@@ -158,12 +161,15 @@ class _LocalRankState extends State<LocalRank>{
       );
     }
 
+    if (isPresent(idx))
+      colorBox = Colors.amber;
+
     return Padding(
       padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 10.0),
       child: Container(
         height: height > width ? height * 0.1 : width * 0.1,
         decoration: BoxDecoration(
-            color: Colors.lightGreen,
+            color: colorBox,
             borderRadius: BorderRadius.all(Radius.circular(15.0)),
             boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 5.0)]
         ),
@@ -226,6 +232,10 @@ class _LocalRankState extends State<LocalRank>{
         ),
       ),
     );
+  }
+
+  bool isPresent(int index){
+    return bestPlayersUsername[index] == widget.currentUser.username ;
   }
 
 }
