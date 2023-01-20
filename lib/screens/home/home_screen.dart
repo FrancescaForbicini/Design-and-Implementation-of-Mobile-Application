@@ -74,6 +74,7 @@ class _HomeScreenState extends State<HomeScreen>{
         icon: const Icon(Icons.logout, color: Colors.lightGreen,size: 30),
         onPressed: () => {
           _authenticationService.signOut(),
+          Navigator.pop(context),
           Navigator.push(context, MaterialPageRoute(builder: (context) => AuthenticationScreen()))
         },
       ),

@@ -136,7 +136,6 @@ class _QuizViewState extends State<QuizView> {
         Container(
           height: widget.height > widget.width ? widget.height * 0.15 : widget.height * 0.3,
           width: widget.height > widget.width ? widget.width : widget.width * 0.45,
-          //width: MediaQuery.of(context).size.width,
           padding: EdgeInsets.all(15),
           child: ElevatedButton(
             style: ButtonStyle(

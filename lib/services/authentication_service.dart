@@ -39,8 +39,10 @@ class AuthenticationService {
       } else if (e.code == 'email-already-in-use') {
         print('The account already exists for that email.');
       }
+      return false;
     } catch (e) {
       print(e);
+      return false;
     }
     return true;
   }

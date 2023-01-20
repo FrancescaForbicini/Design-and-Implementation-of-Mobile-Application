@@ -140,7 +140,7 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
             else {
               return const Center(
                 child: CircularProgressIndicator(
-                  backgroundColor: Colors.lightGreen,
+                  color: Colors.lightGreen,
                 ),
               );
             }
@@ -179,13 +179,6 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
               physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) {
                 print(_questions[index].rightAnswer);
-/*                double h, w;
-                h = 0;
-                w = 0;
-                if (_questions[index].isPresent) {
-                  h = widget.height * 0.9 * 0.15;
-                  w = widget.height * 0.9 * 0.1;
-                }*/
                 AudioPlayer audioPlayer = AudioPlayer();
                 return QuizView(
                     image: _questions[index].url != "" ? IconButton(
@@ -199,22 +192,6 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
                           await audioPlayer.play();
                         },
                     ) : null,
-/*                  image: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      child: Ink.image(
-                        width: w,
-                        height: h,
-                        image: _questions[index].image.image,
-                      ),
-                      onTap: () async {
-                        print(_questions[index].url);
-                        await audioPlayer.setUrl(
-                            _questions[index].url);
-                        await audioPlayer.play();
-                      },
-                    ),
-                  ),*/
                   showCorrect: true,
                   answerColor: Colors.white,
                   answerBackgroundColor: const Color(0xFF101010),

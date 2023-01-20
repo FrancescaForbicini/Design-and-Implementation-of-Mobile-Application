@@ -94,7 +94,7 @@ class _ResultPageState extends State<ResultPage> {
             } else {
               return const Center(
                 child: CircularProgressIndicator(
-                  backgroundColor: Colors.lightGreen,
+                  color: Colors.lightGreen,
                 ),
               );
             }
@@ -220,6 +220,7 @@ class _ResultPageState extends State<ResultPage> {
           backgroundColor: MaterialStateColor.resolveWith(
               (states) =>  buttonColor!)),
       onPressed: () => {
+        Navigator.pop(context),
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => UserProfile()))
       },
