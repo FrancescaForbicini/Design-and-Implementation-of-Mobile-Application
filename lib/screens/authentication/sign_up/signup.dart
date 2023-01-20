@@ -77,19 +77,19 @@ class SignUpScreen extends StatelessWidget {
               children: <Widget>[
                 _buildEmailTextfield(context),
                 SizedBox(
-                  height: _height * 0.05,
+                  height: _height * 0.02,
                 ),
                 _buildUsernameTextField(context),
                 SizedBox(
-                  height: _height * 0.05,
+                  height: _height * 0.02,
                 ),
                 _buildPasswordTextfield(context),
                 SizedBox(
-                  height: _height * 0.05,
+                  height: _height * 0.02,
                 ),
                 _buildPasswordConfirmTextField(context),
                 SizedBox(
-                  height: _height * 0.05,
+                  height: _height * 0.02,
                 ),
                 _buildButton(context),
               ],
@@ -198,13 +198,55 @@ class SignUpScreen extends StatelessWidget {
 
 
   Widget _buildButton(BuildContext context) {
+    Future<bool> done;
     return MaterialButton(
         color: Colors.lightGreen,
         textColor: Colors.white,
         child: AutoSizeText(S.of(context).SignupButton),
         onPressed: () => {
           if(formGlobalKey.currentState!.validate()){
-            _authService.signUp(_emailController.text, _passwordController.text, _usernameController.text, context)
+            done = _authService.signUp(_emailController.text, _passwordController.text, _usernameController.text, context),
+            done.then((value) => {
+              if(value){
+                Navigator.pop(context),
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text(S.of(context).SignupOk),
+                      content: Text(S.of(context).SignupOkText),
+                      actions: [
+                        MaterialButton(
+                          child: Text(S.of(context).SignupOkButton),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        )
+                      ],
+                    );
+                  }
+                )
+              }
+              else{
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text(S.of(context).SignupFail),
+                        content: Text(S.of(context).SignupFailText),
+                        actions: [
+                          MaterialButton(
+                            child: Text(S.of(context).SignupFailButton),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          )
+                        ],
+                      );
+                    }
+                )
+              }
+            })
           }
         },
     );

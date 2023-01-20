@@ -63,6 +63,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "HomeStart":
             MessageLookupByLibrary.simpleMessage("Comincia un nuovo quiz!"),
         "HomeTitle": MessageLookupByLibrary.simpleMessage("La tua Home Page"),
+        "NoQuizPresent": MessageLookupByLibrary.simpleMessage(
+            "Non hai ancora finito nessun quiz!"),
         "PositionDenied": MessageLookupByLibrary.simpleMessage(
             "I permessi di localizzazione sono stati negati"),
         "PositionDisabled": MessageLookupByLibrary.simpleMessage(
@@ -125,6 +127,16 @@ class MessageLookup extends MessageLookupByLibrary {
             "Le password non corrispondono"),
         "SignupErrPwd": MessageLookupByLibrary.simpleMessage(
             "La password non può essere vuota o più corta di 6 caratteri"),
+        "SignupFail":
+            MessageLookupByLibrary.simpleMessage("Registrazione fallita!"),
+        "SignupFailButton": MessageLookupByLibrary.simpleMessage("Ok"),
+        "SignupFailText": MessageLookupByLibrary.simpleMessage(
+            "Username scelto già presente, cambia username"),
+        "SignupOk":
+            MessageLookupByLibrary.simpleMessage("Registrazione completata!"),
+        "SignupOkButton": MessageLookupByLibrary.simpleMessage("Ok"),
+        "SignupOkText": MessageLookupByLibrary.simpleMessage(
+            "Ora puoi effettuare il login"),
         "SignupPwd": MessageLookupByLibrary.simpleMessage("Password"),
         "SignupTitle": MessageLookupByLibrary.simpleMessage("Registrati"),
         "SignupUser": MessageLookupByLibrary.simpleMessage("Username"),

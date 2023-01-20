@@ -15,7 +15,13 @@ class AuthenticationService {
 
   AuthenticationService._AuthenticationServiceConstructor();
 
-  signUp(email, password, username, BuildContext context) async {
+  Future<bool> signUp(email, password, username, BuildContext context) async {
+    var isPresent = await checkUsername(username);
+
+    if (isPresent){
+      return false;
+    }
+
     try{
       final auth = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
@@ -36,17 +42,28 @@ class AuthenticationService {
     } catch (e) {
       print(e);
     }
-    Navigator.pop(context);
+    return true;
   }
 
-  _sendVerification(auth) async{
+  Future<bool> checkUsername(String username) async{
+    QuerySnapshot<Map<String, dynamic>> snap = await FirebaseFirestore.instance.collection("users").where("username", isEqualTo: username).get();
+    List<DocumentSnapshot> items = snap.docs.toList();
+
+    if (items.isNotEmpty){
+      print(items.first);
+      return true;
+    }
+    return false;
+  }
+
+/*  _sendVerification(auth) async{
     await auth.currentUser?.sendEmailVerification();
 
-/*    if (!_isEmailVerified) {
+    if (!_isEmailVerified) {
       _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
         _checkVerificationStatus(auth);
       });
-    }*/
+    }
   }
 
   _checkVerificationStatus(auth) async{
@@ -63,7 +80,7 @@ class AuthenticationService {
     if (_isEmailVerified) {
       _timer?.cancel();
     }
-  }
+  }*/
 
   Future<bool> signIn(email, password) async {
     try{

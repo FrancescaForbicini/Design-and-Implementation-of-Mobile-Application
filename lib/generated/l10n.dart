@@ -60,15 +60,6 @@ class S {
     );
   }
 
-  String get NoQuizPresent {
-    return Intl.message(
-      'You have not done any quiz',
-      name: 'NoQuizPresent',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Password cannot be empty or shorter than 6 characters`
   String get SignupErrPwd {
     return Intl.message(
@@ -154,6 +145,66 @@ class S {
     return Intl.message(
       'SIGN UP',
       name: 'SignupButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Signup completed!`
+  String get SignupOk {
+    return Intl.message(
+      'Signup completed!',
+      name: 'SignupOk',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Now you can login`
+  String get SignupOkText {
+    return Intl.message(
+      'Now you can login',
+      name: 'SignupOkText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ok`
+  String get SignupOkButton {
+    return Intl.message(
+      'Ok',
+      name: 'SignupOkButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Signup failed!`
+  String get SignupFail {
+    return Intl.message(
+      'Signup failed!',
+      name: 'SignupFail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Username already in use, please choose another one`
+  String get SignupFailText {
+    return Intl.message(
+      'Username already in use, please choose another one',
+      name: 'SignupFailText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ok`
+  String get SignupFailButton {
+    return Intl.message(
+      'Ok',
+      name: 'SignupFailButton',
       desc: '',
       args: [],
     );
@@ -574,6 +625,16 @@ class S {
     return Intl.message(
       'Your best score is ',
       name: 'BestQuizScore',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You didn't complete a quiz yet!`
+  String get NoQuizPresent {
+    return Intl.message(
+      'You didn\'t complete a quiz yet!',
+      name: 'NoQuizPresent',
       desc: '',
       args: [],
     );

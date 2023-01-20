@@ -60,6 +60,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "HomePlaylist": MessageLookupByLibrary.simpleMessage("Your playlists:"),
         "HomeStart": MessageLookupByLibrary.simpleMessage("Start a new quiz!"),
         "HomeTitle": MessageLookupByLibrary.simpleMessage("Home Page"),
+        "NoQuizPresent": MessageLookupByLibrary.simpleMessage(
+            "You didn\'t complete a quiz yet!"),
         "PositionDenied": MessageLookupByLibrary.simpleMessage(
             "Location permissions are denied"),
         "PositionDisabled": MessageLookupByLibrary.simpleMessage(
@@ -121,6 +123,14 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("The passwords do not match"),
         "SignupErrPwd": MessageLookupByLibrary.simpleMessage(
             "Password cannot be empty or shorter than 6 characters"),
+        "SignupFail": MessageLookupByLibrary.simpleMessage("Signup failed!"),
+        "SignupFailButton": MessageLookupByLibrary.simpleMessage("Ok"),
+        "SignupFailText": MessageLookupByLibrary.simpleMessage(
+            "Username already in use, please choose another one"),
+        "SignupOk": MessageLookupByLibrary.simpleMessage("Signup completed!"),
+        "SignupOkButton": MessageLookupByLibrary.simpleMessage("Ok"),
+        "SignupOkText":
+            MessageLookupByLibrary.simpleMessage("Now you can login"),
         "SignupPwd": MessageLookupByLibrary.simpleMessage("Password"),
         "SignupTitle": MessageLookupByLibrary.simpleMessage("Sign Up"),
         "SignupUser": MessageLookupByLibrary.simpleMessage("Username"),
