@@ -145,7 +145,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "UserBestScore": m5,
         "UserEmail": MessageLookupByLibrary.simpleMessage("E-mail"),
         "UserQuiz": MessageLookupByLibrary.simpleMessage("Il mio miglior Quiz"),
-        "UserRank": MessageLookupByLibrary.simpleMessage("Classifica Globale"),
+        "UserRank": MessageLookupByLibrary.simpleMessage("Classifica"),
         "UserTitle": MessageLookupByLibrary.simpleMessage("Profilo Utente")
       };
 }

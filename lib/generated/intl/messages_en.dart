@@ -50,7 +50,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "GlobalLocation": MessageLookupByLibrary.simpleMessage("Country"),
         "GlobalPosition": MessageLookupByLibrary.simpleMessage("Position"),
         "GlobalScore": MessageLookupByLibrary.simpleMessage("Score"),
-        "GlobalTitle": MessageLookupByLibrary.simpleMessage("Global Rank"),
+        "GlobalTitle": MessageLookupByLibrary.simpleMessage("Leaderboard"),
         "GlobalUsername": MessageLookupByLibrary.simpleMessage("Username"),
         "HomeArtists": MessageLookupByLibrary.simpleMessage("Your artists:"),
         "HomeErrArtists": MessageLookupByLibrary.simpleMessage(

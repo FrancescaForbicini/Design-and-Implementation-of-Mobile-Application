@@ -35,7 +35,7 @@
     "UserBestScore": "Miglior punteggio: {bestScore}",
     "UserEmail": "E-mail",
     "UserQuiz": "Il mio miglior Quiz",
-    "UserRank": "Classifica Globale",
+    "UserRank": "Classifica",
     "QuizGenTitle": "Nuovo quiz",
     "QuizGenScore": "Punteggio: {totalScore}   Livello: {level}",
     "QuizGenNextLevel": "Hai risposto correttamente a {questionNumber} domande!",

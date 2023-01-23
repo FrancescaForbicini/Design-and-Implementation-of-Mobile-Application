@@ -540,10 +540,10 @@ class S {
     );
   }
 
-  /// `Global Rank`
+  /// `Leaderboard`
   String get GlobalTitle {
     return Intl.message(
-      'Global Rank',
+      'Leaderboard',
       name: 'GlobalTitle',
       desc: '',
       args: [],
