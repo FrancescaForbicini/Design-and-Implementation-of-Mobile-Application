@@ -107,6 +107,7 @@ class _HomeScreenState extends State<HomeScreen>{
   Widget _buildHomeBody(height, width, BuildContext context){
     Color? textColor = Theme.of(context).textTheme.bodyText1?.color;
     return ListView(
+      physics: const BouncingScrollPhysics(),
       scrollDirection: Axis.vertical,
       shrinkWrap: true,
       children: <Widget>[
@@ -202,6 +203,7 @@ class _HomeScreenState extends State<HomeScreen>{
         if (snapshot.hasData && snapshot.connectionState == ConnectionState.done){
           if(_playlists.length > 0){
             child = ListView.builder(
+              physics: const BouncingScrollPhysics(),
               scrollDirection: Axis.horizontal,
               itemCount: _playlists.length,
               itemBuilder: (context, index){
@@ -285,6 +287,7 @@ class _HomeScreenState extends State<HomeScreen>{
         if (snapshot.hasData && snapshot.connectionState == ConnectionState.done){
           if(_artists.length > 0){
             child = ListView.builder(
+              physics: const BouncingScrollPhysics(),
               scrollDirection: Axis.horizontal,
               itemCount: _artists.length,
               itemBuilder: (context, index){
