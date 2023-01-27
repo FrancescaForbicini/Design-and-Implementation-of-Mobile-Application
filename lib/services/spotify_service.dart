@@ -83,18 +83,18 @@ class SpotifyService {
     });
   }
 
-  Future<SpotifyApiCredentials> getCredentials(user) async{
+  Future<SpotifyApiCredentials> getCredentials(email) async{
     var data;
     var spotifyCredentials;
     print("Getting the reference to the doc...");
-    if(user!=null){
-      print("User: ${user.email}");
+    if(email!=null){
+      print("User: ${email}");
     }
     else{
       print("Why the f am I in else");
     }
 
-    final docRef = FirebaseFirestore.instance.collection("users").doc(user.email);
+    final docRef = FirebaseFirestore.instance.collection("users").doc(email);
     print("Getting the credentials...");
     await docRef.get().then((DocumentSnapshot doc) {
       data = doc.data() as Map<String, dynamic>;

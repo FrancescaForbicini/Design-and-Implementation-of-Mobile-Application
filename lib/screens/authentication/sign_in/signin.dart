@@ -1,15 +1,21 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dima_project/screens/spotifyAuth_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:spotify/spotify.dart' as spotify_dart;
 
 import '../../../customized_app_bar.dart';
 import '../../../generated/l10n.dart';
 import '../../../services/authentication_service.dart';
+import '../../../services/spotify_service.dart';
 import '../sign_up/signup.dart';
 
+bool isTest = false;
 
 class SignInScreen extends StatelessWidget {
   SignInScreen({super.key});
+
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final AuthenticationService _authService = AuthenticationService();
@@ -19,7 +25,8 @@ class SignInScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final _appBar = CustomizedAppBar(
       leading: IconButton(
-        icon: Icon(Icons.arrow_back, color: Theme.of(context).iconTheme.color,size: 30),
+        icon: Icon(Icons.arrow_back,
+            color: Theme.of(context).iconTheme.color, size: 30),
         onPressed: () => {
           Navigator.pop(context),
         },
@@ -49,7 +56,6 @@ class SignInScreen extends StatelessWidget {
             SizedBox(
               height: _height * 0.05,
             ),
-
             _buildPasswordTextField(context),
             SizedBox(
               height: _height * 0.05,
@@ -61,55 +67,47 @@ class SignInScreen extends StatelessWidget {
     );
   }
 
-
   Widget _buildEmailTextField(BuildContext context) {
     return TextFormField(
-      key: const Key('email_text_input'),
-      controller: _emailController,
-      validator: (value)=> EmailFieldValidator.validate(value!),
-      keyboardType: TextInputType.emailAddress,
-      decoration: InputDecoration(
-          labelText: S.of(context).SigninEmail,
-          filled: true,
-          icon: const Icon(Icons.email, color: Colors.lightGreen,),
-          enabledBorder:  OutlineInputBorder(
-              borderSide: BorderSide(
-                  color: Theme.of(context).iconTheme.color!,
-                  width: 2.0
-              )
-          ),
-          labelStyle: const TextStyle(
-              fontSize: 18.0,
-              fontWeight: FontWeight.w400 ,
-              fontFamily: 'Calibri')
-      )
-    );
+        key: const Key('email_text_input'),
+        controller: _emailController,
+        validator: (value) => EmailFieldValidator.validate(value!),
+        keyboardType: TextInputType.emailAddress,
+        decoration: InputDecoration(
+            labelText: S.of(context).SigninEmail,
+            filled: true,
+            icon: const Icon(
+              Icons.email,
+              color: Colors.lightGreen,
+            ),
+            enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                    color: Theme.of(context).iconTheme.color!, width: 2.0)),
+            labelStyle: const TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.w400,
+                fontFamily: 'Calibri')));
   }
 
   Widget _buildPasswordTextField(BuildContext context) {
     return TextFormField(
       key: const Key('password_text_input'),
       controller: _passwordController,
-      validator: (value)=> PasswordFieldValidator.validate(value!),
+      validator: (value) => PasswordFieldValidator.validate(value!),
       decoration: InputDecoration(
           labelText: S.of(context).SigninPwd,
           filled: true,
           icon: const Icon(Icons.key, color: Colors.lightGreen),
           enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(
-                  color: Theme.of(context).iconTheme.color!,
-                  width: 2.0
-              )
-          ),
+                  color: Theme.of(context).iconTheme.color!, width: 2.0)),
           labelStyle: const TextStyle(
               fontSize: 18.0,
-              fontWeight: FontWeight.w400 ,
-              fontFamily: 'Calibri')
-      ),
+              fontWeight: FontWeight.w400,
+              fontFamily: 'Calibri')),
       obscureText: true,
     );
   }
-
 
   Widget _buildButton(BuildContext context) {
     Future<bool> done;
@@ -119,36 +117,64 @@ class SignInScreen extends StatelessWidget {
         textColor: Colors.white,
         child: AutoSizeText(S.of(context).SigninButton),
         onPressed: () => {
-          done = _authService.signIn(_emailController.text, _passwordController.text),
-          done.then((value) => {
-            if (value){
-              Navigator.pop(context),
-              Navigator.push(context, MaterialPageRoute(builder: (context) => SpotifyScreen()),)
-            }
-            else{
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text(S.of(context).SigninErr),
-                      content: Text(S.of(context).SigninErrText),
-                      actions: [
-                        MaterialButton(
-                          child: Text(S.of(context).SigninErrButton),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            },
-                        )
-                      ],
-                    );
-                  }
-              )
-            }
-          }
-          ),
-        }
-    );
+              done = _authService.signIn(
+                  _emailController.text, _passwordController.text),
+              done.then((value) => {
+                    if (value)
+                      {
+                        if (isTest)
+                          {
+                            print("Ciao"),
+                            setToken(context),
+                          }
+                        else
+                          {
+                            print(isTest),
+                            Navigator.pop(context),
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SpotifyScreen()),
+                            )
+                          }
+                      }
+                    else
+                      {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text(S.of(context).SigninErr),
+                                content: Text(S.of(context).SigninErrText),
+                                actions: [
+                                  MaterialButton(
+                                    child: Text(S.of(context).SigninErrButton),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  )
+                                ],
+                              );
+                            })
+                      }
+                  }),
+            });
   }
 
-
+  void setToken(context) async {
+    SpotifyService spotifyService = SpotifyService();
+    var email = 'francesca.forbicini@gmail.com';
+    spotify_dart.SpotifyApiCredentials spotifyCredentials =
+        await spotifyService.getCredentials(email);
+    print("Got the credentials");
+    spotifyService.spotify = spotify_dart.SpotifyApi(spotifyCredentials);
+    print("Created API");
+    try {
+      spotifyService.spotify.me.get();
+      spotifyService.saveCredentials();
+      print("Saved credentials");
+    } catch (e) {
+      print("Error");
+    }
+  }
 }

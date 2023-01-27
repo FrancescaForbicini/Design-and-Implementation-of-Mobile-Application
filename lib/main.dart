@@ -113,7 +113,7 @@ class _MyHomePageState extends State<MyHomePage> {
     print("First line of init Spotify");
     print("Current user: ${widget.currUser.email}");
     spotify_dart.SpotifyApiCredentials spotifyCredentials =
-        await _spotifyService.getCredentials(widget.currUser);
+        await _spotifyService.getCredentials(widget.currUser.email);
     print("Got the credentials");
     _spotifyService.spotify = spotify_dart.SpotifyApi(spotifyCredentials);
     print("Created API");
