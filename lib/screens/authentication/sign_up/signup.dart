@@ -102,30 +102,32 @@ class SignUpScreen extends StatelessWidget {
 
   Widget _buildEmailTextfield(BuildContext context) {
     return TextFormField(
-        controller: _emailController,
-        validator: (value)=> EmailFieldValidator.validate(value!),
-        style: const TextStyle(color: Colors.lightGreen),
-        keyboardType: TextInputType.emailAddress,
-        decoration: InputDecoration(
-            labelText: S.of(context).SignupEmail,
-            filled: true,
-            icon: const Icon(Icons.email, color: Colors.lightGreen,),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                  color: Theme.of(context).iconTheme.color!,
-                  width: 2.0
-              )
-          ),
-          labelStyle: const TextStyle(
-              fontSize: 18.0,
-              fontWeight: FontWeight.w400 ,
-              fontFamily: 'Calibri')
-        )
+      key: const Key('email_text_input'),
+      controller: _emailController,
+      validator: (value)=> EmailFieldValidator.validate(value!),
+      style: const TextStyle(color: Colors.lightGreen),
+      keyboardType: TextInputType.emailAddress,
+      decoration: InputDecoration(
+          labelText: S.of(context).SignupEmail,
+          filled: true,
+          icon: const Icon(Icons.email, color: Colors.lightGreen,),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+                color: Theme.of(context).iconTheme.color!,
+                width: 2.0
+            )
+        ),
+        labelStyle: const TextStyle(
+            fontSize: 18.0,
+            fontWeight: FontWeight.w400 ,
+            fontFamily: 'Calibri')
+      )
     );
   }
 
   Widget _buildPasswordTextfield(BuildContext context) {
     return TextFormField(
+      key: const Key('password_text_input'),
       controller: _passwordController,
       validator: (value)=> PasswordFieldValidator.validate(value!),
       style: const TextStyle(color: Colors.lightGreen),
@@ -150,6 +152,7 @@ class SignUpScreen extends StatelessWidget {
 
   Widget _buildPasswordConfirmTextField(BuildContext context) {
     return TextFormField(
+      key: const Key('confpass_text_input'),
       controller: _passConfirmController,
       validator: (value)=> PassConfirmFieldValidator.validate(value!, _passwordController),
       style: const TextStyle(color: Colors.lightGreen),
@@ -174,6 +177,7 @@ class SignUpScreen extends StatelessWidget {
 
   Widget _buildUsernameTextField(BuildContext context) {
     return TextFormField(
+      key: const Key('username_text_input'),
       controller: _usernameController,
       validator: (value)=> UsernameFieldValidator.validate(value!),
       style: const TextStyle(color: Colors.lightGreen),
@@ -200,24 +204,45 @@ class SignUpScreen extends StatelessWidget {
   Widget _buildButton(BuildContext context) {
     Future<bool> done;
     return MaterialButton(
-        color: Colors.lightGreen,
-        textColor: Colors.white,
-        child: AutoSizeText(S.of(context).SignupButton),
-        onPressed: () => {
-          if(formGlobalKey.currentState!.validate()){
-            done = _authService.signUp(_emailController.text, _passwordController.text, _usernameController.text, context),
-            done.then((value) => {
-              if(value){
-                Navigator.pop(context),
-                showDialog(
+      key: const Key('sign_up_button'),
+      color: Colors.lightGreen,
+      textColor: Colors.white,
+      child: AutoSizeText(S.of(context).SignupButton),
+      onPressed: () => {
+        if(formGlobalKey.currentState!.validate()){
+          done = _authService.signUp(_emailController.text, _passwordController.text, _usernameController.text, context),
+          done.then((value) => {
+            if(value){
+              Navigator.pop(context),
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    key: const Key('signup_ok_dialog'),
+                    title: Text(S.of(context).SignupOk),
+                    content: Text(S.of(context).SignupOkText),
+                    actions: [
+                      MaterialButton(
+                        child: Text(S.of(context).SignupOkButton),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      )
+                    ],
+                  );
+                }
+              )
+            }
+            else{
+              showDialog(
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
-                      title: Text(S.of(context).SignupOk),
-                      content: Text(S.of(context).SignupOkText),
+                      title: Text(S.of(context).SignupFail),
+                      content: Text(S.of(context).SignupFailText),
                       actions: [
                         MaterialButton(
-                          child: Text(S.of(context).SignupOkButton),
+                          child: Text(S.of(context).SignupFailButton),
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
@@ -225,30 +250,11 @@ class SignUpScreen extends StatelessWidget {
                       ],
                     );
                   }
-                )
-              }
-              else{
-                showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text(S.of(context).SignupFail),
-                        content: Text(S.of(context).SignupFailText),
-                        actions: [
-                          MaterialButton(
-                            child: Text(S.of(context).SignupFailButton),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          )
-                        ],
-                      );
-                    }
-                )
-              }
-            })
-          }
-        },
+              )
+            }
+          })
+        }
+      },
     );
   }
 

@@ -39,6 +39,7 @@ class AuthenticationScreen extends StatelessWidget{
               width: _screenWidth,
               height: _height * 0.16,
               child: TextButton(
+                key: const Key('sign_in_button'),
                 child: AutoSizeText(
                   S.of(context).AuthSignin,
                   style: TextStyle(fontSize: 20.0,fontFamily: 'Hind', color: textColor),
@@ -55,6 +56,7 @@ class AuthenticationScreen extends StatelessWidget{
               width: _screenWidth,
               height: _height * 0.16,
               child: TextButton(
+                key: const Key('sign_up_button'),
                 child: AutoSizeText(
                   S.of(context).AuthSignup,
                   style: TextStyle(fontSize: 20.0,fontFamily: 'Hind', color: textColor),
@@ -71,6 +73,7 @@ class AuthenticationScreen extends StatelessWidget{
               width: _screenWidth,
               height: _height * 0.16,
               child: TextButton(
+                key: const Key('sign_google_button'),
                 child: AutoSizeText(
                   S.of(context).AuthGoogle,
                   style: TextStyle(fontSize: 20.0,fontFamily: 'Hind', color: textColor),

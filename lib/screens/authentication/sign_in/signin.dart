@@ -64,29 +64,31 @@ class SignInScreen extends StatelessWidget {
 
   Widget _buildEmailTextField(BuildContext context) {
     return TextFormField(
-        controller: _emailController,
-        validator: (value)=> EmailFieldValidator.validate(value!),
-        keyboardType: TextInputType.emailAddress,
-        decoration: InputDecoration(
-            labelText: S.of(context).SigninEmail,
-            filled: true,
-            icon: const Icon(Icons.email, color: Colors.lightGreen,),
-            enabledBorder:  OutlineInputBorder(
-                borderSide: BorderSide(
-                    color: Theme.of(context).iconTheme.color!,
-                    width: 2.0
-                )
-            ),
-            labelStyle: const TextStyle(
-                fontSize: 18.0,
-                fontWeight: FontWeight.w400 ,
-                fontFamily: 'Calibri')
-        )
+      key: const Key('email_text_input'),
+      controller: _emailController,
+      validator: (value)=> EmailFieldValidator.validate(value!),
+      keyboardType: TextInputType.emailAddress,
+      decoration: InputDecoration(
+          labelText: S.of(context).SigninEmail,
+          filled: true,
+          icon: const Icon(Icons.email, color: Colors.lightGreen,),
+          enabledBorder:  OutlineInputBorder(
+              borderSide: BorderSide(
+                  color: Theme.of(context).iconTheme.color!,
+                  width: 2.0
+              )
+          ),
+          labelStyle: const TextStyle(
+              fontSize: 18.0,
+              fontWeight: FontWeight.w400 ,
+              fontFamily: 'Calibri')
+      )
     );
   }
 
   Widget _buildPasswordTextField(BuildContext context) {
     return TextFormField(
+      key: const Key('password_text_input'),
       controller: _passwordController,
       validator: (value)=> PasswordFieldValidator.validate(value!),
       decoration: InputDecoration(
@@ -112,6 +114,7 @@ class SignInScreen extends StatelessWidget {
   Widget _buildButton(BuildContext context) {
     Future<bool> done;
     return MaterialButton(
+        key: const Key('sign_in_button'),
         color: Colors.lightGreen,
         textColor: Colors.white,
         child: AutoSizeText(S.of(context).SigninButton),

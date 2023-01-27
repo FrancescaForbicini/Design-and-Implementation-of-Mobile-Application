@@ -49,6 +49,7 @@ class _SpotifyScreenState extends State<SpotifyScreen> {
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: _appBar,
       body: Container(
+        key: const Key('spoty_container'),
         width: _screenWidth,
         height: _height,
         child: FutureBuilder(
@@ -58,6 +59,7 @@ class _SpotifyScreenState extends State<SpotifyScreen> {
             if (snapshot.connectionState == ConnectionState.done) {
               print(snapshot);
               child = WebView(
+                key: const Key('spoty_webview'),
                 javascriptMode: JavascriptMode.unrestricted,
                 initialUrl: _spotifyService.getAuthUri().toString(),
                 navigationDelegate: (navReq) async {

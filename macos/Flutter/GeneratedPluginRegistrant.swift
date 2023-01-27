@@ -13,7 +13,7 @@ import firebase_database
 import firebase_storage
 import geolocator_apple
 import just_audio
-import path_provider_macos
+import path_provider_foundation
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
   AudioSessionPlugin.register(with: registry.registrar(forPlugin: "AudioSessionPlugin"))
