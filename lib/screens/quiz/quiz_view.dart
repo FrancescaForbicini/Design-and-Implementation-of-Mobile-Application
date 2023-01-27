@@ -89,9 +89,11 @@ class _QuizViewState extends State<QuizView> {
     }
 
     List<Widget> answerColumn = [];
-
+    int index = -1;
     for (String i in widget.wrongAnswers) {
+      index ++;
       answerColumn.add(Container(
+        key: Key('wrongAnswer $index' ),
         height: widget.height > widget.width ? widget.height * 0.15 : widget.height * 0.3,
         width: widget.height > widget.width ? widget.width : widget.width * 0.45,
         padding: EdgeInsets.all(15),
@@ -134,6 +136,7 @@ class _QuizViewState extends State<QuizView> {
     answerColumn.insert(
         answerIndex,
         Container(
+          key: const Key('rightAnswer'),
           height: widget.height > widget.width ? widget.height * 0.15 : widget.height * 0.3,
           width: widget.height > widget.width ? widget.width : widget.width * 0.45,
           padding: EdgeInsets.all(15),

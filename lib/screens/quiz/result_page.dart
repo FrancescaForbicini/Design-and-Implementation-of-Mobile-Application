@@ -146,6 +146,8 @@ class _ResultPageState extends State<ResultPage> {
                   ),
                 ),
                 Icon(
+                  key: const Key("camera_button"),
+
                   Icons.photo_camera,
                   color: buttonColor,
                   size: _height / 16,
@@ -203,6 +205,8 @@ class _ResultPageState extends State<ResultPage> {
                     ),
                   ),
                   Icon(
+                    key: const Key("location_button"),
+
                     Icons.location_on,
                     color: buttonColor,
                     size: _height / 16,
@@ -216,6 +220,7 @@ class _ResultPageState extends State<ResultPage> {
 
   Widget exitButton() {
     return ElevatedButton(
+      key: const Key("exit_button"),
       style: ButtonStyle(
           backgroundColor: MaterialStateColor.resolveWith(
               (states) =>  buttonColor!)),
