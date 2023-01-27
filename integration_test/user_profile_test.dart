@@ -38,6 +38,8 @@ void main() {
         while (timerDone != true) {
           await tester.pump();
         }
+
+        await signoutSteps(tester);
       },
 
     );
@@ -86,6 +88,8 @@ void main() {
         while (timerDone != true) {
           await tester.pump();
         }
+
+        await signoutSteps(tester);
       },
     );
   });

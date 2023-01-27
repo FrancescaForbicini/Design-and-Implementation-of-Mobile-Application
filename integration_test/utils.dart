@@ -93,7 +93,7 @@ Future<void> loginSteps(
 
   await pumpUntilFound(
     tester,
-    find.byKey(const Key('home_scaffold')),
+    find.byKey(const Key('home_page')),
   );
 
   print("Finishing loginSteps");
@@ -118,4 +118,16 @@ Future<void> homeSteps(WidgetTester tester) async {
 
   expect(find.byKey(const Key('userprofile_page')), findsAtLeastNWidgets(1));
   await tester.pumpAndSettle();
+}
+
+Future<void> signoutSteps(WidgetTester tester) async{
+  await tester.tap(find.byKey(const Key('sign_out_button')));
+
+  await tester.pumpAndSettle();
+
+  bool timerDone = false;
+  Timer(const Duration(seconds: 5), () => timerDone = true);
+  while (timerDone != true) {
+    await tester.pump();
+  }
 }

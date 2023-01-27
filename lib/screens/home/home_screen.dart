@@ -71,6 +71,7 @@ class _HomeScreenState extends State<HomeScreen>{
 
     final _appBar = CustomizedAppBar(
       leading: IconButton(
+        key: const Key('sign_out_button'),
         icon: const Icon(Icons.logout, color: Colors.lightGreen,size: 30),
         onPressed: () => {
           _authenticationService.signOut(),

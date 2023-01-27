@@ -24,7 +24,9 @@ void main() {
 
           print("Almost in expect");
 
-          expect(find.byKey(const Key('home_scaffold')), findsAtLeastNWidgets(1));
+          expect(find.byKey(const Key('home_page')), findsAtLeastNWidgets(1));
+
+          await signoutSteps(tester);
         },
       );
     }

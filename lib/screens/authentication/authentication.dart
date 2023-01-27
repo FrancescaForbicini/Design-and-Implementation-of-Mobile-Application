@@ -25,6 +25,7 @@ class AuthenticationScreen extends StatelessWidget{
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       body: Container(
+        key: const Key('auth_container'),
         width: _screenWidth,
         height: _height,
         child: Column(
