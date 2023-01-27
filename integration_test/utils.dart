@@ -88,8 +88,10 @@ Future<void> loginSteps(
 
   await pumpUntilFound(
     tester,
-    find.byKey(const Key('spoty_webview')),
+    find.byKey(const Key('home_scaffold')),
   );
+
+  print("Finishing loginSteps");
 
   bool timerDone = false;
   Timer(const Duration(seconds: 5), () => timerDone = true);

@@ -19,9 +19,13 @@ void main() {
           isTest = true;
           await loginSteps(tester);
 
-          await tester.pumpAndSettle();
+          print("Done loginSteps");
 
-          expect(find.byKey(const Key('spoty_webview')), findsAtLeastNWidgets(1));
+          //await tester.pumpAndSettle();
+
+          print("Almost in expect");
+
+          expect(find.byKey(const Key('home_scaffold')), findsAtLeastNWidgets(1));
         },
       );
     }

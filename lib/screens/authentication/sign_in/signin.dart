@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dima_project/screens/home/home_screen.dart';
 import 'package:dima_project/screens/spotifyAuth_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -126,6 +127,11 @@ class SignInScreen extends StatelessWidget {
                           {
                             print("Ciao"),
                             setToken(context),
+                            Navigator.pop(context),
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => HomeScreen())),
                           }
                         else
                           {
@@ -163,7 +169,7 @@ class SignInScreen extends StatelessWidget {
 
   void setToken(context) async {
     SpotifyService spotifyService = SpotifyService();
-    var email = 'francesca.forbicini@gmail.com';
+    var email = 'test@dima.com';
     spotify_dart.SpotifyApiCredentials spotifyCredentials =
         await spotifyService.getCredentials(email);
     print("Got the credentials");
