@@ -16,7 +16,6 @@ void main() {
           await app.main();
 
           await tester.pumpAndSettle();
-          isTest = true;
           await loginSteps(tester);
 
           print("Done loginSteps");

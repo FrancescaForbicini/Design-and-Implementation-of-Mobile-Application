@@ -58,6 +58,7 @@ class _GlobalRankState extends State<GlobalRank>{
     );
 
     return FutureBuilder(
+      key: const Key('globalrank_page'),
       future: done,
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if(snapshot.hasData && snapshot.connectionState == ConnectionState.done){

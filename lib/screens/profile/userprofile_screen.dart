@@ -70,6 +70,7 @@ class _UserProfileState extends State<UserProfile> {
     Color? textColor = Theme.of(context).textTheme.headline1?.color;
     final _appBar = CustomizedAppBar(
       leading: IconButton(
+        key: const Key('logout_button'),
         icon: Icon(
           Icons.logout,
           size: 30,
@@ -83,6 +84,7 @@ class _UserProfileState extends State<UserProfile> {
       ),
       actions: [
         IconButton(
+            key: const Key('home_button'),
             icon: Icon(Icons.home, size: 30, color: iconColor),
             onPressed: () {
               Navigator.push(context,
@@ -105,6 +107,7 @@ class _UserProfileState extends State<UserProfile> {
     late var image;
 
     return Scaffold(
+        key: const Key('userprofile_page'),
         backgroundColor: backgroundColor,
         appBar: _appBar,
         body: FutureBuilder(
@@ -212,6 +215,7 @@ class _UserProfileState extends State<UserProfile> {
                             ),
                           ),
                           ListTile(
+                            key: const Key('bestquiz_button'),
                             title: AutoSizeText(
                               S.of(context).UserQuiz,
                               style: TextStyle(
@@ -234,6 +238,7 @@ class _UserProfileState extends State<UserProfile> {
                             },
                           ),
                           ListTile(
+                            key: const Key('rank_button'),
                             title: AutoSizeText(
                               S.of(context).UserRank,
                               style:  TextStyle(

@@ -125,17 +125,15 @@ class SignInScreen extends StatelessWidget {
                       {
                         if (isTest)
                           {
-                            print("Ciao"),
                             setToken(context),
                             Navigator.pop(context),
                             Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => HomeScreen())),
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => HomeScreen())),
                           }
                         else
                           {
-                            print(isTest),
                             Navigator.pop(context),
                             Navigator.push(
                               context,

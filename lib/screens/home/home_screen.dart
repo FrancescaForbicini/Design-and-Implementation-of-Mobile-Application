@@ -80,6 +80,7 @@ class _HomeScreenState extends State<HomeScreen>{
       ),
       actions: [
         IconButton(
+          key: const Key('user_button'),
           icon: const Icon(Icons.person, color: Colors.lightGreen,size: 30),
           onPressed: () => {
             Navigator.push(context, MaterialPageRoute(builder: (context) => UserProfile()))
@@ -98,7 +99,7 @@ class _HomeScreenState extends State<HomeScreen>{
     final _statusBarHeight = MediaQuery.of(context).padding.top;
 
     return Scaffold(
-      key: const Key('home_scaffold'),
+      key: const Key('home_page'),
       appBar: _appBar,
       backgroundColor: Theme.of(context).backgroundColor,
       body: _buildHomeBody(_screenHeight - _appBarHeight - _statusBarHeight, _screenWidth, context),
@@ -108,7 +109,6 @@ class _HomeScreenState extends State<HomeScreen>{
   Widget _buildHomeBody(height, width, BuildContext context){
     Color? textColor = Theme.of(context).textTheme.bodyText1?.color;
     return ListView(
-      key: const Key('home_screen'),
       physics: const BouncingScrollPhysics(),
       scrollDirection: Axis.vertical,
       shrinkWrap: true,
