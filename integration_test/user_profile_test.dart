@@ -17,7 +17,7 @@ void main() {
 
         await tester.pumpAndSettle();
 
-        await homeSteps(tester);
+        await userProfileSteps(tester);
 
         await tester.tap(find.byKey(const Key('bestquiz_button')));
 
@@ -39,7 +39,7 @@ void main() {
           await tester.pump();
         }
 
-        await signoutSteps(tester);
+        await signOutSteps(tester);
       },
 
     );
@@ -52,7 +52,7 @@ void main() {
 
         await tester.pumpAndSettle();
 
-        await homeSteps(tester);
+        await userProfileSteps(tester);
 
         await tester.tap(find.byKey(const Key('rank_button')));
 
@@ -89,7 +89,7 @@ void main() {
           await tester.pump();
         }
 
-        await signoutSteps(tester);
+        await signOutSteps(tester);
       },
     );
   });

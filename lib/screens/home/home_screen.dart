@@ -11,21 +11,21 @@ import '../../customized_app_bar.dart';
 import '../../generated/l10n.dart';
 import '../quiz/quiz_generator.dart';
 
-class HomeScreen extends StatefulWidget{
+class HomeScreen extends StatefulWidget {
   HomeScreen({super.key});
 
   @override
   State<StatefulWidget> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen>{
+class _HomeScreenState extends State<HomeScreen> {
   final AuthenticationService _authenticationService = AuthenticationService();
   final SpotifyService _spotifyService = SpotifyService();
   late var _userId;
   late List _playlists;
   late List _artists;
   late Future<bool> _done;
-  late sp.Playlists  _playlists_quiz;
+  late sp.Playlists _playlists_quiz;
   late sp.Artists _artists_quiz;
   late sp.Pages<sp.Track> _tracksPages;
   late Iterable<sp.Track> _tracksIterator;
@@ -37,18 +37,18 @@ class _HomeScreenState extends State<HomeScreen>{
     super.initState();
   }
 
-  Future<bool> _startup() async{
-
+  Future<bool> _startup() async {
     print("Debugging here in startup method");
     var _user = await _spotifyService.spotify.me.get();
     print("User spotify: $_user");
-    print("User spotify info: ${_user.displayName}, ${_user.country}, ${_user.product}, ${_user.id}");
+    print(
+        "User spotify info: ${_user.displayName}, ${_user.country}, ${_user.product}, ${_user.id}");
     _userId = _user.id;
     print("Got the userid");
     print("UserID: $_userId");
     var _playlistsRef = _spotifyService.spotify.playlists;
     print("Got reference to playlists: ${_playlistsRef.runtimeType}");
-    if(_playlistsRef != null){
+    if (_playlistsRef != null) {
       print("The reference exists!");
     }
     print(_playlistsRef.me.all().runtimeType);
@@ -68,23 +68,24 @@ class _HomeScreenState extends State<HomeScreen>{
 
   @override
   Widget build(BuildContext context) {
-
     final _appBar = CustomizedAppBar(
       leading: IconButton(
         key: const Key('sign_out_button'),
-        icon: const Icon(Icons.logout, color: Colors.lightGreen,size: 30),
+        icon: const Icon(Icons.logout, color: Colors.lightGreen, size: 30),
         onPressed: () => {
           _authenticationService.signOut(),
           Navigator.pop(context),
-          Navigator.push(context, MaterialPageRoute(builder: (context) => AuthenticationScreen()))
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => AuthenticationScreen()))
         },
       ),
       actions: [
         IconButton(
           key: const Key('user_button'),
-          icon: const Icon(Icons.person, color: Colors.lightGreen,size: 30),
+          icon: const Icon(Icons.person, color: Colors.lightGreen, size: 30),
           onPressed: () => {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => UserProfile()))
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => UserProfile()))
           },
         ),
       ],
@@ -103,11 +104,12 @@ class _HomeScreenState extends State<HomeScreen>{
       key: const Key('home_page'),
       appBar: _appBar,
       backgroundColor: Theme.of(context).backgroundColor,
-      body: _buildHomeBody(_screenHeight - _appBarHeight - _statusBarHeight, _screenWidth, context),
+      body: _buildHomeBody(_screenHeight - _appBarHeight - _statusBarHeight,
+          _screenWidth, context),
     );
   }
 
-  Widget _buildHomeBody(height, width, BuildContext context){
+  Widget _buildHomeBody(height, width, BuildContext context) {
     Color? textColor = Theme.of(context).textTheme.bodyText1?.color;
     return ListView(
       physics: const BouncingScrollPhysics(),
@@ -130,7 +132,7 @@ class _HomeScreenState extends State<HomeScreen>{
                 height: height * 0.1,
                 child: AutoSizeText(
                   S.of(context).HomeStart,
-                  style:  TextStyle(
+                  style: TextStyle(
                     color: textColor,
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
@@ -203,14 +205,14 @@ class _HomeScreenState extends State<HomeScreen>{
       future: _done,
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         Widget child;
-        if (snapshot.hasData && snapshot.connectionState == ConnectionState.done){
-          if(_playlists.length > 0){
+        if (snapshot.hasData &&
+            snapshot.connectionState == ConnectionState.done) {
+          if (_playlists.length > 0) {
             child = ListView.builder(
               physics: const BouncingScrollPhysics(),
               scrollDirection: Axis.horizontal,
               itemCount: _playlists.length,
-              itemBuilder: (context, index){
-
+              itemBuilder: (context, index) {
                 return Container(
                   width: width * 0.35,
                   height: height * 0.35,
@@ -222,18 +224,22 @@ class _HomeScreenState extends State<HomeScreen>{
                         color: Colors.transparent,
                         child: InkWell(
                           child: Ink.image(
+                            key: Key('playlist_button$index'),
                             width: width * 0.25,
                             height: height * 0.25,
                             image: getImage(_playlists[index].images),
                           ),
-                          onTap:() async{
-                            _tracksPages = await _playlists_quiz.getTracksByPlaylistId(_playlists[index].id);
+                          onTap: () async {
+                            _tracksPages = await _playlists_quiz
+                                .getTracksByPlaylistId(_playlists[index].id);
                             _tracksIterator = await _tracksPages.all();
                             _tracks = _tracksIterator.toList();
-                            Navigator.push(context,
+                            Navigator.push(
+                                context,
                                 MaterialPageRoute(
-                                    builder: (context) => QuizGenerator(_tracks,"playlists",0,1)));
-                          } ,
+                                    builder: (context) => QuizGenerator(
+                                        _tracks, "playlists", 0, 1)));
+                          },
                         ),
                       ),
                       SizedBox(
@@ -243,9 +249,9 @@ class _HomeScreenState extends State<HomeScreen>{
                           _playlists[index].name,
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                              color: Theme.of(context).textTheme.bodyText2?.color,
-                              fontSize: 15
-                          ),
+                              color:
+                                  Theme.of(context).textTheme.bodyText2?.color,
+                              fontSize: 15),
                         ),
                       )
                     ],
@@ -253,8 +259,7 @@ class _HomeScreenState extends State<HomeScreen>{
                 );
               },
             );
-          }
-          else{
+          } else {
             child = Container(
               width: width,
               height: height * 0.35,
@@ -270,8 +275,7 @@ class _HomeScreenState extends State<HomeScreen>{
           }
 
           return child;
-        }
-        else {
+        } else {
           return const Center(
             child: CircularProgressIndicator(
               color: Colors.lightGreen,
@@ -282,18 +286,19 @@ class _HomeScreenState extends State<HomeScreen>{
     );
   }
 
-  Widget _buildArtists(height, width, BuildContext context){
+  Widget _buildArtists(height, width, BuildContext context) {
     return FutureBuilder(
       future: _done,
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         Widget child;
-        if (snapshot.hasData && snapshot.connectionState == ConnectionState.done){
-          if(_artists.length > 0){
+        if (snapshot.hasData &&
+            snapshot.connectionState == ConnectionState.done) {
+          if (_artists.length > 0) {
             child = ListView.builder(
               physics: const BouncingScrollPhysics(),
               scrollDirection: Axis.horizontal,
               itemCount: _artists.length,
-              itemBuilder: (context, index){
+              itemBuilder: (context, index) {
                 return Container(
                   width: width * 0.35,
                   height: height * 0.35,
@@ -305,17 +310,21 @@ class _HomeScreenState extends State<HomeScreen>{
                         color: Colors.transparent,
                         child: InkWell(
                           child: Ink.image(
+                            key: Key('artist_button$index'),
+
                             width: width * 0.25,
                             height: height * 0.25,
                             //fit: BoxFit.cover,
                             image: getImage(_artists[index].images),
                           ),
-                          onTap:() async{
-                            sp.Artist artist = await _artists_quiz.get(_artists[index].id);
-                            Navigator.push(context,
+                          onTap: () async {
+                            sp.Artist artist =
+                                await _artists_quiz.get(_artists[index].id);
+                            Navigator.push(
+                                context,
                                 MaterialPageRoute(
-                                    builder: (context) => QuizGenerator(artist,"artists",0,1)));
-
+                                    builder: (context) => QuizGenerator(
+                                        artist, "artists", 0, 1)));
                           },
                         ),
                       ),
@@ -326,9 +335,9 @@ class _HomeScreenState extends State<HomeScreen>{
                           _artists[index].name,
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                              color:Theme.of(context).textTheme.bodyText2?.color,
-                              fontSize: 15
-                          ),
+                              color:
+                                  Theme.of(context).textTheme.bodyText2?.color,
+                              fontSize: 15),
                         ),
                       )
                     ],
@@ -336,8 +345,7 @@ class _HomeScreenState extends State<HomeScreen>{
                 );
               },
             );
-          }
-          else{
+          } else {
             child = Container(
               width: width,
               height: height * 0.35,
@@ -353,8 +361,7 @@ class _HomeScreenState extends State<HomeScreen>{
           }
 
           return child;
-        }
-        else {
+        } else {
           return const Center(
             child: CircularProgressIndicator(
               color: Colors.lightGreen,
@@ -366,11 +373,9 @@ class _HomeScreenState extends State<HomeScreen>{
   }
 }
 
-ImageProvider<Object> getImage(image){
+ImageProvider<Object> getImage(image) {
   if (image.isEmpty) {
     return Image.asset('images/wolf_user.png').image;
   }
   return Image.network(image[0].url).image;
 }
-
-

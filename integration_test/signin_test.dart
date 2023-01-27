@@ -26,7 +26,7 @@ void main() {
 
           expect(find.byKey(const Key('home_page')), findsAtLeastNWidgets(1));
 
-          await signoutSteps(tester);
+          await signOutSteps(tester);
         },
       );
     }

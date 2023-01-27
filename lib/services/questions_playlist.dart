@@ -42,8 +42,6 @@ class QuestionsPlaylist {
 
       List<String?> wrongAnswers = [];
 
-      print(S.current);
-
       switch (typeQuestion) {
         case 0:
           {
@@ -53,6 +51,9 @@ class QuestionsPlaylist {
             sp.Artist artist = tracks[i].artists![0];
             question.rightAnswer = artist.name.toString();
             wrongAnswers = allArtists.where((element) => element != artist.name.toString()).toList();
+            question.wrongAnswers = setWrongAnswersTracks(wrongAnswers);
+            questions.add(question);
+
             break;
           }
 
@@ -64,6 +65,9 @@ class QuestionsPlaylist {
             sp.AlbumSimple? album = tracks[i].album;
             question.rightAnswer = album!.name.toString();
             wrongAnswers = allAlbums.where((element) => element != album.name).toList();
+            question.wrongAnswers = setWrongAnswersTracks(wrongAnswers);
+            questions.add(question);
+
             break;
           }
 
@@ -77,14 +81,15 @@ class QuestionsPlaylist {
               question.isPresent = true;
               question.rightAnswer = track.name.toString();
               wrongAnswers = allTracks.where((element) => element != tracks[i].name).toList();
+              question.wrongAnswers = setWrongAnswersTracks(wrongAnswers);
+              questions.add(question);
+
             }
 
             break;
           }
       }
-      question.wrongAnswers = setWrongAnswersTracks(wrongAnswers);
 
-      questions.add(question);
       typeQuestion++;
     }
     questions.shuffle();

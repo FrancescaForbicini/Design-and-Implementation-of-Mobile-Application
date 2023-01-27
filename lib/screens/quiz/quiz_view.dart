@@ -83,24 +83,25 @@ class _QuizViewState extends State<QuizView> {
 
   @override
   Widget build(BuildContext context) {
-
     if (!isTapped) {
       answerIndex = _random.nextInt(widget.wrongAnswers.length + 1);
     }
-
     List<Widget> answerColumn = [];
     int index = -1;
     for (String i in widget.wrongAnswers) {
-      index ++;
+      index++;
       answerColumn.add(Container(
-        key: Key('wrongAnswer $index' ),
-        height: widget.height > widget.width ? widget.height * 0.15 : widget.height * 0.3,
-        width: widget.height > widget.width ? widget.width : widget.width * 0.45,
+        height: widget.height > widget.width
+            ? widget.height * 0.15
+            : widget.height * 0.3,
+        width:
+            widget.height > widget.width ? widget.width : widget.width * 0.45,
         padding: EdgeInsets.all(15),
         child: ElevatedButton(
+          key: Key('wrongAnswer$index'),
           style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.resolveWith(
-                (states) => isTapped ? Colors.red : widget.answerBackgroundColor),
+            backgroundColor: MaterialStateProperty.resolveWith((states) =>
+                isTapped ? Colors.red : widget.answerBackgroundColor),
             padding: MaterialStateProperty.resolveWith(
                 (states) => EdgeInsets.fromLTRB(20, 10, 20, 10)),
             shape:
@@ -115,8 +116,7 @@ class _QuizViewState extends State<QuizView> {
                   color: widget.answerColor,
                   fontSize: widget.width > widget.height
                       ? widget.width / 25
-                      : widget.height / 25
-              ),
+                      : widget.height / 25),
               overflow: TextOverflow.ellipsis,
             ),
           ),
@@ -136,11 +136,15 @@ class _QuizViewState extends State<QuizView> {
     answerColumn.insert(
         answerIndex,
         Container(
-          key: const Key('rightAnswer'),
-          height: widget.height > widget.width ? widget.height * 0.15 : widget.height * 0.3,
-          width: widget.height > widget.width ? widget.width : widget.width * 0.45,
+          height: widget.height > widget.width
+              ? widget.height * 0.15
+              : widget.height * 0.3,
+          width:
+              widget.height > widget.width ? widget.width : widget.width * 0.45,
           padding: EdgeInsets.all(15),
           child: ElevatedButton(
+            key: const Key('rightAnswer'),
+
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.resolveWith((states) =>
                   isTapped ? Colors.green : widget.answerBackgroundColor),
@@ -158,8 +162,7 @@ class _QuizViewState extends State<QuizView> {
                     color: widget.answerColor,
                     fontSize: widget.width > widget.height
                         ? widget.width / 25
-                        : widget.height / 25
-                ),
+                        : widget.height / 25),
                 overflow: TextOverflow.ellipsis,
               ),
             ),
@@ -178,14 +181,12 @@ class _QuizViewState extends State<QuizView> {
 
     late var answersWidget;
 
-    if(widget.height > widget.width){
+    if (widget.height > widget.width) {
       answersWidget = Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: answerColumn
-      );
-    }
-    else{
+          children: answerColumn);
+    } else {
       answersWidget = Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -223,98 +224,94 @@ class _QuizViewState extends State<QuizView> {
         height: widget.height,
         child: widget.questionTag != null
             ? Stack(
-          children: [
-            Positioned(
-              top: 0,
-              left: 0,
-              child: Container(
-                padding: EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                    color: widget.tagBackgroundColor,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(
-                          widget.height > widget.width
-                              ? widget.height / 20
-                              : widget.width / 20),
-                      bottomRight: Radius.circular(
-                          widget.height > widget.width
-                              ? widget.height / 20
-                              : widget.width / 20),
-                    )),
-                child: AutoSizeText(
-                  widget.questionTag!,
-                  style: TextStyle(
-                      color: widget.tagColor,
-                      fontWeight: FontWeight.bold,
-                      fontSize: widget.width > widget.height
-                          ? widget.width / 20
-                          : widget.height / 20),
-                ),
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.fromLTRB(
-                  0,
-                  widget.width > widget.height
-                      ? widget.width / 10
-                      : widget.height / 10,
-                  0,
-                  0),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: widget.image != null
-                      ? [
-                    Container(
-                        height: widget.height * 0.38,
-                        width: widget.width,
-                        padding: EdgeInsets.all(15),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            AutoSizeText(
-                              widget.question,
-                              style: TextStyle(
-                                  color: widget.questionColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: widget.width > widget.height
-                                      ? widget.width / 25
-                                      : widget.height / 20
-                              ),
-                            ),
-                            widget.image!
-                          ]
-                        )
-
+                children: [
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                          color: widget.tagBackgroundColor,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(
+                                widget.height > widget.width
+                                    ? widget.height / 20
+                                    : widget.width / 20),
+                            bottomRight: Radius.circular(
+                                widget.height > widget.width
+                                    ? widget.height / 20
+                                    : widget.width / 20),
+                          )),
+                      child: AutoSizeText(
+                        widget.questionTag!,
+                        style: TextStyle(
+                            color: widget.tagColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: widget.width > widget.height
+                                ? widget.width / 20
+                                : widget.height / 20),
+                      ),
                     ),
-                    answersWidget
-                  ]
-                      : [
-                    Container(
-                        height: widget.height * 0.2,
-                        width: widget.width,
-                        padding: EdgeInsets.all(15),
-                        child: AutoSizeText(
-                          widget.question,
-                          style: TextStyle(
-                              color: widget.questionColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: widget.width > widget.height
-                                  ? widget.width / 20
-                                  : widget.height / 20
-                          ),
-                          //overflow: TextOverflow.ellipsis,
-                        )
+                  ),
+                  Container(
+                    margin: EdgeInsets.fromLTRB(
+                        0,
+                        widget.width > widget.height
+                            ? widget.width / 10
+                            : widget.height / 10,
+                        0,
+                        0),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: widget.image != null
+                            ? [
+                                Container(
+                                    height: widget.height * 0.38,
+                                    width: widget.width,
+                                    padding: EdgeInsets.all(15),
+                                    child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          AutoSizeText(
+                                            widget.question,
+                                            style: TextStyle(
+                                                color: widget.questionColor,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize:
+                                                    widget.width > widget.height
+                                                        ? widget.width / 25
+                                                        : widget.height / 20),
+                                          ),
+                                          widget.image!
+                                        ])),
+                                answersWidget
+                              ]
+                            : [
+                                Container(
+                                    height: widget.height * 0.2,
+                                    width: widget.width,
+                                    padding: EdgeInsets.all(15),
+                                    child: AutoSizeText(
+                                      widget.question,
+                                      style: TextStyle(
+                                          color: widget.questionColor,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: widget.width > widget.height
+                                              ? widget.width / 20
+                                              : widget.height / 20),
+                                      //overflow: TextOverflow.ellipsis,
+                                    )),
+                                answersWidget
+                              ],
+                      ),
                     ),
-                    answersWidget
-                  ],
-                ),
-              ),
-            ),
-          ],
-        )
+                  ),
+                ],
+              )
             : SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -322,50 +319,45 @@ class _QuizViewState extends State<QuizView> {
                   children: widget.image != null
                       ? [
                           Container(
-                            height: widget.height * 0.38,
-                            width: widget.width,
-                            padding: EdgeInsets.all(15),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                AutoSizeText(
-                                  widget.question,
-                                  style: TextStyle(
-                                      color: widget.questionColor,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: widget.width > widget.height
-                                          ? widget.width / 25
-                                          : widget.height / 20
-                                  ),
-                                  //overflow: TextOverflow.ellipsis,
-                                ),
-                                widget.image!
-                              ]
-                            )
-                          ),
+                              height: widget.height * 0.38,
+                              width: widget.width,
+                              padding: EdgeInsets.all(15),
+                              child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    AutoSizeText(
+                                      widget.question,
+                                      style: TextStyle(
+                                          color: widget.questionColor,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: widget.width > widget.height
+                                              ? widget.width / 25
+                                              : widget.height / 20),
+                                      //overflow: TextOverflow.ellipsis,
+                                    ),
+                                    widget.image!
+                                  ])),
                           answersWidget
                         ]
                       : [
                           Container(
-                            height: widget.height * 0.2,
-                            width: widget.width,
-                            padding: EdgeInsets.all(15),
-                            child: AutoSizeText(
-                              widget.question,
-                              style: TextStyle(
-                                  color: widget.questionColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: widget.width > widget.height
-                                      ? widget.width / 20
-                                      : widget.height / 20
-                              ),
-                            )
-                          ),
+                              height: widget.height * 0.2,
+                              width: widget.width,
+                              padding: EdgeInsets.all(15),
+                              child: AutoSizeText(
+                                widget.question,
+                                style: TextStyle(
+                                    color: widget.questionColor,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: widget.width > widget.height
+                                        ? widget.width / 20
+                                        : widget.height / 20),
+                              )),
                           answersWidget
                         ],
                 ),
-          )
-    );
+              ));
   }
 }

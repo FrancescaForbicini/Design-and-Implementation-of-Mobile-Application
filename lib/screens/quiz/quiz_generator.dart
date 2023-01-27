@@ -21,7 +21,9 @@ class QuizGenerator extends StatelessWidget {
   final String typeQuiz;
   final int totalScore;
   final int level;
-  const QuizGenerator(this.topic, this.typeQuiz, this.totalScore,this.level, {super.key});
+
+  const QuizGenerator(this.topic, this.typeQuiz, this.totalScore, this.level,
+      {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -31,13 +33,12 @@ class QuizGenerator extends StatelessWidget {
         style: const TextStyle(color: Colors.lightGreen, fontSize: 30),
       ),
       leading: IconButton(
-        icon: Icon(Icons.arrow_back,
-            color: Theme.of(context).iconTheme.color),
+        icon: Icon(Icons.arrow_back, color: Theme.of(context).iconTheme.color),
         onPressed: () {
           Navigator.pop(context);
         },
       ),
-      actions:[],
+      actions: [],
     );
     final _screenHeight = MediaQuery.of(context).size.height;
     final _screenWidth = MediaQuery.of(context).size.width;
@@ -45,8 +46,10 @@ class QuizGenerator extends StatelessWidget {
     final _statusBarHeight = MediaQuery.of(context).padding.top;
 
     return Scaffold(
+      key: const Key('quiz_page'),
       appBar: _appBar,
-      body: QuizGeneratorStateful(topic, typeQuiz, totalScore, level, _screenWidth, _screenHeight - _appBarHeight - _statusBarHeight),
+      body: QuizGeneratorStateful(topic, typeQuiz, totalScore, level,
+          _screenWidth, _screenHeight - _appBarHeight - _statusBarHeight),
     );
   }
 }
@@ -59,10 +62,12 @@ class QuizGeneratorStateful extends StatefulWidget {
   final width;
   final height;
 
-  QuizGeneratorStateful(this.topic, this.typeQuiz, this.totalScore, this.level, this.width, this.height);
+  QuizGeneratorStateful(this.topic, this.typeQuiz, this.totalScore, this.level,
+      this.width, this.height);
 
   @override
-  _QuizGeneratorState createState() => _QuizGeneratorState(topic, typeQuiz, totalScore, level, width, height);
+  _QuizGeneratorState createState() =>
+      _QuizGeneratorState(topic, typeQuiz, totalScore, level, width, height);
 }
 
 class _QuizGeneratorState extends State<QuizGeneratorStateful> {
@@ -79,12 +84,13 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
   final width;
   final height;
 
-  _QuizGeneratorState(this.topic, this.typeQuiz, this.totalScore, this.level, this.width, this.height);
+  _QuizGeneratorState(this.topic, this.typeQuiz, this.totalScore, this.level,
+      this.width, this.height);
 
   // Fetch content from the json file
   Future<bool> readJson() async {
-    final String response = await rootBundle
-        .loadString('json/question_$typeQuiz.json');
+    final String response =
+        await rootBundle.loadString('json/question_$typeQuiz.json');
     final data = await json.decode(response);
     setState(() {
       _questionsFromJSON = data["questions"];
@@ -93,16 +99,16 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
       case 'playlists':
         {
           _questions = [];
-          await QuestionsPlaylist().buildQuestionsPlaylist(
-              _questions, topic, _questionsFromJSON);
+          await QuestionsPlaylist()
+              .buildQuestionsPlaylist(_questions, topic, _questionsFromJSON);
           break;
         }
 
       case 'artists':
         {
           _questions = [];
-          await QuestionsArtist().buildQuestionArtists(
-              _questions, topic, _questionsFromJSON);
+          await QuestionsArtist()
+              .buildQuestionArtists(_questions, topic, _questionsFromJSON);
           break;
         }
       default:
@@ -115,7 +121,6 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
     return true;
   }
 
-
   @override
   void initState() {
     _done = readJson();
@@ -125,7 +130,6 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
       width: widget.width,
       height: widget.height,
@@ -134,24 +138,26 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
       child: FutureBuilder(
           future: _done,
           builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-            if (snapshot.hasData && snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.hasData &&
+                snapshot.connectionState == ConnectionState.done) {
               return quizBuilder();
-            }
-            else {
+            } else {
+              print("loading");
               return const Center(
+                key: const Key('quiz_load'),
                 child: CircularProgressIndicator(
                   color: Colors.lightGreen,
                 ),
               );
             }
-          }
-      ),
-
+          }),
     );
   }
 
   Widget quizBuilder() {
+    print("sono qui");
     return Column(
+        key: const Key('quiz_builder'),
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(
@@ -171,156 +177,153 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
             height: widget.height * 0.01,
           ),
           Container(
-            width: widget.width * 0.9,
-            height: widget.height * 0.9,
-            child: PageView.builder(
-              itemCount: _questions.length,
-              controller: _controller,
-              physics: const NeverScrollableScrollPhysics(),
-              itemBuilder: (context, index) {
-                print(_questions[index].rightAnswer);
-                AudioPlayer audioPlayer = AudioPlayer();
-                return QuizView(
-                    image: _questions[index].url != "" ? IconButton(
-                        padding: EdgeInsets.all(0),
-                        icon: Icon(Icons.play_arrow),
-                        iconSize: widget.height * 0.9 * 0.1,
-                        onPressed: () async {
-                          print(_questions[index].url);
-                          await audioPlayer.setUrl(
-                              _questions[index].url);
-                          await audioPlayer.play();
-                        },
-                    ) : null,
-                  showCorrect: true,
-                  answerColor: Colors.white,
-                  answerBackgroundColor: const Color(0xFF101010),
-                  questionColor: const Color(0xFF101010),
-                  backgroundColor: Colors.lightGreen,
-                  width: widget.width * 0.9,
-                  height: widget.height * 0.9,
-                  question: _questions[index].question1 +
-                      _questions[index].artistAlbum.toString() +
-                      _questions[index].question2,
-                  rightAnswer: _questions[index].rightAnswer!,
-                  wrongAnswers: [
-                    _questions[index].wrongAnswers[0],
-                    _questions[index].wrongAnswers[1],
-                    _questions[index].wrongAnswers[2]
-                  ],
-                  onRightAnswer: () =>
-                  {
-                    audioPlayer.stop(),
-                    setState(() {
-                      totalScore = totalScore + level;
-                    }),
-                    onRightQuestion(),
-                  },
-                  onWrongAnswer: () =>
-                  {
-                    audioPlayer.stop(),
-                    setState(() {
-                      end = true;
-                      Timer(const Duration(milliseconds: 500), () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                ResultPage(
-                                  score: totalScore,
-                                  end: end,
-                                ),
-                          ),
-                        );
-                      });
-                    })
-                  },
-                );
-              },
-            )
-          )
-        ]
-    );
+              width: widget.width * 0.9,
+              height: widget.height * 0.9,
+              child: PageView.builder(
+                itemCount: _questions.length,
+                controller: _controller,
+                physics: const NeverScrollableScrollPhysics(),
+                key: const Key("quiz_generator"),
+                itemBuilder: (context, index) {
+                  print(_questions[index].rightAnswer);
+                  AudioPlayer audioPlayer = AudioPlayer();
+                  print("DOMANDE");
+                  return QuizView(
+                    image: _questions[index].url != ""
+                        ? IconButton(
+                            padding: EdgeInsets.all(0),
+                            icon: Icon(Icons.play_arrow),
+                            iconSize: widget.height * 0.9 * 0.1,
+                            onPressed: () async {
+                              print(_questions[index].url);
+                              await audioPlayer.setUrl(_questions[index].url);
+                              await audioPlayer.play();
+                            },
+                          )
+                        : null,
+                    showCorrect: true,
+                    answerColor: Colors.white,
+                    answerBackgroundColor: const Color(0xFF101010),
+                    questionColor: const Color(0xFF101010),
+                    backgroundColor: Colors.lightGreen,
+                    width: widget.width * 0.9,
+                    height: widget.height * 0.9,
+                    question: _questions[index].question1 +
+                        _questions[index].artistAlbum.toString() +
+                        _questions[index].question2,
+                    rightAnswer: _questions[index].rightAnswer!,
+                    wrongAnswers: [
+                      _questions[index].wrongAnswers[0],
+                      _questions[index].wrongAnswers[1],
+                      _questions[index].wrongAnswers[2]
+                    ],
+                    onRightAnswer: () => {
+                      audioPlayer.stop(),
+                      setState(() {
+                        totalScore = totalScore + level;
+                      }),
+                      onRightQuestion(),
+                    },
+                    onWrongAnswer: () => {
+                      audioPlayer.stop(),
+                      setState(() {
+                        end = true;
+                        Timer(const Duration(milliseconds: 500), () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ResultPage(
+                                score: totalScore,
+                                end: end,
+                              ),
+                            ),
+                          );
+                        });
+                      })
+                    },
+                  );
+                },
+              ))
+        ]);
   }
 
-
-  void onRightQuestion() async{
+  void onRightQuestion() async {
     _controller.nextPage(
       duration: const Duration(milliseconds: 500),
       curve: Curves.easeInExpo,
     );
     if (_questionNumber < _questions.length) {
-
       setState(() {
         _questionNumber++;
       });
     } else {
       setState(() {
-        level ++;
+        level++;
         _questions = [];
       });
-      showDialog(context: context, builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(
-            S.of(context).QuizGenNextLevel(_questionNumber),
-            style: const TextStyle(color: Color(0xFF101010), fontWeight: FontWeight.bold, fontSize: 20),
-          ),
-          content: Text(
-            S.of(context).QuizGenNextMessage(level),
-            style: const TextStyle(color: Color(0xFF101010), fontWeight: FontWeight.bold, fontSize: 20,)
-          ),
-          backgroundColor: Colors.lightGreenAccent,
-          actions: <Widget>[
-            TextButton(
-              style: TextButton.styleFrom(
-                backgroundColor: const Color(0xFF101010),
-                textStyle: Theme.of(context).textTheme.labelLarge,
-              ),
-              child: Text(
-                S.of(context).QuizGenGoOnButton,
-                style: const TextStyle(color: Colors.white),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        QuizGenerator(
-                            topic,typeQuiz,totalScore,level),
-                  ),
-                );
-              },
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(
+              S.of(context).QuizGenNextLevel(_questionNumber),
+              style: const TextStyle(
+                  color: Color(0xFF101010),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20),
             ),
-            TextButton(
-              style: TextButton.styleFrom(
-                backgroundColor: const Color(0xFF101010),
-                textStyle: Theme.of(context).textTheme.labelLarge,
+            content: Text(S.of(context).QuizGenNextMessage(level),
+                style: const TextStyle(
+                  color: Color(0xFF101010),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                )),
+            backgroundColor: Colors.lightGreenAccent,
+            actions: <Widget>[
+              TextButton(
+                style: TextButton.styleFrom(
+                  backgroundColor: const Color(0xFF101010),
+                  textStyle: Theme.of(context).textTheme.labelLarge,
+                ),
+                child: Text(
+                  S.of(context).QuizGenGoOnButton,
+                  style: const TextStyle(color: Colors.white),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          QuizGenerator(topic, typeQuiz, totalScore, level),
+                    ),
+                  );
+                },
               ),
-              child: Text(S.of(context).QuizGenExitButton,
-                style: const TextStyle(color: Colors.white),
+              TextButton(
+                style: TextButton.styleFrom(
+                  backgroundColor: const Color(0xFF101010),
+                  textStyle: Theme.of(context).textTheme.labelLarge,
+                ),
+                child: Text(
+                  S.of(context).QuizGenExitButton,
+                  style: const TextStyle(color: Colors.white),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          ResultPage(score: totalScore, end: end),
+                    ),
+                  );
+                },
               ),
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        ResultPage(
-                            score: totalScore,
-                            end: end),
-                  ),
-                );
-
-              },
-            ),
-          ],
-        );
-      },
+            ],
+          );
+        },
       );
-
     }
   }
 }
-
-

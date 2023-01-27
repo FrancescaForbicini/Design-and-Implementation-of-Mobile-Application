@@ -29,7 +29,7 @@ void main() {
 
         await tester.pump();
 
-        await signoutSteps(tester);
+        await signOutSteps(tester);
 
         expect(
             find.byKey(const Key('auth_container')), findsAtLeastNWidgets(1));

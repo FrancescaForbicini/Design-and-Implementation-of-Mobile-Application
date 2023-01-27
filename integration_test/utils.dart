@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:dima_project/screens/authentication/sign_in/signin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'dart:math' as math;
 
 Future<void> pumpUntilFound(
   WidgetTester tester,
@@ -61,7 +60,6 @@ const Map<String, String> testingAccount = {
 Future<void> loginSteps(
   WidgetTester tester,
 ) async {
-
   isTest = true;
 
   await tester.pumpAndSettle();
@@ -90,7 +88,6 @@ Future<void> loginSteps(
 
   await tester.tap(find.byKey(const Key('sign_in_button')));
 
-
   await pumpUntilFound(
     tester,
     find.byKey(const Key('home_page')),
@@ -105,7 +102,7 @@ Future<void> loginSteps(
   }
 }
 
-Future<void> homeSteps(WidgetTester tester) async {
+Future<void> userProfileSteps(WidgetTester tester) async {
   await tester.pumpAndSettle();
 
   await loginSteps(tester);
@@ -120,7 +117,7 @@ Future<void> homeSteps(WidgetTester tester) async {
   await tester.pumpAndSettle();
 }
 
-Future<void> signoutSteps(WidgetTester tester) async{
+Future<void> signOutSteps(WidgetTester tester) async {
   await tester.tap(find.byKey(const Key('sign_out_button')));
 
   await tester.pumpAndSettle();
@@ -129,5 +126,35 @@ Future<void> signoutSteps(WidgetTester tester) async{
   Timer(const Duration(seconds: 5), () => timerDone = true);
   while (timerDone != true) {
     await tester.pump();
+  }
+}
+
+Future<void> quizSteps(WidgetTester tester, int numberRightQuestion) async {
+  {
+    await pumpUntilFound(
+      tester,
+      find.byKey(const Key('quiz_load')),
+    );
+
+    await pumpUntilFound(
+      tester,
+      find.byKey(const Key('quiz_builder')),
+    );
+
+    for (int i = 0; i < numberRightQuestion; i++) {
+      expect(find.byKey(const Key('rightAnswer')), findsAtLeastNWidgets(1));
+
+      await tester.tap(find.byKey(const Key('rightAnswer')));
+
+      await tester.pumpAndSettle();
+    }
+
+    expect(find.byKey(const Key('wrongAnswer1')), findsAtLeastNWidgets(1));
+
+    await tester.tap(find.byKey(const Key('wrongAnswer1')));
+
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('resultPage')), findsAtLeastNWidgets(1));
   }
 }
