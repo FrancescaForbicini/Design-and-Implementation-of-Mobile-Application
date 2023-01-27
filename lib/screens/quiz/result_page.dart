@@ -58,6 +58,7 @@ class _ResultPageState extends State<ResultPage> {
     backgroundColor = Theme.of(context).backgroundColor;
     buttonColor = Theme.of(context).buttonColor;
     return Scaffold(
+      key: const Key("result_page"),
       backgroundColor: backgroundColor,
       body: FutureBuilder(
           future: done,

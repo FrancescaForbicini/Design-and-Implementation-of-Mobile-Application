@@ -12,15 +12,7 @@ void main() {
 
       await app.main();
 
-      await tester.pumpAndSettle();
-
-      await userProfileSteps(tester);
-
-      await tester.pumpAndSettle();
-
-      await tester.tap(find.byKey(const Key('home_button')));
-
-      await tester.pumpAndSettle();
+      await loadingHomeSteps(tester);
 
       expect(find.byKey(const Key('home_page')), findsAtLeastNWidgets(1));
 
@@ -33,15 +25,7 @@ void main() {
 
       await app.main();
 
-      await tester.pumpAndSettle();
-
-      await userProfileSteps(tester);
-
-      await tester.pumpAndSettle();
-
-      await tester.tap(find.byKey(const Key('home_button')));
-
-      await tester.pumpAndSettle();
+      await loadingHomeSteps(tester);
 
       expect(find.byKey(const Key('home_page')), findsAtLeastNWidgets(1));
 

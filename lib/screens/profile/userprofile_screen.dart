@@ -71,13 +71,10 @@ class _UserProfileState extends State<UserProfile> {
     final _appBar = CustomizedAppBar(
       leading: IconButton(
         key: const Key('sign_out_button'),
-        icon: Icon(
-          Icons.logout,
-          size: 30,
-          color: Theme.of(context).iconTheme.color,
-        ),
+        icon: const Icon(Icons.logout, color: Colors.lightGreen, size: 30),
         onPressed: () => {
           _authenticationService.signOut(),
+          Navigator.pop(context),
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => AuthenticationScreen()))
         },

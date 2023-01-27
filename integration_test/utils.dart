@@ -103,7 +103,6 @@ Future<void> loginSteps(
 }
 
 Future<void> userProfileSteps(WidgetTester tester) async {
-  await tester.pumpAndSettle();
 
   await loginSteps(tester);
 
@@ -122,11 +121,25 @@ Future<void> signOutSteps(WidgetTester tester) async {
 
   await tester.pumpAndSettle();
 
+  expect(find.byKey(const Key('auth_container')), findsAtLeastNWidgets(1));
+
   bool timerDone = false;
   Timer(const Duration(seconds: 5), () => timerDone = true);
   while (timerDone != true) {
     await tester.pump();
   }
+}
+
+Future<void> loadingHomeSteps(WidgetTester tester) async{
+
+  await userProfileSteps(tester);
+
+  await tester.pumpAndSettle();
+
+  await tester.tap(find.byKey(const Key('home_button')));
+
+  await tester.pumpAndSettle();
+
 }
 
 Future<void> quizSteps(WidgetTester tester, int numberRightQuestion) async {
@@ -155,6 +168,6 @@ Future<void> quizSteps(WidgetTester tester, int numberRightQuestion) async {
 
     await tester.pumpAndSettle();
 
-    expect(find.byKey(const Key('resultPage')), findsAtLeastNWidgets(1));
+    expect(find.byKey(const Key('result_page')), findsAtLeastNWidgets(1));
   }
 }
