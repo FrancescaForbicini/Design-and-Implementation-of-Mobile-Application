@@ -70,7 +70,7 @@ class _UserProfileState extends State<UserProfile> {
     Color? textColor = Theme.of(context).textTheme.headline1?.color;
     final _appBar = CustomizedAppBar(
       leading: IconButton(
-        key: const Key('logout_button'),
+        key: const Key('sign_out_button'),
         icon: Icon(
           Icons.logout,
           size: 30,
