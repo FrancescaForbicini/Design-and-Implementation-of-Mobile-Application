@@ -1,5 +1,6 @@
 import 'package:dima_project/main.dart' as app;
 import 'package:dima_project/screens/authentication/sign_in/signin.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'utils.dart';
@@ -17,7 +18,7 @@ void main() {
           await tester.pumpAndSettle();
           await loginSteps(tester);
 
-          await tester.pumpAndSettle();
+          expect(find.byKey(const Key('home_page')), findsAtLeastNWidgets(1));
 
         },
       );
