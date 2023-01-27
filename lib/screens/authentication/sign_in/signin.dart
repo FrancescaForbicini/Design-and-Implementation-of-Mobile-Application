@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dima_project/screens/home/home_screen.dart';
 import 'package:dima_project/screens/spotifyAuth_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -124,12 +125,15 @@ class SignInScreen extends StatelessWidget {
                       {
                         if (isTest)
                           {
-                            print("Ciao"),
                             setToken(context),
+                            Navigator.pop(context),
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => HomeScreen())),
                           }
                         else
                           {
-                            print(isTest),
                             Navigator.pop(context),
                             Navigator.push(
                               context,

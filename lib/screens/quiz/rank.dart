@@ -23,6 +23,8 @@ class Rank extends StatelessWidget {
   Widget build(BuildContext context) {
     final _appBar = CustomizedAppBar(
       leading: IconButton(
+        key: const Key('arrow_back'),
+
         icon: Icon(Icons.arrow_back,
             color: Theme.of(context).iconTheme.color, size: 30),
         onPressed: () => {
@@ -39,12 +41,17 @@ class Rank extends StatelessWidget {
           tabs: <Widget>[
             Tab(
               icon: Icon(
+                key: const Key('globalrank_button'),
+
                 FontAwesomeIcons.earthAmericas,
                 color: Theme.of(context).iconTheme.color,
               ),
             ),
             Tab(
-              icon: Icon(Icons.pin_drop,
+              icon: Icon(
+                  key: const Key('localrank_button'),
+
+                  Icons.pin_drop,
                   color: Theme.of(context).iconTheme.color),
             )
           ]),
@@ -57,6 +64,8 @@ class Rank extends StatelessWidget {
     final _height = _screenHeight - _appBarHeight - _statusBarHeight;
 
     return DefaultTabController(
+        key: const Key('rank_page'),
+
         initialIndex: 0,
         length: 2,
         child: Scaffold(

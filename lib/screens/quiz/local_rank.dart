@@ -75,6 +75,8 @@ class _LocalRankState extends State<LocalRank>{
           //print("THERE ARE USERS");
 
           return Container(
+              key: const Key('localrank_page'),
+
               height: widget.height,
               width: widget.width,
               child: ListView.builder(
@@ -85,6 +87,7 @@ class _LocalRankState extends State<LocalRank>{
         }
         else{
           return const Center(
+            key: const Key('localrank_page'),
             child: CircularProgressIndicator(
               backgroundColor: Colors.lightGreen,
             ),

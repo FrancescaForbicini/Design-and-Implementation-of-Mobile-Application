@@ -36,6 +36,8 @@ class BestQuizState extends State<BestQuiz> {
           style: TextStyle(fontSize: 30, color: Theme.of(context).textTheme.headline1?.color),
         ),
         leading: IconButton(
+          key: const Key('arrow_back'),
+
           icon:
               Icon(Icons.arrow_back, color: Theme.of(context).iconTheme.color),
           onPressed: () {
@@ -51,6 +53,7 @@ class BestQuizState extends State<BestQuiz> {
     final radius = min(_height * 0.5 * 0.25, _screenWidth * 0.25);
 
     return Scaffold(
+      key: const Key('bestquiz_page'),
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: _appBar,
       body: FutureBuilder<Quiz>(
