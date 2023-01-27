@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:dima_project/main.dart' as app;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:dima_project/screens/authentication/sign_in/signin.dart';
 
 import 'utils.dart';
 
@@ -19,9 +21,13 @@ void main() {
           await app.main();
           await tester.pumpAndSettle();
 
+          isTest = true;
+
           await loginSteps(tester);
 
           await tester.pumpAndSettle();
+
+          print(isTest);
 
           expect(find.byKey(const Key('spoty_webview')), findsAtLeastNWidgets(1));
         },

@@ -7,7 +7,7 @@ import '../../../generated/l10n.dart';
 import '../../../services/authentication_service.dart';
 import '../sign_up/signup.dart';
 
-
+bool isTest = false;
 class SignInScreen extends StatelessWidget {
   SignInScreen({super.key});
   final TextEditingController _emailController = TextEditingController();

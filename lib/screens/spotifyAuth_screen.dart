@@ -66,6 +66,7 @@ class _SpotifyScreenState extends State<SpotifyScreen> {
                   if (navReq.url.startsWith(_spotifyService.getRedirectUri())) {
                     responseUri = navReq.url;
                     await _handleResponse(responseUri);
+                    print(responseUri);
 
                     return NavigationDecision.prevent;
                   }
