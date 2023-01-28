@@ -11,7 +11,7 @@ void main() {
 
     testWidgets('Bad Result Test', (WidgetTester tester) async {
 
-      numberRightQuestion = 1;
+      numberRightQuestion = 0;
 
       await app.main();
 
@@ -23,11 +23,11 @@ void main() {
 
       await quizSteps(tester, numberRightQuestion);
 
-      await tester.pumpAndSettle();
+      /*await tester.pumpAndSettle();
 
       await tester.tap(find.byKey(const Key('exit_button')));
 
-      await tester.pumpAndSettle();
+      await tester.pumpAndSettle();*/
 
       expect(
           find.byKey(const Key('userprofile_page')), findsAtLeastNWidgets(1));
@@ -48,7 +48,33 @@ void main() {
 
       await tester.tap(find.byKey(const Key('playlist_button2')));
 
-      await quizSteps(tester, numberRightQuestion);
+      /*await quizSteps(tester, numberRightQuestion);*/
+
+      await pumpUntilFound(
+        tester,
+        find.byKey(const Key('quiz_load')),
+      );
+
+      await pumpUntilFound(
+        tester,
+        find.byKey(const Key('quiz_builder')),
+      );
+
+      for (int i = 0; i < numberRightQuestion; i++) {
+        expect(find.byKey(const Key('rightAnswer')), findsAtLeastNWidgets(1));
+
+        await tester.tap(find.byKey(const Key('rightAnswer')));
+
+        await tester.pumpAndSettle();
+      }
+
+      expect(find.byKey(const Key('wrongAnswer1')), findsAtLeastNWidgets(1));
+
+      await tester.tap(find.byKey(const Key('wrongAnswer1')));
+
+      await tester.pumpAndSettle();
+
+      expect(find.byKey(const Key('result_page')), findsAtLeastNWidgets(1));
 
       await tester.pumpAndSettle();
 
@@ -59,7 +85,7 @@ void main() {
       await tester.pumpAndSettle();
 
 
-      await tester.tap(find.byKey(const Key('position_button')));
+      await tester.tap(find.byKey(const Key('location_button')));
 
       //TODO
 

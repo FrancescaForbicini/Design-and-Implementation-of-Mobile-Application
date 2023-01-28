@@ -92,5 +92,46 @@ void main() {
         await signOutSteps(tester);
       },
     );
+
+    testWidgets(
+      'Back to Home Test',
+          (WidgetTester tester) async {
+        await app.main();
+
+        await tester.pumpAndSettle();
+
+        await userProfileSteps(tester);
+
+        await tester.tap(find.byKey(const Key('bestquiz_button')));
+
+        await tester.pumpAndSettle();
+
+        expect(
+            find.byKey(const Key('bestquiz_page')), findsAtLeastNWidgets(1));
+
+        await tester.tap(find.byKey(const Key('arrow_back')));
+
+        await tester.pumpAndSettle();
+
+        expect(
+            find.byKey(const Key('userprofile_page')), findsAtLeastNWidgets(1));
+
+        await tester.tap(find.byKey(const Key('home_button')));
+
+        await tester.pumpAndSettle();
+
+        expect(
+            find.byKey(const Key('home_page')), findsAtLeastNWidgets(1));
+
+        bool timerDone = false;
+        Timer(const Duration(seconds: 5), () => timerDone = true);
+        while (timerDone != true) {
+          await tester.pump();
+        }
+
+        await signOutSteps(tester);
+      },
+
+    );
   });
 }

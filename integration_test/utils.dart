@@ -169,5 +169,11 @@ Future<void> quizSteps(WidgetTester tester, int numberRightQuestion) async {
     await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('result_page')), findsAtLeastNWidgets(1));
+
+    await tester.tap(find.byKey(const Key("exit_button")));
+
+    await tester.pumpAndSettle();
+
+    await pumpUntilFound(tester, find.byKey(const Key('userprofile_page')));
   }
 }

@@ -148,6 +148,7 @@ class SignInScreen extends StatelessWidget {
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
+                                key: const Key('sign_in_err'),
                                 title: Text(S.of(context).SigninErr),
                                 content: Text(S.of(context).SigninErrText),
                                 actions: [

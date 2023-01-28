@@ -5,7 +5,7 @@ import 'utils.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  int numberRightQuestion = 3;
+  int numberRightQuestion = 0;
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   group('Quiz test', () {
     testWidgets('Question Playlist Test', (WidgetTester tester) async {
@@ -19,6 +19,8 @@ void main() {
       await tester.tap(find.byKey(const Key('playlist_button2')));
 
       await quizSteps(tester,numberRightQuestion);
+
+      await signOutSteps(tester);
     });
 
     testWidgets('Question Artist Test', (WidgetTester tester) async {
@@ -32,6 +34,8 @@ void main() {
       await tester.tap(find.byKey(const Key('artist_button2')));
 
       await quizSteps(tester,numberRightQuestion);
+
+      await signOutSteps(tester);
     });
   });
 }

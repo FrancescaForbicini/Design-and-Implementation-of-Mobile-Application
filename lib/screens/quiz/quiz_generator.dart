@@ -191,6 +191,7 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
                   return QuizView(
                     image: _questions[index].url != ""
                         ? IconButton(
+                            color: Colors.black,
                             padding: EdgeInsets.all(0),
                             icon: Icon(Icons.play_arrow),
                             iconSize: widget.height * 0.9 * 0.1,

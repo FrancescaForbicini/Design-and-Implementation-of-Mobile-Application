@@ -238,6 +238,7 @@ class SignUpScreen extends StatelessWidget {
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
+                      key: const Key('signup_err_dialog'),
                       title: Text(S.of(context).SignupFail),
                       content: Text(S.of(context).SignupFailText),
                       actions: [
