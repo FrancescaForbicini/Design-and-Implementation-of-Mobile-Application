@@ -17,6 +17,7 @@ import '../../services/spotify_service.dart';
 import '../profile/userprofile_screen.dart';
 
 Quiz quiz = Quiz();
+bool isTest = false;
 
 class ResultPage extends StatefulWidget {
   const ResultPage({super.key, required this.score, required this.end});
@@ -104,10 +105,16 @@ class _ResultPageState extends State<ResultPage> {
   }
 
   Widget savePicture(double _height, double _screenWidth, double radius) {
-    updateScore(widget.score);
+
     return GestureDetector(
       onTap: () async {
-        image = (await AcquireImage().getImageFromCamera())!;
+        if (isTest){
+          image = 'images/wolf_user.png';
+        }
+        else {
+          image = (await AcquireImage().getImageFromCamera())!;
+        }
+
         if (image != null) {
           setState(() {
             quiz.image = image!;
@@ -119,16 +126,29 @@ class _ResultPageState extends State<ResultPage> {
           future: quiz.getImageQuiz(),
           builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
             if (image != null) {
-              File file = File(image!);
-              return CircleAvatar(
-                backgroundColor: Theme.of(context).buttonColor,
-                minRadius: radius,
-                child: CircleAvatar(
-                  backgroundColor: Colors.transparent,
-                  radius: radius - 10 > 0 ? radius - 10 : 5.0,
-                  backgroundImage: Image.file(file).image,
-                ),
-              );
+              if(!isTest){
+                File file = File(image!);
+                return CircleAvatar(
+                  backgroundColor: Theme.of(context).buttonColor,
+                  minRadius: radius,
+                  child: CircleAvatar(
+                    backgroundColor: Colors.transparent,
+                    radius: radius - 10 > 0 ? radius - 10 : 5.0,
+                    backgroundImage: Image.file(file).image,
+                  ),
+                );
+              }
+              else{
+                return CircleAvatar(
+                  backgroundColor: Theme.of(context).buttonColor,
+                  minRadius: radius,
+                  child: CircleAvatar(
+                    backgroundColor: Colors.transparent,
+                    radius: radius - 10 > 0 ? radius - 10 : 5.0,
+                    backgroundImage: Image.asset(image!).image,
+                  ),
+                );
+              }
             }
 
             return Row(
@@ -220,6 +240,10 @@ class _ResultPageState extends State<ResultPage> {
   }
 
   Widget exitButton() {
+    if(savedPicture && savedPosition){
+      updateScore(widget.score);
+    }
+
     return ElevatedButton(
       key: const Key("exit_button"),
       style: ButtonStyle(

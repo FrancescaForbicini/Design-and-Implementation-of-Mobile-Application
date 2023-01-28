@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dima_project/main.dart' as app;
 import 'package:dima_project/screens/authentication/sign_in/signin.dart';
+import 'package:dima_project/screens/quiz/result_page.dart' as res;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
@@ -13,6 +14,8 @@ void main() {
     testWidgets(
       'Best Quiz Test',
       (WidgetTester tester) async {
+        res.isTest = true;
+
         await app.main();
 
         await tester.pumpAndSettle();

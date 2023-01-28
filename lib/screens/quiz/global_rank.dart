@@ -112,7 +112,7 @@ class _GlobalRankState extends State<GlobalRank>{
             Center(child: Icon(FontAwesomeIcons.crown, size: 36.0, color: Colors.yellow,),),
             Padding(
               padding: const EdgeInsets.only(left: 6.0, top: 6),
-              child: Center(child: AutoSizeText('1', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),),
+              child: Center(child: AutoSizeText('1', style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),),),
             )
           ],
         ),
@@ -128,7 +128,7 @@ class _GlobalRankState extends State<GlobalRank>{
             Center(child: Icon(FontAwesomeIcons.crown, size: 36.0, color: Colors.grey[300],),),
             Padding(
               padding: const EdgeInsets.only(left: 6.0, top: 6),
-              child: Center(child: AutoSizeText('2', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),),
+              child: Center(child: AutoSizeText('2', style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),),),
             )
           ],
         ),
@@ -143,7 +143,7 @@ class _GlobalRankState extends State<GlobalRank>{
             Center(child: Icon(FontAwesomeIcons.crown, size: 36.0, color: Colors.orange[300],),),
             Padding(
               padding: const EdgeInsets.only(left: 6.0, top: 6),
-              child: Center(child: AutoSizeText('3', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),),
+              child: Center(child: AutoSizeText('3', style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),),),
             )
           ],
         ),
@@ -163,8 +163,9 @@ class _GlobalRankState extends State<GlobalRank>{
         ),
       );
     }
-    if (isPresent(idx))
+    if (isPresent(idx)){
       colorBox = Colors.amber;
+    }
 
     return Padding(
       padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 10.0),

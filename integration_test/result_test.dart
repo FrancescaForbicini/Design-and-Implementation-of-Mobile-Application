@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:dima_project/main.dart' as app;
+import 'package:dima_project/screens/quiz/result_page.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'utils.dart';
@@ -12,6 +15,8 @@ void main() {
     testWidgets('Bad Result Test', (WidgetTester tester) async {
 
       numberRightQuestion = 0;
+
+      isTest = true;
 
       await app.main();
 
@@ -37,6 +42,8 @@ void main() {
     });
 
     testWidgets('Best Result Test', (WidgetTester tester) async {
+
+      isTest = true;
 
       numberRightQuestion = 1;
 
@@ -91,7 +98,11 @@ void main() {
 
       await tester.pumpAndSettle();
 
-
+      bool timerDone = false;
+      Timer(const Duration(seconds: 5), () => timerDone = true);
+      while (timerDone != true) {
+        await tester.pump();
+      }
 
       expect(find.byKey(const Key('exit_button')), findsAtLeastNWidgets(1));
 

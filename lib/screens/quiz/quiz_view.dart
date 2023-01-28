@@ -222,7 +222,7 @@ class _QuizViewState extends State<QuizView> {
                 color: Colors.black, width: 1.5, style: BorderStyle.solid)),
         width: widget.width,
         height: widget.height,
-        child: widget.questionTag != null
+        child: /*widget.questionTag != null
             ? Stack(
                 children: [
                   Positioned(
@@ -312,7 +312,7 @@ class _QuizViewState extends State<QuizView> {
                   ),
                 ],
               )
-            : SingleChildScrollView(
+            : */SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.center,

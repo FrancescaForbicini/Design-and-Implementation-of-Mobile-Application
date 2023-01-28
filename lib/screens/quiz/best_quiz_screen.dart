@@ -91,7 +91,7 @@ class BestQuizState extends State<BestQuiz> {
                     child: CircleAvatar(
                       backgroundColor: Colors.transparent,
                       radius: radius - 10 > 0 ? radius - 10 : 5.0,
-                      backgroundImage:
+                      backgroundImage: isTest ? Image.asset(snapshot.data!.image!).image :
                           Image.file(snapshot.data!.getFileImage()).image,
                     ),
                   ),
