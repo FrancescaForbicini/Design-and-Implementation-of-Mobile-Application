@@ -51,16 +51,13 @@ class _HomeScreenState extends State<HomeScreen> {
     if (_playlistsRef != null) {
       print("The reference exists!");
     }
-    print(_playlistsRef.me.all().runtimeType);
     Iterable<sp.PlaylistSimple> playlists = await _playlistsRef.me.all();
-    print(_playlistsRef.me.all().runtimeType);
     print("Got the playlists");
-    print(playlists.runtimeType);
     _playlists = playlists.toList();
     _playlists_quiz = sp.Playlists(_spotifyService.spotify);
     _artists_quiz = sp.Artists(_spotifyService.spotify);
     Iterable<sp.Artist> artists = await _spotifyService.spotify.me.topArtists();
-    print(artists.runtimeType);
+    print("Got the artists");
     _artists = artists.toList();
 
     return true;

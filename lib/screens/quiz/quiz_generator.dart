@@ -187,7 +187,6 @@ class _QuizGeneratorState extends State<QuizGeneratorStateful> {
                 itemBuilder: (context, index) {
                   print(_questions[index].rightAnswer);
                   AudioPlayer audioPlayer = AudioPlayer();
-                  print("DOMANDE");
                   return QuizView(
                     image: _questions[index].url != ""
                         ? IconButton(
